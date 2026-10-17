@@ -1,0 +1,69 @@
+export const meta = {
+  title: 'Quãng 6, 7 và bảng tổng hợp',
+  description: 'Hoàn thiện 12 quãng trong một quãng tám và mẹo đảo quãng để tính nhanh.',
+  minutes: 12,
+}
+
+## Quãng 6 và quãng 7
+
+| Quãng | Số nửa cung | Ví dụ từ C | Nghe |
+|---|---|---|---|
+| 6 thứ (♭6) | 8 | C – A♭ | <Play notes="C4 Ab4" /> |
+| 6 trưởng (6) | 9 | C – A | <Play notes="C4 A4" /> |
+| 7 thứ (♭7) | 10 | C – B♭ | <Play notes="C4 Bb4" /> |
+| 7 trưởng (7) | 11 | C – B | <Play notes="C4 B4" /> |
+
+Quãng 7 thứ là "gia vị" của hợp âm 7 (C7, Am7); quãng 7 trưởng tạo nên màu mơ màng của hợp âm maj7.
+
+## Bảng 12 quãng
+
+Đây là toàn bộ quãng trong một quãng tám — bảng bạn sẽ dùng đến hết lộ trình:
+
+| Nửa cung | Tên | Ký hiệu | Từ C |
+|---|---|---|---|
+| 0 | Đồng âm | 1 | C |
+| 1 | 2 thứ | ♭2 | D♭ |
+| 2 | 2 trưởng | 2 | D |
+| 3 | 3 thứ | ♭3 | E♭ |
+| 4 | 3 trưởng | 3 | E |
+| 5 | 4 đúng | 4 | F |
+| 6 | 4 tăng / 5 giảm (tritone) | ♯4 / ♭5 | F♯ / G♭ |
+| 7 | 5 đúng | 5 | G |
+| 8 | 6 thứ | ♭6 | A♭ |
+| 9 | 6 trưởng | 6 | A |
+| 10 | 7 thứ | ♭7 | B♭ |
+| 11 | 7 trưởng | 7 | B |
+| 12 | 8 đúng | 8 | C |
+
+Cột **ký hiệu** chính là cách ghi công thức hợp âm và scale: hợp âm thứ là "1 – ♭3 – 5", scale ngũ cung thứ là "1 – ♭3 – 4 – 5 – ♭7".
+
+<Show root="C" scale="major" labels="interval" play="none" caption="Scale C trưởng ghi theo quãng tính từ C: toàn quãng trưởng và đúng (1 2 3 4 5 6 7)" />
+
+## Mẹo đảo quãng
+
+Nốt trên của một quãng chuyển xuống dưới (hoặc ngược lại) thì được **quãng đảo**:
+
+- Số cộng lại luôn bằng **9**: 3 ↔ 6, 2 ↔ 7, 4 ↔ 5.
+- Tính chất đổi: **trưởng ↔ thứ**, **tăng ↔ giảm**, **đúng vẫn là đúng**.
+
+Ví dụ: C lên A là 6 trưởng ⟷ A lên C là 3 thứ. Muốn tìm nhanh quãng 6 trưởng *phía trên* một nốt? Tìm quãng 3 thứ *phía dưới* nó rồi lên một quãng tám.
+
+<OnlyFor instrument="guitar">
+
+<Show notes="C A" positions="5:3 3:2" labels="interval" caption="Quãng 6 trưởng: C (dây 5 phím 3) → A (dây 3 phím 2) — hình: sang 2 dây, lùi 1 phím" />
+
+<Show notes="C Bb" positions="5:3 3:3" labels="interval" caption="Quãng 7 thứ: C (dây 5 phím 3) → B♭ (dây 3 phím 3) — hình: sang 2 dây, cùng phím" />
+
+</OnlyFor>
+
+<Quiz id="m1-tonghop-q1" question="C → A là quãng gì?" options={['6 thứ', '6 trưởng', '5 tăng', '7 thứ']} answer={1} explain="C…A qua 6 chữ cái; 9 nửa cung → 6 trưởng." />
+
+<Quiz id="m1-tonghop-q2" question="E → C (đi lên) là quãng gì?" options={['6 thứ', '6 trưởng', '5 đúng', '7 thứ']} answer={0} explain="E, F, G, A, B, C = quãng 6; 8 nửa cung → thứ. Hoặc: C lên E là 3 trưởng, đảo lại thành 6 thứ." />
+
+<Quiz id="m1-tonghop-q3" question="G → F (đi lên) là quãng gì?" options={['7 trưởng', '6 trưởng', '7 thứ', '8 giảm']} answer={2} explain="G…F qua 7 chữ cái; 10 nửa cung → 7 thứ. Đây là quãng 7 trong hợp âm G7." />
+
+<Quiz id="m1-tonghop-q4" question="Đảo quãng 3 trưởng ta được quãng gì?" options={['6 trưởng', '6 thứ', '5 đúng', '3 thứ']} answer={1} explain="3 + 6 = 9, trưởng thành thứ → 6 thứ." />
+
+<FindNotes id="m1-tonghop-find-maj7-c" prompt="Bấm nốt cách C một quãng 7 trưởng (đi lên)." targets="B" />
+
+<FindNotes id="m1-tonghop-find-m7-d" prompt="Bấm nốt cách D một quãng 7 thứ (đi lên)." targets="C" />

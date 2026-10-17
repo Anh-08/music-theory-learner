@@ -1,0 +1,81 @@
+export const meta = {
+  title: 'Công thức scale trưởng',
+  description: 'Một công thức cung – nửa cung duy nhất để dựng scale trưởng từ bất kỳ nốt nào.',
+  minutes: 12,
+}
+
+**Scale** (âm giai, thang âm) là một tập hợp nốt xếp theo thứ tự cao độ, bắt đầu từ một nốt gọi là **chủ âm**. Scale cho bạn biết *những nốt nào "thuộc về" bài nhạc*. Khi improvise, scale là bộ nốt an toàn để chọn.
+
+Scale quan trọng nhất là **scale trưởng** (major scale) — nền móng của gần như mọi khái niệm phía sau.
+
+## Công thức
+
+Đi từ C chỉ qua các nốt tự nhiên, bạn có scale C trưởng: <Play notes="C4 D4 E4 F4 G4 A4 B4 C5" />
+
+Khoảng cách giữa các nốt liên tiếp **không đều nhau**:
+
+| C → D | D → E | E → F | F → G | G → A | A → B | B → C |
+|---|---|---|---|---|---|---|
+| 1 | 1 | ½ | 1 | 1 | 1 | ½ |
+
+Công thức scale trưởng: **1 – 1 – ½ – 1 – 1 – 1 – ½** (cung – cung – nửa cung – cung – cung – cung – nửa cung; tiếng Anh: W W H W W W H).
+
+<OnlyFor instrument="guitar">
+
+Trên một dây đàn, công thức hiện ra rất rõ — nhảy 2 phím, 2 phím, 1 phím…
+
+<Show root="C" scale="major" positions="5:3 5:5 5:7 5:8 5:10 5:12 5:14 5:15" frets={15} labels="interval" caption="C trưởng trên dây 5: phím 3 – 5 – 7 – 8 – 10 – 12 – 14 – 15" />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+<Show root="C" scale="major" labels="interval" caption="C trưởng: toàn phím trắng. Hai chỗ nửa cung là E–F và B–C" />
+
+</OnlyFor>
+
+## Dựng scale từ nốt khác
+
+Áp công thức lên **G**: G → A (1) → B (1) → C (½) → D (1) → E (1) → **F♯** (1) → G (½).
+
+Bước E → F chỉ là nửa cung, nhưng công thức cần một cung — nên phải nâng F lên thành **F♯**.
+
+<Show root="G" scale="major" labels="note" />
+
+Áp lên **F**: F → G → A → **B♭** → C → D → E → F. Bước A → B là một cung, nhưng công thức cần nửa cung — nên phải hạ B thành **B♭**.
+
+<Show root="F" scale="major" labels="note" />
+
+<Callout type="note" title="Mỗi chữ cái xuất hiện đúng một lần">
+Tại sao là B♭ mà không phải A♯? Vì scale 7 nốt phải dùng đủ 7 chữ cái A–G, mỗi chữ **một lần**. F G A **A♯** C D E sẽ có hai chữ A và thiếu chữ B. Quy tắc này giúp tên nốt luôn khớp với số bậc — rất tiện khi tính quãng và hợp âm.
+</Callout>
+
+<Quiz
+  id="m2-cong-thuc-q1"
+  question="Scale D trưởng gồm những nốt nào?"
+  options={['D E F G A B C', 'D E F♯ G A B C♯', 'D E F♯ G A B C', 'D E F♯ G♯ A B C♯']}
+  answer={1}
+  explain="D→E (1), E→F♯ (1), F♯→G (½), G→A (1), A→B (1), B→C♯ (1), C♯→D (½)."
+/>
+
+<Quiz
+  id="m2-cong-thuc-q2"
+  question="Scale E♭ trưởng có bao nhiêu nốt giáng?"
+  options={['1', '2', '3', '4']}
+  answer={2}
+  explain="E♭ F G A♭ B♭ C D — ba nốt giáng: E♭, A♭, B♭."
+/>
+
+<Quiz
+  id="m2-cong-thuc-q3"
+  question="Trong công thức scale trưởng, hai bước nửa cung nằm ở đâu?"
+  options={['Giữa bậc 2–3 và 6–7', 'Giữa bậc 3–4 và 7–8', 'Giữa bậc 1–2 và 4–5', 'Giữa bậc 4–5 và 7–8']}
+  answer={1}
+  explain="1 – 1 – ½ – 1 – 1 – 1 – ½: nửa cung từ bậc 3 lên 4 và từ bậc 7 lên 8 (chủ âm)."
+/>
+
+<FindNotes id="m2-cong-thuc-find-d" prompt="Bấm đủ 7 nốt của scale D trưởng (mỗi nốt một lần là đủ)." targets="D E F# G A B C#" />
+
+<Callout type="practice" title="Cầm đàn lên">
+Dựng scale trưởng từ A và từ B♭ trên giấy bằng công thức, rồi chơi thử trên đàn. Nghe có giống "Đô Rê Mi Fa Son La Si Đô" không? Nếu có — bạn đã dựng đúng.
+</Callout>

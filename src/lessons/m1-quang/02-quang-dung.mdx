@@ -1,0 +1,69 @@
+export const meta = {
+  title: 'Quãng 4, 5, 8 đúng và tritone',
+  description: 'Những quãng "vững" nhất trong âm nhạc, power chord, và quãng căng thẳng nhất.',
+  minutes: 12,
+}
+
+## Quãng "đúng"
+
+Quãng 4, 5 và 8 không chia trưởng/thứ mà có tính chất **đúng** (perfect) — vì chúng nghe rất hòa hợp, "trống rỗng" và vững chãi.
+
+| Quãng | Số nửa cung | Ví dụ từ C | Nghe |
+|---|---|---|---|
+| 4 đúng (4) | 5 | C – F | <Play notes="C4 F4" as="both" /> |
+| 5 đúng (5) | 7 | C – G | <Play notes="C4 G4" as="both" /> |
+| 8 đúng (8) | 12 | C – C | <Play notes="C4 C5" as="both" /> |
+
+Nâng một quãng đúng lên nửa cung, ta được quãng **tăng**; hạ xuống nửa cung, ta được quãng **giảm**.
+
+## Tritone: quãng căng nhất
+
+Giữa 4 đúng (5 nửa cung) và 5 đúng (7 nửa cung) có một quãng **6 nửa cung = 3 cung** — vì thế gọi là **tritone**. Tùy cách viết, nó là **4 tăng** (C – F♯) hoặc **5 giảm** (C – G♭).
+
+Nghe thử: <Play notes="C4 F#4" as="both">C – F♯</Play>. Rất căng, như muốn "chạy" đi đâu đó. Tritone nằm trong mọi hợp âm 7 át (như G7) và là động lực khiến G7 muốn về C — bạn sẽ gặp lại ở Module 6.
+
+<Callout type="note" title="B – F: tritone duy nhất trên phím trắng">
+Trong các nốt tự nhiên, mọi cặp quãng 5 đều là 5 đúng — **trừ B – F** (chỉ 6 nửa cung, là 5 giảm). Cặp này sẽ tạo ra hợp âm giảm duy nhất trong giọng C trưởng.
+</Callout>
+
+## Power chord: 1 + 5
+
+<OnlyFor instrument="guitar">
+
+Power chord trong rock chính là **nốt gốc + quãng 5 đúng** (thêm quãng 8 cho dày). Không có quãng 3, nên nó không trưởng cũng không thứ — vì thế dùng được ở mọi nơi.
+
+<Show root="G" notes="G D" shape="355xxx" labels="interval" caption="G5: dây 6 phím 3 (G) – dây 5 phím 5 (D) – dây 4 phím 5 (G)" />
+
+Hình quãng 5 đúng: **sang dây cao hơn kế bên, lên 2 phím**. Hình quãng 4 đúng: **sang dây kế bên, cùng phím** (lại trừ cặp dây G–B: lên thêm 1 phím).
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+Tay trái chơi **nốt gốc + quãng 5** là cách đệm bass cơ bản nhất: vững, rõ hợp âm mà không bị đục. Thử với C và G:
+
+<Show notes="C3 G3" labels="interval" play="chord" caption="Quãng 5 đúng ở tay trái: C3 – G3" />
+
+Trên phím trắng, quãng 5 đúng luôn cách **3 phím trắng ở giữa** — trừ B – F.
+
+</OnlyFor>
+
+## Quãng 4 và quãng 5 là "hai mặt" của nhau
+
+C lên G là quãng 5. Còn G lên C (C phía trên) là quãng 4. Hai quãng cộng lại thành một quãng tám. Đây gọi là **đảo quãng** — bài sau sẽ nói kỹ hơn.
+
+<Quiz id="m1-dung-q1" question="Quãng 5 đúng có bao nhiêu nửa cung?" options={['5', '6', '7', '8']} answer={2} explain="5 đúng = 7 nửa cung (3 cung rưỡi)." />
+
+<Quiz id="m1-dung-q2" question="B → F là quãng gì?" options={['5 đúng', '5 giảm (tritone)', '4 đúng', '4 tăng']} answer={1} explain="B, C, D, E, F = quãng 5; nhưng chỉ 6 nửa cung nên là 5 giảm." />
+
+<Quiz id="m1-dung-q3" question="C → F là quãng gì?" options={['3 trưởng', '4 đúng', '4 tăng', '5 đúng']} answer={1} explain="C, D, E, F = quãng 4; 5 nửa cung → đúng." />
+
+<Quiz id="m1-dung-q4" question="Power chord có những quãng nào?" options={['1 và 3', '1 và 5 (thêm 8)', '1, 3 và 5', '1 và 4']} answer={1} explain="Power chord = nốt gốc + quãng 5 đúng, thường thêm quãng 8. Không có quãng 3." />
+
+<FindNotes id="m1-dung-find-p5-d" prompt="Bấm nốt cách D một quãng 5 đúng (đi lên)." targets="A" />
+
+<FindNotes id="m1-dung-find-p4-e" prompt="Bấm nốt cách E một quãng 4 đúng (đi lên)." targets="A" />
+
+<Callout type="practice" title="Cầm đàn lên">
+Chơi một chuỗi quãng 5 nối nhau: C → G → D → A → E → B. Bạn vừa đi gần nửa **vòng quãng năm** — thứ sẽ xuất hiện ở Module 2.
+</Callout>

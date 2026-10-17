@@ -1,0 +1,90 @@
+export const meta = {
+  title: 'Tìm nốt nhanh trên đàn',
+  description: 'Biết tên nốt ở bất kỳ đâu trên cần đàn hoặc bàn phím — kỹ năng nền cho mọi phần sau.',
+  minutes: 15,
+}
+
+Mọi thứ trong nhạc lý — quãng, scale, hợp âm — đều được nói bằng tên nốt. Nếu bạn phải đếm từng phím mới biết mình đang bấm nốt gì, mọi bài sau sẽ rất chậm. Bài này giúp bạn tìm nốt **ngay lập tức**.
+
+<OnlyFor instrument="guitar">
+
+## Guitar: dây buông và hai dây mốc
+
+Sáu dây buông, từ dây trầm nhất (dây 6) đến cao nhất (dây 1): **E – A – D – G – B – E**.
+
+Cách nhanh nhất là thuộc thật kỹ **nốt tự nhiên trên dây 6 và dây 5** — đây là nơi đặt nốt gốc của hầu hết hợp âm chặn và hình scale:
+
+<Show notes="C D E F G A B" positions="6:0 6:1 6:3 6:5 6:7 6:8 6:10 6:12 5:0 5:2 5:3 5:5 5:7 5:8 5:10 5:12" play="none" caption="Nốt tự nhiên trên dây 6 và dây 5 — nốt C được tô đỏ làm mốc" />
+
+Vài điểm giúp nhớ:
+
+- Các **chấm trên cần đàn** (phím 3, 5, 7, 9, 12) là cột mốc: dây 6 phím 3 = G, phím 5 = A, phím 7 = B; dây 5 phím 3 = C, phím 5 = D, phím 7 = E.
+- **Phím 12** là dây buông lên một quãng tám — từ phím 12 trở đi, mọi thứ lặp lại.
+- Nhớ E–F và B–C chỉ cách 1 phím: dây 6 phím 0 (E) → phím 1 (F); dây 5 phím 2 (B) → phím 3 (C).
+
+## Hình quãng tám
+
+Khi đã biết một nốt, bạn tìm các nốt cùng tên bằng **hình quãng tám**:
+
+- Từ dây 6 hoặc dây 5: **sang 2 dây, lên 2 phím**.
+- Từ dây 4 hoặc dây 3: **sang 2 dây, lên 3 phím** (vì dây B được lên dây lệch đi một phím).
+
+<Show notes="G" positions="6:3 4:5 2:8 1:3" play="none" caption="Nốt G ở nhiều vị trí: dây 6 phím 3 → dây 4 phím 5 → dây 2 phím 8; dây 1 phím 3 cùng cao độ với dây 2 phím 8" />
+
+<NoteDrill id="m0-tim-not-drill-6-5" naturalsOnly strings="6 5" />
+
+<Quiz
+  id="m0-tim-not-q-guitar1"
+  question="Dây 6 phím 5 là nốt gì?"
+  options={['G', 'A', 'B', 'C']}
+  answer={1}
+  explain="E (0) → F (1) → G (3) → A (5). Đây cũng là nốt của dây 5 buông — đó là lý do ta lên dây theo cách bấm phím 5."
+/>
+
+<FindNotes id="m0-tim-not-find-d-string5" prompt="Trên dây 5, bấm nốt D." targets="D" string={5} />
+
+<FindNotes id="m0-tim-not-find-f-string4" prompt="Trên dây 4, bấm nốt F (có hai chỗ trong 12 phím đầu — chọn chỗ nào cũng được)." targets="F" string={4} />
+
+Khi đã chắc dây 6 và 5, luyện cả cần đàn với đầy đủ nốt thăng/giáng:
+
+<NoteDrill id="m0-tim-not-drill-all" />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Piano: nhóm phím đen là bản đồ
+
+Phím đen xếp thành **nhóm 2** và **nhóm 3** xen kẽ. Đây là cột mốc duy nhất bạn cần:
+
+- **C** là phím trắng ngay **bên trái nhóm 2 phím đen**.
+- **F** là phím trắng ngay **bên trái nhóm 3 phím đen**.
+- Từ C đi lên: C D E (quanh nhóm 2), rồi F G A B (quanh nhóm 3).
+
+<Show notes="C D E F G A B" play="none" caption="Bảy nốt tự nhiên là bảy phím trắng — C được tô đỏ" />
+
+**C4** — "Đô giữa" — là phím C gần giữa đàn nhất (thường ngay dưới tên hãng đàn). Các phím đen lấy tên theo phím trắng bên cạnh: phím đen giữa C và D là **C♯ / D♭**.
+
+<Show notes="C#4 D#4 F#4 G#4 A#4" play="none" caption="Năm phím đen trong một quãng tám" />
+
+<NoteDrill id="m0-tim-not-drill-piano-white" naturalsOnly />
+
+<Quiz
+  id="m0-tim-not-q-piano1"
+  question="Phím trắng ngay bên trái nhóm 3 phím đen là nốt gì?"
+  options={['C', 'E', 'F', 'B']}
+  answer={2}
+  explain="Bên trái nhóm 2 phím đen là C, bên trái nhóm 3 phím đen là F."
+/>
+
+<FindNotes id="m0-tim-not-find-fsharp" prompt="Bấm một nốt F♯ bất kỳ." targets="F#" />
+
+Khi đã chắc phím trắng, luyện với cả phím đen:
+
+<NoteDrill id="m0-tim-not-drill-piano-all" />
+
+</OnlyFor>
+
+<Callout type="practice" title="Cầm đàn lên">
+Chọn một nốt (ví dụ G) và tìm **mọi** vị trí của nó trên đàn thật trong 30 giây, đọc to tên khi bấm. Đổi sang nốt khác mỗi ngày. Mục tiêu: không cần đếm.
+</Callout>

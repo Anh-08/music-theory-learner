@@ -2,9 +2,13 @@ import { chroma, displayNote, solfege, type Chroma } from './notes'
 
 export type LabelMode = 'note' | 'interval' | 'solfege'
 
+/** Màu đánh dấu đặc biệt (dùng trong bài tập); mặc định là màu chủ âm / nốt thường. */
+export type MarkerColor = 'correct' | 'wrong' | 'question' | 'neutral'
+
 export interface Highlight {
   label: string
   isRoot: boolean
+  color?: MarkerColor
 }
 
 /** Nốt cần tô sáng trên đàn, đánh chỉ mục theo chroma để dùng chung cho mọi quãng tám. */

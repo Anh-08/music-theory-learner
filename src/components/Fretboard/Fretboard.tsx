@@ -10,6 +10,7 @@ import {
   type HighlightMap,
   type Tuning,
 } from '../../theory'
+import { markerFill } from '../markerColors'
 
 export interface FretboardProps {
   tuning: Tuning
@@ -18,6 +19,8 @@ export interface FretboardProps {
   /** Các nốt đang vang (midi) — được nhấn mạnh thêm. */
   activeMidis?: ReadonlySet<number>
   onNoteClick?: (position: FretPosition) => void
+  /** Nếu có: chỉ tô sáng đúng các vị trí này (ví dụ một thế bấm), thay vì mọi vị trí cùng tên nốt. */
+  only?: ReadonlyArray<{ string: number; fret: number }>
 }
 
 const WIDTH = 1000
@@ -27,7 +30,7 @@ const TOP = 22
 const STRING_GAP = 30
 const MARKER_R = 12
 
-export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteClick }: FretboardProps) {
+export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteClick, only }: FretboardProps) {
   const stringCount = tuning.strings.length
   const boardHeight = (stringCount - 1) * STRING_GAP
   const height = TOP + boardHeight + 44
@@ -92,7 +95,7 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
       ))}
 
       {positions.map((p) => {
-        const h = highlights.get(p.chroma)
+        const h = !only || only.some((o) => o.string === p.string && o.fret === p.fret) ? highlights.get(p.chroma) : undefined
         const active = activeMidis?.has(p.midi) ?? false
         const x = noteX(p.fret)
         const y = stringY(p.string)
@@ -123,7 +126,7 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
                   cy={y}
                   r={active ? MARKER_R + 3 : MARKER_R}
                   strokeWidth={active ? 3 : 2}
-                  className={`transition-all duration-100 ${h.isRoot ? 'fill-rose-500' : 'fill-sky-600 dark:fill-sky-500'} ${active ? 'stroke-amber-400' : 'stroke-white dark:stroke-stone-900'}`}
+                  className={`transition-all duration-100 ${markerFill(h)} ${active ? 'stroke-amber-400' : 'stroke-white dark:stroke-stone-900'}`}
                 />
                 <text x={x} y={y + 4} textAnchor="middle" className={`pointer-events-none fill-white font-semibold ${h.label.length > 3 ? 'text-[8px]' : h.label.length > 2 ? 'text-[9px]' : 'text-[11px]'}`}>
                   {h.label}

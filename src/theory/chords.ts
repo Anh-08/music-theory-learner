@@ -1,5 +1,5 @@
 import { Chord } from 'tonal'
-import { bestRootSpelling, type Chroma } from './notes'
+import { bestRootSpelling, displayNote, type Chroma } from './notes'
 import { intervalLabel } from './intervals'
 
 export interface ChordType {
@@ -47,9 +47,19 @@ export function chordType(id: string): ChordType {
   return t
 }
 
-export function getChord(rootChroma: Chroma, typeId: string): ChordInfo {
+/** Hợp âm với chủ âm viết đúng như truyền vào. */
+export function chordFromRoot(root: string, typeId: string): ChordInfo {
   const type = chordType(typeId)
-  const root = bestRootSpelling(rootChroma, (r) => Chord.getChord(typeId, r).notes)
   const c = Chord.getChord(typeId, root)
+  if (c.empty) throw new Error(`Không dựng được hợp âm: ${root} ${typeId}`)
   return { type, root, notes: c.notes, intervals: c.intervals, labels: c.intervals.map(intervalLabel) }
+}
+
+export function getChord(rootChroma: Chroma, typeId: string): ChordInfo {
+  return chordFromRoot(bestRootSpelling(rootChroma, (r) => Chord.getChord(typeId, r).notes), typeId)
+}
+
+/** Tên hợp âm để hiển thị: "Bb" + "m7" → "B♭m7". */
+export function chordSymbol(root: string, typeId: string): string {
+  return displayNote(root) + chordType(typeId).suffix
 }

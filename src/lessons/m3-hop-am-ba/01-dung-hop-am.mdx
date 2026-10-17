@@ -1,0 +1,74 @@
+export const meta = {
+  title: 'Dựng hợp âm từ quãng 3',
+  description: 'Hợp âm ba là ba nốt cách nhau quãng 3. Bốn loại: trưởng, thứ, giảm, tăng.',
+  minutes: 15,
+}
+
+Bạn đã bấm hàng chục hợp âm. Bài này cho bạn biết **bên trong chúng có gì** — để bạn tự dựng được bất kỳ hợp âm nào thay vì tra bảng.
+
+## Chồng quãng 3
+
+**Hợp âm ba** (triad) gồm ba nốt: **nốt gốc** (1), **quãng 3** và **quãng 5** tính từ nốt gốc. Nói cách khác: lấy một nốt, chồng một quãng 3 lên, rồi chồng thêm một quãng 3 nữa.
+
+Có hai loại quãng 3 (trưởng và thứ), nên có đúng **bốn** cách chồng:
+
+| Loại | Công thức | Cách chồng | Ví dụ gốc C | Ký hiệu |
+|---|---|---|---|---|
+| Trưởng | 1 – 3 – 5 | 3 trưởng + 3 thứ | C E G | C |
+| Thứ | 1 – ♭3 – 5 | 3 thứ + 3 trưởng | C E♭ G | Cm |
+| Giảm | 1 – ♭3 – ♭5 | 3 thứ + 3 thứ | C E♭ G♭ | Cdim, C° |
+| Tăng | 1 – 3 – ♯5 | 3 trưởng + 3 trưởng | C E G♯ | Caug, C+ |
+
+<Show root="C" chord="M" labels="interval" caption="C trưởng: 1 – 3 – 5" />
+
+<Show root="C" chord="m" labels="interval" caption="C thứ: 1 – ♭3 – 5 — chỉ khác C trưởng đúng một nốt" />
+
+Nghe cả bốn loại: <Play notes="C4 E4 G4" as="both">Trưởng</Play> <Play notes="C4 Eb4 G4" as="both">Thứ</Play> <Play notes="C4 Eb4 Gb4" as="both">Giảm</Play> <Play notes="C4 E4 G#4" as="both">Tăng</Play>
+
+<Callout type="note" title="Quãng 3 quyết định màu sắc">
+Trưởng và thứ chỉ khác nhau ở **quãng 3**: hạ nó nửa cung là hợp âm chuyển từ sáng sang buồn. Quãng 5 đúng làm "nền" vững. Hợp âm giảm (♭5) nghe căng và bất ổn; hợp âm tăng (♯5) nghe lơ lửng, như đang chờ điều gì đó.
+</Callout>
+
+## Nhìn vào hợp âm quen thuộc
+
+<OnlyFor instrument="guitar">
+
+Hợp âm E và Em bạn bấm từ những ngày đầu. Hãy xem các nốt trong đó là những bậc nào:
+
+<Show root="E" chord="M" shape="022100" labels="interval" caption="E (022100): E – B – E – G♯ – B – E. Sáu dây nhưng chỉ ba nốt: 1, 3, 5" />
+
+<Show root="E" chord="m" shape="022000" labels="interval" caption="Em (022000): nhấc ngón ở dây 3 → G♯ thành G, quãng 3 trưởng thành 3 thứ" />
+
+Hợp âm 6 dây chỉ là **ba nốt được nhân đôi** ở nhiều quãng tám. Khi tự dựng hợp âm, bạn chỉ cần đảm bảo có đủ 1, 3, 5.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+Trên piano, hợp âm trưởng là **4 + 3** nửa cung, hợp âm thứ là **3 + 4**. Thử với D:
+
+<Show notes="D4 F#4 A4" labels="interval" play="chord" caption="D trưởng: D – F♯ – A" />
+
+<Show notes="D4 F4 A4" labels="interval" play="chord" caption="D thứ: D – F – A — ngón giữa lùi xuống một phím" />
+
+</OnlyFor>
+
+<Quiz id="m3-dung-q1" question="Hợp âm D trưởng gồm những nốt nào?" options={['D F A', 'D F♯ A', 'D F♯ A♯', 'D E A']} answer={1} explain="D → F♯ là 3 trưởng, F♯ → A là 3 thứ." />
+
+<Quiz id="m3-dung-q2" question="Hợp âm nào gồm E – G – B?" options={['E', 'Em', 'Edim', 'G']} answer={1} explain="E → G là 3 thứ, E → B là 5 đúng → E thứ." />
+
+<Quiz id="m3-dung-q3" question="B – D – F là hợp âm gì?" options={['B thứ', 'B giảm', 'D trưởng', 'B tăng']} answer={1} explain="B → D là 3 thứ, B → F là 5 giảm → Bdim (B°)." />
+
+<Quiz id="m3-dung-q4" question="F – A – C♯ là hợp âm gì?" options={['F trưởng', 'F tăng', 'A thứ', 'F thứ']} answer={1} explain="F → A là 3 trưởng, A → C♯ cũng là 3 trưởng → F tăng (F+)." />
+
+<FindNotes id="m3-dung-find-dm" prompt="Bấm đủ các nốt của hợp âm Dm." targets="D F A" />
+
+<FindNotes id="m3-dung-find-bb" prompt="Bấm đủ các nốt của hợp âm B♭ trưởng." targets="Bb D F" />
+
+## Luyện tai: trưởng hay thứ?
+
+<EarQuiz id="m3-tai-truong-thu" kind="chord" options="M m" />
+
+Khi đã chắc, thêm giảm và tăng:
+
+<EarQuiz id="m3-tai-bon-loai" kind="chord" options="M m dim aug" />

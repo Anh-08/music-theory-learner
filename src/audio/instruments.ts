@@ -2,6 +2,12 @@ import type * as ToneNs from 'tone'
 
 export type InstrumentId = 'piano' | 'guitar'
 
+/** Nốt thấp nhất (midi) để bắt đầu khi phát scale / hợp âm: guitar thấp hơn piano một quãng tám, như khi chơi thật. */
+export const PLAY_RANGE: Record<InstrumentId, { scale: number; chord: number }> = {
+  guitar: { scale: 48, chord: 40 },
+  piano: { scale: 60, chord: 48 },
+}
+
 export interface Voice {
   /** Phát các nốt tại `time` (giờ AudioContext) trong `duration` giây. */
   play(midis: number[], time: number, duration: number): void

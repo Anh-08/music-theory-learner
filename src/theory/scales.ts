@@ -42,9 +42,15 @@ export function scaleType(id: string): ScaleType {
   return t
 }
 
-export function getScale(rootChroma: Chroma, typeId: string): ScaleInfo {
+/** Scale với chủ âm viết đúng như truyền vào (không tự đổi C♯ thành D♭). */
+export function scaleFromRoot(root: string, typeId: string): ScaleInfo {
   const type = scaleType(typeId)
-  const root = bestRootSpelling(rootChroma, (r) => Scale.get(`${r} ${typeId}`).notes)
   const s = Scale.get(`${root} ${typeId}`)
+  if (s.empty) throw new Error(`Không dựng được scale: ${root} ${typeId}`)
   return { type, root, notes: s.notes, intervals: s.intervals, labels: s.intervals.map(intervalLabel) }
+}
+
+/** Scale theo chroma của chủ âm, tự chọn cách viết ít dấu hóa nhất. */
+export function getScale(rootChroma: Chroma, typeId: string): ScaleInfo {
+  return scaleFromRoot(bestRootSpelling(rootChroma, (r) => Scale.get(`${r} ${typeId}`).notes), typeId)
 }

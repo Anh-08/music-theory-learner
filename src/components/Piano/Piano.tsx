@@ -1,5 +1,6 @@
 import type { KeyboardEvent } from 'react'
 import { noteFromMidi, pianoKeys, rootLabel, type HighlightMap, type PianoKey } from '../../theory'
+import { markerFill } from '../markerColors'
 
 export interface PianoProps {
   /** Phím đầu và phím cuối (midi), nên là phím trắng. */
@@ -8,6 +9,8 @@ export interface PianoProps {
   highlights: HighlightMap
   activeMidis?: ReadonlySet<number>
   onKeyClick?: (midi: number) => void
+  /** Nếu có: chỉ tô sáng đúng các phím này thay vì mọi quãng tám. */
+  onlyMidis?: ReadonlySet<number>
 }
 
 const WHITE_W = 40
@@ -16,14 +19,14 @@ const BLACK_W = 24
 const BLACK_H = 95
 const PAD = 2
 
-export function Piano({ startMidi, endMidi, highlights, activeMidis, onKeyClick }: PianoProps) {
+export function Piano({ startMidi, endMidi, highlights, activeMidis, onKeyClick, onlyMidis }: PianoProps) {
   const keys = pianoKeys(startMidi, endMidi)
   const whiteCount = keys.filter((k) => !k.black).length
   const width = whiteCount * WHITE_W + PAD * 2
   const height = WHITE_H + PAD * 2
 
   const renderKey = (k: PianoKey) => {
-    const h = highlights.get(k.chroma)
+    const h = !onlyMidis || onlyMidis.has(k.midi) ? highlights.get(k.chroma) : undefined
     const active = activeMidis?.has(k.midi) ?? false
     const x = PAD + (k.black ? (k.whiteIndex + 1) * WHITE_W - BLACK_W / 2 : k.whiteIndex * WHITE_W)
     const w = k.black ? BLACK_W : WHITE_W
@@ -61,7 +64,7 @@ export function Piano({ startMidi, endMidi, highlights, activeMidis, onKeyClick 
         <rect x={x} y={PAD} width={w} height={keyH} rx={k.black ? 3 : 4} strokeWidth={1.5} className={`stroke-stone-400 transition-colors duration-100 dark:stroke-stone-600 ${keyClass}`} />
         {h && (
           <>
-            <circle cx={cx} cy={cy} r={r} className={h.isRoot ? 'fill-rose-500' : 'fill-sky-600 dark:fill-sky-500'} />
+            <circle cx={cx} cy={cy} r={r} className={markerFill(h)} />
             <text x={cx} y={cy + 4} textAnchor="middle" className={`pointer-events-none fill-white font-semibold ${h.label.length > 2 ? 'text-[8px]' : 'text-[11px]'}`}>
               {h.label}
             </text>

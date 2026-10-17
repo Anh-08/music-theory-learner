@@ -30,3 +30,12 @@ describe('chords', () => {
     }
   })
 })
+
+describe('chordFromRoot', () => {
+  it('giữ nguyên cách viết chủ âm và tạo ký hiệu', async () => {
+    const { chordFromRoot, chordSymbol } = await import('../chords')
+    expect(chordFromRoot('Gb', 'M').notes).toEqual(['Gb', 'Bb', 'Db'])
+    expect(chordSymbol('Bb', 'm7')).toBe('B♭m7')
+    expect(chordSymbol('C', 'M')).toBe('C')
+  })
+})

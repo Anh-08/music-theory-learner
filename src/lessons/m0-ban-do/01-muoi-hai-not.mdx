@@ -1,0 +1,84 @@
+export const meta = {
+  title: '12 nốt nhạc',
+  description: 'Mọi bài nhạc bạn từng chơi chỉ dùng 12 nốt. Hiểu cung, nửa cung, dấu thăng và dấu giáng.',
+  minutes: 10,
+}
+
+## Chỉ có 12 nốt
+
+Dù là ballad, rock hay jazz, âm nhạc phương Tây chỉ dùng **12 nốt** lặp đi lặp lại ở nhiều độ cao khác nhau. Bảy trong số đó là **nốt tự nhiên** — chắc bạn đã biết:
+
+| Chữ cái | C | D | E | F | G | A | B |
+|---|---|---|---|---|---|---|---|
+| Đọc | Đô | Rê | Mi | Fa | Son | La | Si |
+
+Năm nốt còn lại nằm *giữa* các nốt tự nhiên. Trong ứng dụng này ta dùng tên chữ cái (C, D, E…), vì đó là cách viết hợp âm quen thuộc trên các trang hợp âm.
+
+## Nửa cung và cung
+
+- **Nửa cung** (half step) là khoảng cách nhỏ nhất giữa hai nốt. Trên guitar: dịch **1 phím**. Trên piano: sang **phím liền kề** (tính cả phím đen).
+- **Một cung** (whole step) = 2 nửa cung. Guitar: 2 phím. Piano: cách một phím ở giữa.
+
+Đây là 12 nốt đi lên lần lượt từng nửa cung, rồi về lại C ở cao hơn:
+
+<Show notes="C4 C#4 D4 D#4 E4 F4 F#4 G4 G#4 A4 A#4 B4" positions="5:3 5:4 5:5 5:6 5:7 5:8 5:9 5:10 5:11 5:12 5:13 5:14 5:15" frets={15} caption="12 nốt liên tiếp — trên guitar là dây 5 từ phím 3 đến phím 15" />
+
+<Callout type="note" title="Hai cặp đặc biệt: E–F và B–C">
+Giữa **E và F**, giữa **B và C** chỉ cách nhau **nửa cung** — không có nốt nào ở giữa. Trên piano bạn sẽ thấy ngay: không có phím đen nào chen giữa hai cặp này. Mọi cặp nốt tự nhiên còn lại đều cách nhau một cung.
+</Callout>
+
+## Dấu thăng (♯) và dấu giáng (♭)
+
+- **♯ (thăng)** nâng nốt lên nửa cung: C♯ là nốt ngay trên C.
+- **♭ (giáng)** hạ nốt xuống nửa cung: D♭ là nốt ngay dưới D.
+
+Vậy C♯ và D♭ là **cùng một phím, cùng một âm thanh** — ta gọi là hai nốt **trùng âm** (enharmonic). Khi nào gọi là C♯, khi nào gọi là D♭? Điều đó phụ thuộc vào *giọng* của bài, bạn sẽ học ở Module 2. Tạm thời chỉ cần nhớ: mỗi phím đen có hai tên.
+
+<Callout type="tip">
+Về lý thuyết còn có E♯ (= F) và C♭ (= B). Nghe lạ, nhưng chúng xuất hiện trong một số giọng nhiều dấu hóa. Đừng lo về chúng lúc này.
+</Callout>
+
+## Quãng tám: cùng tên, cao hơn
+
+Đi hết 12 nửa cung, bạn quay về nốt cùng tên nhưng cao gấp đôi về tần số — gọi là **quãng tám** (octave). Hai nốt cách nhau quãng tám nghe "giống nhau" đến mức ta đặt cùng một tên: <Play notes="C4 C5" /> <Play notes="A3 A4" />
+
+Số đi kèm tên nốt cho biết quãng tám: **C4** là "Đô giữa" trên piano, **C5** cao hơn một quãng tám. Trên guitar, dây 6 buông là **E2**.
+
+<Quiz
+  id="m0-12-not-q1"
+  question="Giữa E và F cách nhau bao nhiêu?"
+  options={['Nửa cung', 'Một cung', 'Một cung rưỡi', 'Không cách nhau — là một nốt']}
+  answer={0}
+  explain="E–F (và B–C) là hai cặp nốt tự nhiên chỉ cách nhau nửa cung."
+/>
+
+<Quiz
+  id="m0-12-not-q2"
+  question="Nốt nào trùng âm với G♯?"
+  options={['A♭', 'A♯', 'G♭', 'F♯']}
+  answer={0}
+  explain="G♯ là nửa cung trên G, cũng chính là nửa cung dưới A — tức A♭."
+/>
+
+<Quiz
+  id="m0-12-not-q3"
+  question="Từ C lên D là bao nhiêu?"
+  options={['Nửa cung', 'Một cung', 'Một cung rưỡi', 'Hai cung']}
+  answer={1}
+  explain="C → C♯ → D: hai nửa cung, tức một cung."
+/>
+
+<Quiz
+  id="m0-12-not-q4"
+  question="Đi lên nửa cung từ B ta được nốt gì?"
+  options={['B♯ — không có nốt nào khác', 'C', 'C♯', 'A♯']}
+  answer={1}
+  explain="B–C chỉ cách nửa cung, nên nốt ngay trên B là C (về lý thuyết cũng có thể gọi là B♯)."
+/>
+
+<FindNotes id="m0-12-not-find-csharp" prompt="Bấm vào một nốt C♯ / D♭ bất kỳ trên đàn." targets="C#" />
+
+<Callout type="practice" title="Cầm đàn lên">
+- **Guitar:** chơi 12 nốt liên tiếp trên dây 5, từ phím 3 (C) đến phím 15 (C), vừa đánh vừa đọc to tên nốt. Làm lại trên dây 6 bắt đầu từ phím 8.
+- **Piano:** chơi từ C4 lên C5 qua cả phím trắng lẫn phím đen, đọc tên từng nốt — mỗi phím đen đọc cả hai tên ("C thăng – D giáng").
+</Callout>

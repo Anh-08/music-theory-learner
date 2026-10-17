@@ -1,0 +1,76 @@
+export const meta = {
+  title: 'Vòng quãng năm và hóa biểu',
+  description: 'Sơ đồ quan trọng nhất của nhạc lý: giọng nào có bao nhiêu dấu thăng, dấu giáng, và giọng nào gần nhau.',
+  minutes: 15,
+}
+
+Mỗi scale trưởng có một số dấu thăng hoặc giáng cố định — gọi là **hóa biểu** (key signature) của giọng đó. Thay vì học thuộc 12 giọng rời rạc, có một quy luật tuyệt đẹp giúp nhớ hết.
+
+## Đi lên quãng 5: thêm một dấu thăng
+
+Bắt đầu từ C trưởng (không dấu hóa), mỗi lần đi lên **quãng 5 đúng**, giọng mới có thêm **một dấu thăng**:
+
+| Giọng | Số ♯ | Các nốt thăng |
+|---|---|---|
+| C | 0 | — |
+| G | 1 | F♯ |
+| D | 2 | F♯ C♯ |
+| A | 3 | F♯ C♯ G♯ |
+| E | 4 | F♯ C♯ G♯ D♯ |
+| B | 5 | F♯ C♯ G♯ D♯ A♯ |
+| F♯ | 6 | F♯ C♯ G♯ D♯ A♯ E♯ |
+
+Hai điều thú vị:
+
+- Dấu thăng mới luôn là **bậc 7 (cảm âm)** của giọng mới: G trưởng thêm F♯, D trưởng thêm C♯.
+- Thứ tự các dấu thăng — **F C G D A E B** — cũng là một chuỗi quãng 5!
+
+## Đi lên quãng 4: thêm một dấu giáng
+
+Đi theo chiều ngược lại (lên **quãng 4 đúng**, tức xuống quãng 5), mỗi giọng có thêm **một dấu giáng**:
+
+| Giọng | Số ♭ | Các nốt giáng |
+|---|---|---|
+| F | 1 | B♭ |
+| B♭ | 2 | B♭ E♭ |
+| E♭ | 3 | B♭ E♭ A♭ |
+| A♭ | 4 | B♭ E♭ A♭ D♭ |
+| D♭ | 5 | B♭ E♭ A♭ D♭ G♭ |
+| G♭ | 6 | B♭ E♭ A♭ D♭ G♭ C♭ |
+
+Thứ tự dấu giáng — **B E A D G C F** — đúng bằng thứ tự dấu thăng viết ngược. Mẹo nhớ: tên giọng giáng chính là **dấu giáng áp chót** (giọng có B♭ E♭ A♭ → giọng E♭).
+
+## Vòng quãng năm
+
+Nối hai chiều lại, ta được một vòng tròn khép kín — **vòng quãng năm** (circle of fifths). Ở dưới đáy, F♯ trưởng (6♯) và G♭ trưởng (6♭) là cùng một âm thanh, chỉ khác cách viết.
+
+<CircleOfFifths />
+
+## Giọng thứ tương ứng
+
+Vòng trong là các **giọng thứ tương ứng** (relative minor). Mỗi giọng trưởng có một giọng thứ **dùng chung đúng bộ nốt**, bắt đầu từ **bậc 6**:
+
+- C trưởng: C D E F G A B → A thứ: A B C D E F G (cùng nốt, khác điểm "nhà").
+- G trưởng ↔ E thứ, F trưởng ↔ D thứ…
+
+Nghe khác nhau thế nào? <Play notes="C4 D4 E4 F4 G4 A4 B4 C5">C trưởng</Play> <Play notes="A3 B3 C4 D4 E4 F4 G4 A4">A thứ</Play>
+
+<Callout type="tip" title="Vòng quãng năm dùng để làm gì?">
+- **Đoán giọng của bài**: thấy tờ hợp âm có F♯ và C♯ thường xuyên → nhiều khả năng giọng D trưởng hoặc B thứ.
+- **Các giọng cạnh nhau là "họ hàng"**: chung 6/7 nốt, chuyển qua lại rất mượt.
+- **Tiến trình hợp âm**: các hợp âm đi ngược chiều kim đồng hồ (như D → G → C) là chuyển động mạnh nhất trong hòa âm — bạn sẽ gặp lại ở Module 4.
+</Callout>
+
+<Quiz id="m2-vong-q1" question="Giọng trưởng nào có 3 dấu thăng?" options={['D trưởng', 'A trưởng', 'E trưởng', 'E♭ trưởng']} answer={1} explain="C (0) → G (1) → D (2) → A (3)." />
+
+<Quiz id="m2-vong-q2" question="Giọng E♭ trưởng có những nốt giáng nào?" options={['B♭', 'B♭ E♭', 'B♭ E♭ A♭', 'E♭ A♭ D♭']} answer={2} explain="E♭ là dấu giáng áp chót trong B♭ E♭ A♭." />
+
+<Quiz id="m2-vong-q3" question="Giọng thứ tương ứng của G trưởng là?" options={['A thứ', 'D thứ', 'E thứ', 'B thứ']} answer={2} explain="Bậc 6 của G trưởng là E → E thứ, cùng có một dấu F♯." />
+
+<Quiz id="m2-vong-q4" question="Giọng trưởng nào có 2 dấu giáng?" options={['F trưởng', 'B♭ trưởng', 'E♭ trưởng', 'D trưởng']} answer={1} explain="F (1♭) → B♭ (2♭: B♭, E♭)." />
+
+<Quiz id="m2-vong-q5" question="Một tờ hợp âm dùng toàn G, D, Em, C, Am. Giọng của bài nhiều khả năng là?" options={['C trưởng', 'G trưởng', 'D trưởng', 'A thứ']} answer={1} explain="Các hợp âm này đều nằm trong G trưởng (1♯). G cũng thường là hợp âm mở đầu / kết thúc. Bạn sẽ học cách xác định chắc chắn hơn ở Module 3 và 4." />
+
+<Callout type="practice" title="Cầm đàn lên">
+Chơi scale trưởng theo vòng quãng năm: C → G → D → A → E, mỗi giọng một lần lên – xuống, đọc to các nốt thăng khi gặp. Hôm sau làm chiều giáng: F → B♭ → E♭ → A♭.
+</Callout>

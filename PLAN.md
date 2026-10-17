@@ -289,10 +289,12 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 ✅ *Kết quả: đã là một công cụ tra cứu scale/hợp âm dùng được.*
 
 ### Giai đoạn 2 — Hệ thống bài học (MVP)
-- [ ] Cấu hình MDX, layout bài học, mục lục, nút "bài trước/bài sau".
-- [ ] Component `<Quiz />` và các dạng bài tập cơ bản (chọn đáp án, bấm nốt trên đàn ảo, nghe & đoán).
-- [ ] Lưu tiến độ trong localStorage.
-- [ ] Viết nội dung **Module 0 → 3**.
+- [x] Cấu hình MDX, layout bài học, mục lục, nút "bài trước/bài sau".
+- [x] Component `<Quiz />` và các dạng bài tập cơ bản (chọn đáp án, bấm nốt trên đàn ảo, nghe & đoán).
+- [x] Lưu tiến độ trong localStorage.
+- [x] Viết nội dung **Module 0 → 3**.
+
+> Cách viết bài học: mỗi bài là một file `src/lessons/<module>/<NN-ten-bai>.mdx` có `export const meta = { title, description, minutes }`. Dùng được trực tiếp các component `<Show>`, `<Play>`, `<PlayChords>`, `<OnlyFor>`, `<Callout>`, `<CircleOfFifths>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`, `<NoteDrill>` (xem `src/lessons/mdxComponents.ts`). Mỗi bài tập cần `id` duy nhất — test sẽ báo nếu trùng.
 
 ✅ *Kết quả: MVP — học được từ đầu đến hợp âm thuận giọng.*
 

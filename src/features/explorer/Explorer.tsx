@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { arpeggioThenChord, chordEvents, sequenceEvents } from '../../audio/events'
-import type { InstrumentId } from '../../audio/instruments'
+import { PLAY_RANGE, type InstrumentId } from '../../audio/instruments'
 import { usePlayer } from '../../audio/usePlayer'
 import { Fretboard } from '../../components/Fretboard/Fretboard'
 import { Piano } from '../../components/Piano/Piano'
@@ -32,11 +32,6 @@ type Kind = 'scale' | 'chord'
 
 const FRET_COUNTS = ['12', '15', '17', '22']
 
-// Khoảng nốt dùng khi phát: guitar thấp hơn piano một quãng tám, như khi chơi thật.
-const PLAY_RANGE: Record<InstrumentId, { scale: number; chord: number }> = {
-  guitar: { scale: 48, chord: 40 },
-  piano: { scale: 60, chord: 48 },
-}
 
 export function Explorer() {
   const [view, setView] = usePersistentState<View>('explorer.view', 'guitar')

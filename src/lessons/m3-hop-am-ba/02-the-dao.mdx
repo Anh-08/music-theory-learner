@@ -1,0 +1,83 @@
+export const meta = {
+  title: 'Thế đảo hợp âm',
+  description: 'Cùng ba nốt, đổi thứ tự — đổi màu âm thanh và giúp chuyển hợp âm mượt hơn.',
+  minutes: 15,
+}
+
+Hợp âm C là C – E – G, nhưng ba nốt này không bắt buộc phải xếp theo thứ tự đó. **Nốt nào nằm thấp nhất** (nốt bass) quyết định **thế** của hợp âm:
+
+| Thế | Nốt thấp nhất | Thứ tự (thấp → cao) | Ký hiệu |
+|---|---|---|---|
+| Thế gốc | Nốt gốc (1) | C – E – G | C |
+| Đảo 1 | Quãng 3 | E – G – C | C/E |
+| Đảo 2 | Quãng 5 | G – C – E | C/G |
+
+Ký hiệu **C/E** đọc là "C trên bass E": hợp âm C, nhưng nốt E ở dưới cùng. Bạn sẽ gặp kiểu ký hiệu này rất nhiều trên các trang hợp âm.
+
+<OnlyFor instrument="piano">
+
+<Show notes="C4 E4 G4" labels="interval" play="chord" caption="Thế gốc: C – E – G" />
+
+<Show notes="E4 G4 C5" labels="interval" play="chord" caption="Đảo 1: E – G – C" />
+
+<Show notes="G4 C5 E5" labels="interval" play="chord" caption="Đảo 2: G – C – E" />
+
+</OnlyFor>
+
+<OnlyFor instrument="guitar">
+
+Trên guitar, hợp âm ba trên **ba dây cao** (dây 3, 2, 1) là cách tuyệt vời để thấy các thế đảo — và là vũ khí bí mật khi chơi cùng ban nhạc:
+
+<Show root="C" chord="M" shape="x,x,x,5,5,3" frets={15} labels="interval" caption="Thế gốc (dây 3–2–1: phím 5 – 5 – 3): C – E – G" />
+
+<Show root="C" chord="M" shape="x,x,x,9,8,8" frets={15} labels="interval" caption="Đảo 1 (phím 9 – 8 – 8): E – G – C" />
+
+<Show root="C" chord="M" shape="x,x,x,12,13,12" frets={15} labels="interval" caption="Đảo 2 (phím 12 – 13 – 12): G – C – E" />
+
+Ba hình này nối nhau liên tục dọc cần đàn: đi hết đảo 2 là gặp lại thế gốc ở quãng tám trên.
+
+</OnlyFor>
+
+## Vì sao cần thế đảo? Chuyển hợp âm mượt
+
+Thử chơi C → F → G → C bằng thế gốc: tay phải nhảy khá xa. Dùng thế đảo, mỗi nốt chỉ phải di chuyển **ít nhất có thể** — gọi là **dẫn giọng** (voice leading):
+
+<OnlyFor instrument="piano">
+
+<Show notes="C4 E4 G4" labels="note" play="chord" caption="C (thế gốc)" />
+
+<Show notes="C4 F4 A4" labels="note" play="chord" caption="F/C (đảo 2): C giữ nguyên, E lên F, G lên A" />
+
+<Show notes="B3 D4 G4" labels="note" play="chord" caption="G/B (đảo 1): C xuống B, F xuống D, A xuống G" />
+
+Tay gần như đứng yên mà vẫn đổi hợp âm — nghe liền mạch như một dàn hợp xướng.
+
+</OnlyFor>
+
+<OnlyFor instrument="guitar">
+
+<Show root="C" chord="M" shape="x,x,x,5,5,3" frets={15} labels="note" caption="C (thế gốc): phím 5 – 5 – 3" />
+
+<Show root="F" chord="M" shape="x,x,x,5,6,5" frets={15} labels="note" caption="F/C (đảo 2): phím 5 – 6 – 5" />
+
+<Show root="G" chord="M" shape="x,x,x,4,3,3" frets={15} labels="note" caption="G/B (đảo 1): phím 4 – 3 – 3" />
+
+Cả ba hình nằm trong khoảng phím 3–6. Chơi lặp C → F → G → C: nghe rất "chuyên nghiệp" so với ba hợp âm mở.
+
+</OnlyFor>
+
+## Bass đi xuống
+
+Thế đảo còn giúp nốt bass đi thành một đường giai điệu. Tiến trình rất quen thuộc trong ballad: **C → G/B → Am** — bass đi xuống từng bậc C → B → A: <Play notes="C3 B2 A2">bass C – B – A</Play>
+
+<Quiz id="m3-dao-q1" question="E – G – C là thế nào của hợp âm C?" options={['Thế gốc', 'Đảo 1', 'Đảo 2', 'Không phải hợp âm C']} answer={1} explain="Nốt thấp nhất là E — quãng 3 của C → đảo 1 (C/E)." />
+
+<Quiz id="m3-dao-q2" question="Ký hiệu C/G nghĩa là gì?" options={['Chơi C rồi đến G', 'Hợp âm C với nốt G ở bass', 'Hợp âm C hoặc G đều được', 'Hợp âm C thêm nốt G']} answer={1} explain="C/G: hợp âm C, nốt thấp nhất là G — đảo 2 của C." />
+
+<Quiz id="m3-dao-q3" question="A – C – F là thế nào của hợp âm F?" options={['Thế gốc', 'Đảo 1', 'Đảo 2', 'Không phải hợp âm F']} answer={1} explain="F trưởng = F A C. A ở dưới cùng — A là quãng 3 → đảo 1 (F/A)." />
+
+<Quiz id="m3-dao-q4" question="Hợp âm có quãng 5 ở bass là thế nào?" options={['Thế gốc', 'Đảo 1', 'Đảo 2', 'Hợp âm treo']} answer={2} explain="Đảo 2: quãng 5 ở bass." />
+
+<Callout type="practice" title="Cầm đàn lên">
+Chơi C → Am → F → G với dẫn giọng mượt nhất bạn tìm được (mỗi nốt di chuyển ít nhất). Gợi ý: C và Am có chung hai nốt C và E; F và Am có chung A và C.
+</Callout>

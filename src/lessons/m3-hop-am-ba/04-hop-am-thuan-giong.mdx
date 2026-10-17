@@ -1,0 +1,71 @@
+export const meta = {
+  title: '7 hợp âm thuận giọng',
+  description: 'Vì sao các bài hát giọng C luôn có C, F, G, Am, Dm, Em — và cách tìm chúng trong mọi giọng.',
+  minutes: 18,
+}
+
+Đây là bài quan trọng nhất của Module 3. Khi hiểu nó, bạn sẽ thấy vì sao mỗi bài hát chỉ dùng một nhóm hợp âm nhất định — và tự đoán được hợp âm tiếp theo.
+
+## Dựng hợp âm trên từng bậc
+
+Lấy scale C trưởng. Trên mỗi bậc, dựng một hợp âm ba bằng cách chồng quãng 3 — nhưng **chỉ dùng nốt trong scale** (lấy nốt cách một):
+
+| Bậc | Nốt | Hợp âm | Loại |
+|---|---|---|---|
+| I | C – E – G | C | Trưởng |
+| ii | D – F – A | Dm | Thứ |
+| iii | E – G – B | Em | Thứ |
+| IV | F – A – C | F | Trưởng |
+| V | G – B – D | G | Trưởng |
+| vi | A – C – E | Am | Thứ |
+| vii° | B – D – F | B° | Giảm |
+
+Nghe lần lượt: <PlayChords chords="C Dm Em F G Am Bdim C" seconds={1.1} />
+
+Đây là **7 hợp âm thuận giọng** (diatonic chords) của C trưởng. Hầu hết các bài hát giọng C đều dùng chủ yếu những hợp âm này.
+
+## Quy luật cho mọi giọng
+
+Vì mọi scale trưởng có cùng công thức, thứ tự loại hợp âm **luôn giống nhau**:
+
+<Callout type="note" title="Trưởng – thứ – thứ – Trưởng – Trưởng – thứ – giảm">
+**I – ii – iii – IV – V – vi – vii°**. Chữ La Mã **in hoa** là hợp âm trưởng, **in thường** là hợp âm thứ, dấu **°** là hợp âm giảm. Thuộc câu này, bạn biết hợp âm của mọi giọng trưởng.
+</Callout>
+
+| Giọng | I | ii | iii | IV | V | vi | vii° |
+|---|---|---|---|---|---|---|---|
+| C | C | Dm | Em | F | G | Am | B° |
+| G | G | Am | Bm | C | D | Em | F♯° |
+| D | D | Em | F♯m | G | A | Bm | C♯° |
+| A | A | Bm | C♯m | D | E | F♯m | G♯° |
+| F | F | Gm | Am | B♭ | C | Dm | E° |
+
+## Ba hợp âm chính và hợp âm thứ tương ứng
+
+- **I, IV, V** là ba hợp âm trưởng — khung xương của rất nhiều bài: <PlayChords chords="C F G C" />
+- **vi** là hợp âm chủ của giọng thứ tương ứng (Am cho C trưởng) — thêm vào là bài có ngay màu buồn: <PlayChords chords="Am F C G" />
+- Tiến trình **I – V – vi – IV** có lẽ là tiến trình phổ biến nhất trong nhạc pop: <PlayChords chords="C G Am F" />
+
+Vì dùng số La Mã, bạn có thể chơi I – V – vi – IV ở **mọi giọng**: giọng G là G – D – Em – C, giọng D là D – A – Bm – G. Đó là cách chuyển giọng nhanh nhất.
+
+<Show root="C" scale="major" labels="interval" play="none" caption="Scale C trưởng — nguồn gốc của cả 7 hợp âm" />
+
+<Quiz id="m3-thuan-giong-q1" question="Trong giọng G trưởng, hợp âm bậc vi là?" options={['Am', 'Em', 'Bm', 'E']} answer={1} explain="G A B C D E F♯ → bậc 6 là E, loại thứ → Em." />
+
+<Quiz id="m3-thuan-giong-q2" question="Trong giọng D trưởng, hợp âm bậc IV là?" options={['G', 'Gm', 'A', 'F♯m']} answer={0} explain="D E F♯ G → bậc 4 là G, loại trưởng." />
+
+<Quiz id="m3-thuan-giong-q3" question="Bậc nào trong giọng trưởng là hợp âm giảm?" options={['ii', 'iii', 'vi', 'vii']} answer={3} explain="vii° — ví dụ B° trong C trưởng (B D F)." />
+
+<Quiz id="m3-thuan-giong-q4" question="Trong giọng F trưởng, hợp âm bậc ii là?" options={['G', 'Gm', 'Dm', 'B♭']} answer={1} explain="F G A B♭ C D E → bậc 2 là G, loại thứ → Gm." />
+
+<Quiz id="m3-thuan-giong-q5" question="Tiến trình C – Am – F – G trong giọng C là?" options={['I – vi – IV – V', 'I – iii – IV – V', 'I – vi – ii – V', 'I – IV – vi – V']} answer={0} explain="C = I, Am = vi, F = IV, G = V. Đây là 'vòng Đô' quen thuộc." />
+
+<Quiz id="m3-thuan-giong-q6" question="Hợp âm nào KHÔNG thuộc giọng C trưởng?" options={['Dm', 'Em', 'D', 'F']} answer={2} explain="Bậc ii của C trưởng là Dm (D F A). D trưởng cần F♯ — không có trong scale C trưởng." />
+
+<FindNotes id="m3-thuan-giong-find-v-d" prompt="Bấm các nốt của hợp âm bậc V trong giọng D trưởng." targets="A C# E" />
+
+<Callout type="practice" title="Cầm đàn lên">
+1. Chơi I – IV – V – I ở ba giọng: C, G, D.
+2. Chơi I – V – vi – IV ở ba giọng đó.
+3. Tự viết một tiến trình 4 hợp âm của riêng bạn, chỉ dùng hợp âm thuận giọng của G trưởng, rồi chơi lặp lại 4 lần. Bài hát nào bạn biết nghe giống nó?
+</Callout>

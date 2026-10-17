@@ -36,3 +36,32 @@ describe('fretboard', () => {
     expect(w12).toBeLessThan(w1)
   })
 })
+
+describe('thế bấm và vị trí', async () => {
+  const { parseShape, parsePositions, positionMidi } = await import('../fretboard')
+
+  it('đọc thế bấm hợp âm', () => {
+    expect(parseShape('x32010')).toEqual([
+      { string: 5, fret: 3 },
+      { string: 4, fret: 2 },
+      { string: 3, fret: 0 },
+      { string: 2, fret: 1 },
+      { string: 1, fret: 0 },
+    ])
+    expect(parseShape('8,10,10,9,8,8')[1]).toEqual({ string: 5, fret: 10 })
+    expect(() => parseShape('x3201')).toThrow()
+  })
+
+  it('đọc danh sách vị trí', () => {
+    expect(parsePositions(' 6:3  5:2 ')).toEqual([
+      { string: 6, fret: 3 },
+      { string: 5, fret: 2 },
+    ])
+    expect(() => parsePositions('7:a')).toThrow()
+  })
+
+  it('tính cao độ của vị trí', () => {
+    expect(positionMidi(tuning('standard'), { string: 5, fret: 3 })).toBe(48)
+    expect(positionMidi(tuning('standard'), { string: 1, fret: 0 })).toBe(64)
+  })
+})

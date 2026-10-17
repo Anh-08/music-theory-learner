@@ -1,0 +1,77 @@
+export const meta = {
+  title: 'Quãng là gì?',
+  description: 'Khoảng cách giữa hai nốt có tên gọi riêng. Bắt đầu với quãng 2 và quãng 3.',
+  minutes: 12,
+}
+
+**Quãng** (interval) là khoảng cách giữa hai nốt. Hợp âm là các quãng chồng lên nhau, giai điệu là các quãng nối tiếp nhau — nên hiểu quãng là hiểu "vật liệu" của âm nhạc.
+
+Hai nốt có thể vang **lần lượt** (quãng giai điệu) hoặc **cùng lúc** (quãng hòa âm): <Play notes="C4 E4" as="both">C và E</Play>
+
+## Tên quãng có hai phần
+
+Một quãng như "**quãng 3 trưởng**" gồm:
+
+1. **Số** — đếm *tên chữ cái*, tính cả nốt đầu và nốt cuối. C → E: C, D, E = **3** chữ cái → quãng 3.
+2. **Tính chất** — đếm *số nửa cung* để biết là trưởng, thứ, đúng, tăng hay giảm.
+
+Với quãng 2 và quãng 3:
+
+| Quãng | Số nửa cung | Ví dụ từ C | Nghe |
+|---|---|---|---|
+| 2 thứ (♭2) | 1 | C – D♭ | <Play notes="C4 Db4" /> |
+| 2 trưởng (2) | 2 | C – D | <Play notes="C4 D4" /> |
+| 3 thứ (♭3) | 3 | C – E♭ | <Play notes="C4 Eb4" /> |
+| 3 trưởng (3) | 4 | C – E | <Play notes="C4 E4" /> |
+
+Quãng 3 thứ nghe "buồn", quãng 3 trưởng nghe "sáng" — chính hai quãng này quyết định một hợp âm là thứ hay trưởng (Module 3).
+
+<Callout type="note" title="Vì sao phải đếm chữ cái?">
+C – D♯ và C – E♭ cùng cách 3 nửa cung, cùng một âm thanh. Nhưng C → D♯ chỉ qua 2 chữ cái (C, D) nên là **quãng 2 tăng**, còn C → E♭ qua 3 chữ cái là **quãng 3 thứ**. Tên đúng cho biết nốt đó đóng vai trò gì — điều này quan trọng khi đọc hợp âm và scale. Trong thực hành, bạn sẽ gặp quãng 3 thứ nhiều hơn rất nhiều.
+</Callout>
+
+## Nhìn quãng trên đàn
+
+<OnlyFor instrument="guitar">
+
+Trên guitar, mỗi quãng có một **hình** cố định — dời đi đâu cũng giữ nguyên:
+
+- **2 trưởng:** cùng dây, lên 2 phím. **2 thứ:** cùng dây, lên 1 phím.
+- **3 trưởng:** sang dây cao hơn kế bên, **lùi 1 phím**.
+- **3 thứ:** sang dây cao hơn kế bên, **lùi 2 phím**.
+
+<Show notes="C E" positions="5:3 4:2" labels="interval" caption="Quãng 3 trưởng: C (dây 5 phím 3) → E (dây 4 phím 2)" />
+
+<Show notes="C Eb" positions="5:3 4:1" labels="interval" caption="Quãng 3 thứ: C (dây 5 phím 3) → E♭ (dây 4 phím 1)" />
+
+Ngoại lệ duy nhất là khi đi từ **dây 3 (G) sang dây 2 (B)**: mọi hình phải **dịch lên 1 phím** (3 trưởng là cùng phím, 3 thứ là lùi 1 phím). Bạn sẽ gặp lại quy tắc này rất nhiều lần.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+Trên piano, cứ đếm phím (cả trắng lẫn đen): 3 trưởng là nốt thứ 4 tính từ nốt gốc, 3 thứ là nốt thứ 3.
+
+<Show notes="C4 E4" labels="interval" play="chord" caption="Quãng 3 trưởng: C – E (4 nửa cung)" />
+
+<Show notes="D4 F4" labels="interval" play="chord" caption="Quãng 3 thứ: D – F (3 nửa cung) — cả hai đều là phím trắng nhưng tính chất khác nhau" />
+
+Đừng chỉ nhìn "cách một phím trắng": C–E và D–F đều cách một phím trắng, nhưng C–E là 3 trưởng còn D–F là 3 thứ.
+
+</OnlyFor>
+
+<Quiz id="m1-quang-q1" question="C → E♭ là quãng gì?" options={['2 trưởng', '3 thứ', '3 trưởng', '2 tăng']} answer={1} explain="C, D, E = 3 chữ cái → quãng 3; 3 nửa cung → thứ." />
+
+<Quiz id="m1-quang-q2" question="D → F♯ là quãng gì?" options={['3 thứ', '3 trưởng', '4 đúng', '2 trưởng']} answer={1} explain="D, E, F = quãng 3; D → F♯ là 4 nửa cung → trưởng." />
+
+<Quiz id="m1-quang-q3" question="E → F là quãng gì?" options={['2 thứ', '2 trưởng', '1 (đồng âm)', '3 thứ']} answer={0} explain="Hai chữ cái liền nhau → quãng 2; chỉ 1 nửa cung → thứ." />
+
+<Quiz id="m1-quang-q4" question="A → C là quãng gì?" options={['3 trưởng', '2 trưởng', '3 thứ', '4 đúng']} answer={2} explain="A, B, C = quãng 3; A → B (2) + B → C (1) = 3 nửa cung → thứ." />
+
+<FindNotes id="m1-quang-find-m3-a" prompt="Bấm nốt cách A một quãng 3 trưởng (đi lên)." targets="C#" />
+
+<FindNotes id="m1-quang-find-m3-g" prompt="Bấm nốt cách G một quãng 3 thứ (đi lên)." targets="Bb" />
+
+<Callout type="practice" title="Cầm đàn lên">
+Chọn 5 nốt bất kỳ. Với mỗi nốt, chơi quãng 3 trưởng rồi quãng 3 thứ phía trên nó, vừa chơi vừa hát theo. Hãy để ý cảm giác sáng – buồn khác nhau thế nào.
+</Callout>

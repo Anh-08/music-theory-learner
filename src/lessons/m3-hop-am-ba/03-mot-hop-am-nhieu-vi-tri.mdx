@@ -1,0 +1,77 @@
+export const meta = {
+  title: 'Một hợp âm, nhiều vị trí',
+  description: 'Guitar: hệ thống CAGED. Piano: cách xếp hai tay. Chơi một hợp âm ở bất kỳ đâu trên đàn.',
+  minutes: 15,
+}
+
+Cùng là hợp âm C, nhưng bạn có thể chơi nó ở nhiều chỗ, với nhiều cách xếp nốt (**voicing**). Biết nhiều vị trí giúp bạn chọn tiếng đàn hợp với bài và chuyển hợp âm ít phải di chuyển tay.
+
+<OnlyFor instrument="guitar">
+
+## Hệ thống CAGED
+
+Năm hợp âm mở **C, A, G, E, D** có năm hình dạng khác nhau. Điều kỳ diệu: dùng ngón trỏ chặn thay cho "đầu đàn", bạn có thể **dời từng hình lên cao** để chơi bất kỳ hợp âm nào. Và năm hình này **nối tiếp nhau** dọc cần đàn theo đúng thứ tự C – A – G – E – D.
+
+Đây là năm cách chơi hợp âm **C**, đi dần lên cần đàn (để ý vị trí nốt gốc tô đỏ):
+
+<Show root="C" chord="M" shape="x32010" frets={15} labels="interval" caption="1. Hình C (hợp âm C mở): x32010" />
+
+<Show root="C" chord="M" shape="x35553" frets={15} labels="interval" caption="2. Hình A, chặn phím 3: x35553" />
+
+<Show root="C" chord="M" shape="8,7,5,5,5,8" frets={15} labels="interval" caption="3. Hình G, quanh phím 5–8" />
+
+<Show root="C" chord="M" shape="8,10,10,9,8,8" frets={15} labels="interval" caption="4. Hình E, chặn phím 8" />
+
+<Show root="C" chord="M" shape="x,x,10,12,13,12" frets={15} labels="interval" caption="5. Hình D, quanh phím 10–13" />
+
+Sau hình D là hình C ở quãng tám trên (phím 12), và vòng lặp lại. Ghép cả năm hình lại, bạn được bức tranh mọi nốt C – E – G trên cần đàn:
+
+<Show root="C" chord="M" frets={15} labels="interval" play="none" />
+
+<Callout type="tip" title="Dùng CAGED thế nào?">
+Hai hình dùng nhiều nhất là **hình E** (nốt gốc dây 6) và **hình A** (nốt gốc dây 5) — chính là hợp âm chặn quen thuộc. Biết tên nốt trên dây 6 và 5 (Module 0) là bạn chơi được mọi hợp âm trưởng. Ba hình còn lại (C, G, D) hữu ích khi muốn chơi ở vị trí cao, hoặc làm nền để tìm scale quanh hợp âm khi improvise (Module 5).
+</Callout>
+
+<Quiz id="m3-caged-q1" question="Bấm hình E (hợp âm chặn, nốt gốc dây 6) ở phím 5. Đó là hợp âm gì?" options={['G', 'A', 'B', 'C']} answer={1} explain="Dây 6 phím 5 là A → A trưởng." />
+
+<Quiz id="m3-caged-q2" question="Bấm hình A (nốt gốc dây 5) chặn ở phím 7. Đó là hợp âm gì?" options={['D', 'E', 'F', 'G']} answer={1} explain="Dây 5 phím 7 là E → E trưởng." />
+
+<Quiz id="m3-caged-q3" question="Muốn chơi G trưởng bằng hình A (nốt gốc dây 5), chặn ở phím mấy?" options={['3', '5', '7', '10']} answer={3} explain="Dây 5 phím 10 là G." />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Xếp hợp âm cho hai tay
+
+Cách đệm cơ bản và luôn hiệu quả:
+
+- **Tay trái**: nốt gốc (có thể thêm quãng 8 hoặc quãng 5).
+- **Tay phải**: hợp âm ba, chọn **thế đảo gần nhất** với hợp âm trước.
+
+<Show notes="C3 G3 E4 G4 C5" labels="interval" play="chord" caption="C mở rộng: tay trái C3 – G3, tay phải E4 – G4 – C5 (đảo 1)" />
+
+Xếp nốt trải rộng như vậy (**open voicing**) nghe đầy đặn hơn ba nốt sát nhau (**close voicing**), đặc biệt khi chơi một mình.
+
+## Đệm vòng C – Am – F – G
+
+Tay trái chơi nốt gốc, tay phải giữ thế đảo gần nhau nhất:
+
+| Hợp âm | Tay trái | Tay phải |
+|---|---|---|
+| C | C3 | C4 – E4 – G4 |
+| Am | A2 | C4 – E4 – A4 |
+| F | F2 | C4 – F4 – A4 |
+| G | G2 | B3 – D4 – G4 |
+
+Nghe tay phải: <Play notes="C4 E4 G4" as="chord">C</Play> <Play notes="C4 E4 A4" as="chord">Am</Play> <Play notes="C4 F4 A4" as="chord">F</Play> <Play notes="B3 D4 G4" as="chord">G</Play>
+
+<Quiz id="m3-voicing-q-piano1" question="Tay phải đang giữ C4 – E4 – G4 (hợp âm C). Cách chuyển sang Am gần nhất là?" options={['Chuyển cả tay lên A4 – C5 – E5', 'Chỉ đưa G4 lên A4', 'Chỉ đưa C4 xuống A3', 'Chỉ đưa E4 lên F4']} answer={1} explain="Am = A C E. C và E đã có sẵn, chỉ cần đổi G thành A." />
+
+<Quiz id="m3-voicing-q-piano2" question="Tay trái chơi nốt gì khi đệm hợp âm F?" options={['C', 'F', 'A', 'G']} answer={1} explain="Tay trái chơi nốt gốc của hợp âm — F." />
+
+</OnlyFor>
+
+<Callout type="practice" title="Cầm đàn lên">
+Chọn hợp âm G trưởng và tìm **ít nhất ba vị trí / cách xếp** khác nhau trên đàn của bạn. Chơi một vòng G – C – D bằng các vị trí sao cho tay di chuyển ít nhất.
+</Callout>

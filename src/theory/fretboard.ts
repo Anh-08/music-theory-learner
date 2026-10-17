@@ -54,3 +54,42 @@ export function fretX(fret: number, fretCount: number): number {
 
 export const INLAY_FRETS = [3, 5, 7, 9, 12, 15, 17, 19, 21, 24]
 export const DOUBLE_INLAY_FRETS = [12, 24]
+
+export interface StringFret {
+  string: number
+  fret: number
+}
+
+/**
+ * Đọc thế bấm hợp âm viết từ dây 6 đến dây 1: "x32010" hoặc (khi có phím ≥ 10) "8,10,10,9,8,8".
+ * "x" là dây không đánh.
+ */
+export function parseShape(shape: string): StringFret[] {
+  const parts = shape.includes(',') ? shape.split(',') : shape.split('')
+  if (parts.length !== 6) throw new Error(`Thế bấm phải có 6 dây: ${shape}`)
+  return parts.flatMap((part, idx) => {
+    const t = part.trim().toLowerCase()
+    if (t === 'x') return []
+    const fret = Number(t)
+    if (!Number.isInteger(fret) || fret < 0) throw new Error(`Phím không hợp lệ trong thế bấm: ${shape}`)
+    return [{ string: 6 - idx, fret }]
+  })
+}
+
+/** Đọc danh sách vị trí dạng "dây:phím", cách nhau bởi khoảng trắng: "6:3 5:2 5:3". */
+export function parsePositions(text: string): StringFret[] {
+  return text
+    .trim()
+    .split(/\s+/)
+    .map((pair) => {
+      const [s, f] = pair.split(':').map(Number)
+      if (!Number.isInteger(s) || !Number.isInteger(f) || s < 1 || f < 0) throw new Error(`Vị trí không hợp lệ: ${pair}`)
+      return { string: s, fret: f }
+    })
+}
+
+export function positionMidi(t: Tuning, p: StringFret): number {
+  const open = t.strings[t.strings.length - p.string]
+  if (!open) throw new Error(`Tuning không có dây ${p.string}`)
+  return midi(open) + p.fret
+}

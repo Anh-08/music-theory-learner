@@ -1,0 +1,67 @@
+export const meta = {
+  title: 'Scale trưởng trên cây đàn',
+  description: 'Những hình bấm / thế ngón giúp bạn chơi scale trưởng ở mọi giọng mà không cần nghĩ.',
+  minutes: 15,
+}
+
+Hiểu công thức là một chuyện; chơi scale trôi chảy là chuyện khác. Bài này cho bạn **hình bấm** để tay tự đi, còn đầu thì rảnh để nghe nhạc.
+
+<OnlyFor instrument="guitar">
+
+## Hình một quãng tám, nốt gốc trên dây 6
+
+Hình này bắt đầu bằng nốt gốc ở dây 6. Đặt **ngón 2** lên nốt gốc. Ví dụ G trưởng ở phím 3:
+
+<Show root="G" scale="major" positions="6:3 6:5 5:2 5:3 5:5 4:2 4:4 4:5" labels="interval" caption="G trưởng, một quãng tám: dây 6 (3, 5) – dây 5 (2, 3, 5) – dây 4 (2, 4, 5)" />
+
+Đây là hình **di động**: dời nguyên hình lên phím 5 bạn có A trưởng, lên phím 8 là C trưởng. Biết tên nốt trên dây 6 (Module 0) = biết chơi scale trưởng ở mọi giọng.
+
+## Hình một quãng tám, nốt gốc trên dây 5
+
+<Show root="C" scale="major" positions="5:3 5:5 4:2 4:3 4:5 3:2 3:4 3:5" labels="interval" caption="C trưởng, nốt gốc dây 5 phím 3: dây 5 (3, 5) – dây 4 (2, 3, 5) – dây 3 (2, 4, 5)" />
+
+## Một thế bấm đầy đủ hai quãng tám
+
+Nối hai hình lại và mở rộng lên dây 1, ta được một thế bấm trọn vẹn trong khoảng phím 2–5:
+
+<Show root="G" scale="major" positions="6:3 6:5 5:2 5:3 5:5 4:2 4:4 4:5 3:2 3:4 3:5 2:3 2:5 1:2 1:3 1:5" labels="interval" caption="G trưởng, thế phím 2–5, hai quãng tám" />
+
+Và đây là toàn bộ nốt của G trưởng trên cần đàn — mọi thế bấm khác đều là một "lát cắt" của bức tranh này:
+
+<Show root="G" scale="major" frets={15} labels="interval" play="none" />
+
+<Quiz id="m2-tren-dan-q-guitar1" question="Đặt hình scale một quãng tám (nốt gốc dây 6) bắt đầu ở phím 7. Đó là scale trưởng nào?" options={['A trưởng', 'B trưởng', 'C trưởng', 'E trưởng']} answer={1} explain="Dây 6 phím 7 là B → B trưởng." />
+
+<Quiz id="m2-tren-dan-q-guitar2" question="Dời thế G trưởng (nốt gốc dây 6 phím 3) lên phím 10. Ta có scale gì?" options={['C trưởng', 'D trưởng', 'E trưởng', 'F trưởng']} answer={1} explain="Dây 6 phím 10 là D → D trưởng. Cùng một hình, khác giọng." />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Thế ngón cho C trưởng
+
+**Tay phải** (đi lên): **1 2 3 – 1 2 3 4 5**. Ngón cái (1) luồn dưới bàn tay sau ngón 3 để bấm F.
+**Tay trái** (đi lên): **5 4 3 2 1 – 3 2 1**. Ngón 3 vắt qua ngón cái để bấm A.
+
+<Show notes="C4 D4 E4 F4 G4 A4 B4 C5" labels="interval" caption="C trưởng — chỗ luồn ngón cái ở tay phải: sau E, ngón 1 bấm F" />
+
+## Các giọng khác
+
+- **G, D, A, E trưởng**: dùng **đúng thế ngón của C trưởng**. Chỉ cần nhớ những phím đen nào được dùng.
+- **F trưởng**, tay phải: **1 2 3 4 – 1 2 3 4** (ngón 4 bấm B♭, ngón cái luồn sang C).
+
+<Show notes="D4 E4 F#4 G4 A4 B4 C#5 D5" labels="interval" caption="D trưởng: hai phím đen F♯ và C♯, cùng thế ngón với C trưởng" />
+
+<Show notes="F4 G4 A4 Bb4 C5 D5 E5 F5" labels="interval" caption="F trưởng: một phím đen B♭ — tay phải 1 2 3 4 / 1 2 3 4" />
+
+<Quiz id="m2-tren-dan-q-piano1" question="Scale trưởng nào chỉ dùng phím trắng?" options={['G trưởng', 'C trưởng', 'F trưởng', 'A trưởng']} answer={1} explain="C trưởng không có dấu hóa nào." />
+
+<Quiz id="m2-tren-dan-q-piano2" question="Khi chơi C trưởng tay phải, ngón cái luồn để bấm nốt nào?" options={['D', 'E', 'F', 'G']} answer={2} explain="1 2 3 (C D E) rồi ngón cái luồn sang F: 1 2 3 4 5 (F G A B C)." />
+
+</OnlyFor>
+
+<FindNotes id="m2-tren-dan-find-a" prompt="Bấm đủ 7 nốt của scale A trưởng." targets="A B C# D E F# G#" />
+
+<Callout type="practice" title="Cầm đàn lên">
+Bật metronome ở 60 bpm. Chơi scale trưởng lên – xuống, mỗi nốt một phách, ở 3 giọng: C, G, F. Khi chạy đều không vấp, tăng lên 2 nốt mỗi phách. Mục tiêu không phải tốc độ, mà là **không phải nghĩ** — để dành đầu óc cho việc nghe khi improvise.
+</Callout>

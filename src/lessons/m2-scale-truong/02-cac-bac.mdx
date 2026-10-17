@@ -1,0 +1,58 @@
+export const meta = {
+  title: 'Bậc của scale và cảm giác',
+  description: 'Mỗi nốt trong scale có một vai trò: nốt nghỉ ngơi, nốt căng thẳng, nốt muốn về nhà.',
+  minutes: 12,
+}
+
+Đánh số các nốt trong scale từ 1 đến 7, ta có các **bậc** (scale degrees). Gọi theo bậc thay vì tên nốt giúp bạn nói về *vai trò* của nốt mà không phụ thuộc giọng: bậc 5 của C trưởng là G, của G trưởng là D, nhưng ở đâu nó cũng đóng cùng một vai.
+
+<Show root="C" scale="major" labels="interval" play="run" caption="C trưởng ghi theo bậc" />
+
+## Tên và vai trò của từng bậc
+
+| Bậc | Tên | Tiếng Anh | Cảm giác |
+|---|---|---|---|
+| 1 | Chủ âm | Tonic | Nhà — nghỉ ngơi hoàn toàn |
+| 2 | Thượng chủ âm | Supertonic | Lơ lửng, muốn đi về 1 hoặc lên 3 |
+| 3 | Trung âm | Mediant | Ổn định, quyết định màu trưởng |
+| 4 | Hạ át âm | Subdominant | Hơi căng, muốn xuống 3 |
+| 5 | Át âm | Dominant | Ổn định nhưng "mở", như dấu phẩy |
+| 6 | Hạ trung âm | Submediant | Dịu, hơi buồn, muốn về 5 |
+| 7 | Cảm âm | Leading tone | Rất căng, muốn lên 1 ngay |
+
+## Nghe sức hút về chủ âm
+
+Chơi scale đi lên rồi **dừng ở bậc 7**: <Play notes="C4 D4 E4 F4 G4 A4 B4" />
+
+Khó chịu phải không? Tai bạn đòi nốt tiếp theo. Giờ cho nó về nhà: <Play notes="B4 C5" />
+
+Bậc 7 chỉ cách bậc 1 **nửa cung**, nên nó bị hút lên mạnh nhất — vì thế mới gọi là *cảm âm*. Tương tự bậc 4 bị hút xuống bậc 3 (cũng cách nửa cung): <Play notes="F4 E4" />
+
+<Callout type="tip" title="Bí quyết improvise đầu tiên">
+Các bậc **1, 3, 5** là nốt "nghỉ" — đặt chúng ở cuối câu nhạc hoặc vào phách mạnh, câu nhạc sẽ nghe có điểm dừng. Các bậc **2, 4, 6, 7** là nốt "đi qua" — dùng chúng để di chuyển giữa các nốt nghỉ. Đây là nguyên tắc bạn sẽ dùng mãi.
+</Callout>
+
+## Vì sao nói bằng số?
+
+Nhạc sĩ và người chơi nhạc nói "bài này đi 1 – 5 – 6 – 4" thay vì "C – G – Am – F", vì số áp được vào **mọi giọng**. Muốn chuyển giọng (transpose)? Chỉ cần biết scale của giọng mới rồi thay số bằng nốt.
+
+<Quiz id="m2-bac-q1" question="Bậc 5 (át âm) của G trưởng là nốt gì?" options={['C', 'D', 'E', 'F♯']} answer={1} explain="G (1) A (2) B (3) C (4) D (5)." />
+
+<Quiz id="m2-bac-q2" question="Cảm âm của F trưởng là nốt gì?" options={['E', 'E♭', 'B♭', 'G']} answer={0} explain="Cảm âm là bậc 7, nửa cung dưới chủ âm: E." />
+
+<Quiz id="m2-bac-q3" question="Bậc nào được gọi là hạ át âm?" options={['Bậc 2', 'Bậc 4', 'Bậc 6', 'Bậc 7']} answer={1} explain="Hạ át âm (subdominant) là bậc 4 — 'dưới át âm' một bậc." />
+
+<Quiz id="m2-bac-q4" question="Trong A trưởng, C♯ là bậc mấy?" options={['2', '3', '4', '6']} answer={1} explain="A (1) B (2) C♯ (3)." />
+
+<Quiz
+  id="m2-bac-q5"
+  question="Nghe đoạn giai điệu này. Nó kết thúc ở bậc mấy của C trưởng?"
+  options={['Bậc 1 — nghe trọn vẹn', 'Bậc 7 — nghe lơ lửng']}
+  answer={1}
+  play="E4 D4 C4 D4 E4 G4 B4"
+  explain="Kết ở B — cảm âm — nên câu nhạc nghe như chưa xong."
+/>
+
+<Callout type="practice" title="Cầm đàn lên">
+Đánh một hợp âm C (hoặc nhờ ai đó giữ nốt C). Ngẫu hứng một câu ngắn chỉ bằng scale C trưởng, và **luôn kết thúc ở C, E hoặc G**. Sau đó thử kết thúc ở B hoặc F để nghe sự khác biệt.
+</Callout>

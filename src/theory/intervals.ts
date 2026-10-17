@@ -45,3 +45,8 @@ export function intervalName(name: string): string {
   if (i.num === 8 && i.q === 'P') return 'Quãng 8 đúng (octave)'
   return `Quãng ${i.num} ${QUALITY_VI[i.q]} (${QUALITY_EN[i.q]} ${ORDINAL_EN[i.num] ?? `${i.num}th`})`
 }
+
+/** Tên tiếng Việt ngắn: "3m" → "Quãng 3 thứ". */
+export function intervalNameVi(name: string): string {
+  return intervalName(name).replace(/ \(.*\)$/, '')
+}

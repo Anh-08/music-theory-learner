@@ -34,3 +34,11 @@ describe('scales', () => {
     expect(() => getScale(0, 'bebop')).toThrow()
   })
 })
+
+describe('scaleFromRoot', () => {
+  it('giữ nguyên cách viết chủ âm', async () => {
+    const { scaleFromRoot } = await import('../scales')
+    expect(scaleFromRoot('C#', 'major').notes).toEqual(['C#', 'D#', 'E#', 'F#', 'G#', 'A#', 'B#'])
+    expect(() => scaleFromRoot('H', 'major')).toThrow()
+  })
+})
