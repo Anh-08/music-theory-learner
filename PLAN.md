@@ -273,16 +273,18 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 ## 6. Các giai đoạn thực hiện
 
 ### Giai đoạn 0 — Khởi tạo (≈ 1 buổi)
-- [ ] Tạo project Vite + React + TypeScript + Tailwind + Vitest.
-- [ ] `git init`, tạo repo GitHub, viết README ngắn.
-- [ ] GitHub Actions deploy lên GitHub Pages (deploy ngay trang "Hello" để chắc pipeline chạy).
+- [x] Tạo project Vite + React + TypeScript + Tailwind + Vitest.
+- [x] `git init`, tạo repo GitHub, viết README ngắn.
+- [x] GitHub Actions deploy lên GitHub Pages (deploy ngay trang "Hello" để chắc pipeline chạy).
 
 ### Giai đoạn 1 — Nền móng nhạc lý + đàn ảo
-- [ ] Lớp `theory/` bọc quanh tonal: nốt, quãng, scale, chord, tính vị trí trên cần đàn. Viết test.
-- [ ] Component `<Fretboard />` (SVG): tuning, số phím, highlight nốt, nhãn nốt/quãng/bậc, click để nghe.
-- [ ] Component `<Piano />` (SVG): số quãng tám tùy chỉnh, highlight, click để nghe.
-- [ ] Âm thanh: phát nốt đơn và hợp âm (piano + guitar).
-- [ ] Trang **Explorer** (scale & chord trên cả hai nhạc cụ).
+- [x] Lớp `theory/` bọc quanh tonal: nốt, quãng, scale, chord, tính vị trí trên cần đàn. Viết test.
+- [x] Component `<Fretboard />` (SVG): tuning, số phím, highlight nốt, nhãn nốt/quãng/bậc, click để nghe.
+- [x] Component `<Piano />` (SVG): số quãng tám tùy chỉnh, highlight, click để nghe.
+- [x] Âm thanh: phát nốt đơn và hợp âm (piano + guitar).
+- [x] Trang **Explorer** (scale & chord trên cả hai nhạc cụ).
+
+> Ghi chú: piano dùng sample Salamander nạp lúc chạy (dự phòng bằng synth khi mất mạng); guitar tạm dùng PluckSynth (tổng hợp Karplus-Strong, không cần sample). Thay bằng sample guitar thật khi làm Giai đoạn 4 (đệm theo điệu) nếu cần tiếng hay hơn.
 
 ✅ *Kết quả: đã là một công cụ tra cứu scale/hợp âm dùng được.*
 

@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "tonal": "^6.5.1",
+    "tone": "^15.1.22"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",

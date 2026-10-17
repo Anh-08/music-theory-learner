@@ -30,3 +30,5 @@ Lần đầu cần bật Pages: **Settings → Pages → Source: GitHub Actions*
 ## Giấy phép
 
 Mã nguồn: [MIT](LICENSE).
+
+Âm thanh piano: [Salamander Grand Piano](https://archive.org/details/SalamanderGrandPianoV3) của Alexander Holm (CC-BY 3.0), nạp từ bản do [Tone.js](https://tonejs.github.io/) lưu trữ. Logic nhạc lý dựa trên [tonal](https://github.com/tonaljs/tonal).
