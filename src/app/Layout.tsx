@@ -17,6 +17,7 @@ const MAIN: { to: string; label: MessageKey; end?: boolean }[] = [
 ]
 
 const TOOLS: { to: string; label: MessageKey }[] = [
+  { to: '/chords', label: 'nav.chords' },
   { to: '/explorer', label: 'nav.explorer' },
   { to: '/keys', label: 'nav.keys' },
   { to: '/identify', label: 'nav.identify' },

@@ -1,0 +1,86 @@
+export const meta = {
+  title: 'Thế bấm hợp âm: nhiều vị trí và hợp âm mở rộng',
+  description: 'Đọc sơ đồ hợp âm, nhiều cách bấm cho cùng một hợp âm, và thế bấm cho sus, dim, hợp âm 7, 9, 11, 13.',
+  minutes: 25,
+}
+
+Tờ hợp âm ghi "C" nhưng không nói bấm ở đâu. Biết **nhiều thế bấm** cho cùng một hợp âm giúp bạn: chuyển hợp âm ngắn hơn, chọn màu tiếng (thế mở vang, thế cao sáng và gọn), và chơi được những hợp âm "lạ" như Cmaj9, G13, E7♯9.
+
+## Đọc sơ đồ hợp âm
+
+- **Các đường dọc** là dây đàn: bên trái là **dây 6** (E trầm), bên phải là **dây 1**.
+- **Các đường ngang** là phím. Vạch đậm trên cùng là đầu đàn; nếu sơ đồ ghi **"5fr"** nghĩa là ô đầu tiên là phím 5.
+- **Chấm có số** là chỗ bấm, số là **ngón** gợi ý: 1 = trỏ, 2 = giữa, 3 = áp út, 4 = út. Chấm đỏ là **nốt gốc**.
+- **Thanh ngang** là **chặn** (một ngón đè nhiều dây).
+- **×** là dây không đánh, **o** là dây buông.
+
+## Một hợp âm, nhiều thế bấm
+
+Đây là các thế bấm hợp âm C trên cần đàn (bật "Quãng" ở trang **Thế bấm hợp âm** để thấy từng nốt là 1, 3 hay 5):
+
+<ChordShapes root="C" max={6} />
+
+Bạn sẽ nhận ra năm hình **CAGED** (Module 3): hình C, A, G, E, D nối nhau dọc cần đàn. Mẹo dùng trong đệm hát:
+
+- Hợp âm kế tiếp nằm gần thế đang bấm nhất → tay ít di chuyển, chuyển hợp âm không mất nhịp.
+- Chơi cùng một người đệm khác? Một người bấm thế mở, người kia bấm thế cao — tiếng đàn tách bạch, không "đè" nhau.
+
+## Hợp âm treo và hợp âm giảm
+
+<ChordShapes root="D" type="sus4" max={4} />
+
+<ChordShapes root="B" type="dim" max={4} />
+
+<Callout type="tip" title="dim7: một thế bấm, bốn hợp âm">
+Hợp âm **dim7** đối xứng (Module 9): **dời thế bấm 3 phím** là ra cùng một hợp âm với tên khác. Thuộc một thế là chơi được mọi dim7.
+</Callout>
+
+<ChordShapes root="C" type="dim7" max={4} labels="intervals" />
+
+## Hợp âm 7
+
+<ChordShapes root="A" type="7" max={4} />
+
+<ChordShapes root="A" type="m7" max={4} />
+
+<ChordShapes root="B" type="m7b5" max={4} />
+
+## Hợp âm 9, 11, 13
+
+Guitar chỉ có 6 dây — và ngón tay có hạn — nên hợp âm nhiều nốt phải **bỏ bớt**. Thứ tự bỏ thường gặp:
+
+1. **Quãng 5 đúng** — gần như không đổi màu hợp âm.
+2. **Quãng 9** trong hợp âm 11 / 13.
+3. **Quãng 11** trong hợp âm 13.
+
+Luôn giữ: **nốt gốc, quãng 3, quãng 7 và nốt mở rộng cao nhất** — đó là những nốt tạo "tên" của hợp âm. Trang Thế bấm hợp âm ghi rõ nốt nào có thể bỏ cho từng hợp âm.
+
+<ChordShapes root="C" type="9" max={4} labels="intervals" />
+
+<ChordShapes root="A" type="m11" max={4} labels="intervals" />
+
+<ChordShapes root="G" type="13" max={4} labels="intervals" />
+
+<ChordShapes root="E" type="7#9" max={4} labels="intervals" />
+
+E7♯9 ở thế x 7 6 7 8 x được gọi là **"hợp âm Hendrix"** — màu blues-rock rất mạnh.
+
+## Đệm bằng hợp âm mở rộng
+
+Thay các hợp âm ba bằng hợp âm 7 / 9 / 13 là cách nhanh nhất để tiếng đệm nghe "jazz" hơn. Trong trình phát dưới đây, bấm **◀ ▶** cạnh sơ đồ để đổi thế bấm của hợp âm đang chọn — điệu sẽ được đánh bằng đúng thế đó.
+
+<RhythmPlayer rhythm="bossa-pick" progression="Cmaj7 Am7 Dm9 G13" />
+
+<RhythmPlayer rhythm="ballad" progression="Dsus4 D Asus4 A" />
+
+<Quiz id="g-the-bam-q1" question="Trên sơ đồ hợp âm, dấu × trên một dây nghĩa là?" options={['Dây không đánh', 'Dây buông', 'Chặn dây', 'Bấm bằng ngón út']} answer={0} />
+
+<Quiz id="g-the-bam-q2" question="Sơ đồ ghi '7fr' ở ô trên cùng nghĩa là?" options={['Ô đầu tiên của sơ đồ là phím 7', 'Bấm 7 dây', 'Dùng 7 ngón', 'Hợp âm 7']} answer={0} />
+
+<Quiz id="g-the-bam-q3" question="Khi bấm hợp âm 13 trên guitar, nốt nào thường được bỏ đầu tiên?" options={['Quãng 5', 'Quãng 3', 'Quãng 7', 'Nốt 13']} answer={0} explain="Quãng 5 đúng gần như không ảnh hưởng tới màu hợp âm; quãng 3, 7 và 13 mới tạo nên tên hợp âm." />
+
+<Quiz id="g-the-bam-q4" question="Dời một thế bấm dim7 lên 3 phím, ta được gì?" options={['Cùng hợp âm dim7, chỉ đổi tên nốt gốc', 'Một hợp âm trưởng', 'Hợp âm m7♭5', 'Không còn là hợp âm']} answer={0} />
+
+<Callout type="practice" title="Cầm đàn lên">
+Mở trang **Thế bấm hợp âm** (menu Công cụ). Chọn 3 hợp âm của bài bạn đang tập, tìm **hai thế bấm khác nhau** cho mỗi hợp âm, rồi chơi lại cả bài chỉ dùng các thế bấm nằm trong khoảng 5 phím (ví dụ phím 3 – 7).
+</Callout>

@@ -16,7 +16,9 @@ import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
 import { usePersistentState } from '../../store/usePersistentState'
-import { guitarVoicing, intervalLabel, makeHighlights, parseProgression, type ProgressionChord } from '../../theory'
+import { chordShapes, intervalLabel, makeHighlights, parseProgression, type ChordShape, type ProgressionChord, type StringFret } from '../../theory'
+import { ChordDiagram } from '../../components/ChordDiagram/ChordDiagram'
+import { shapeCaption, shapeIntervalLabels } from '../../components/ChordDiagram/shapeLabels'
 import { chordIndexAtBar, chordLabel } from '../jam/jamModel'
 import { nextCustomId, timeSignature, toRhythm, type CustomRhythm } from './customRhythms'
 
@@ -72,10 +74,22 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
   if (parsed.chords && parsed.chords !== lastChords) setLastChords(parsed.chords)
   const chords = parsed.chords ?? lastChords ?? []
 
+  // Thế bấm đã chọn cho từng hợp âm (theo ký hiệu); mặc định là thế đầu tiên (thế quen thuộc).
+  const [shapeIdx, setShapeIdx] = useState<Record<string, number>>({})
+  const shapeFor = (c: ProgressionChord, idx = shapeIdx): ChordShape | undefined => {
+    const list = chordShapes(c)
+    return list[Math.min(idx[c.symbol] ?? 0, list.length - 1)]
+  }
+  const shapesMap = (cs: ProgressionChord[], idx = shapeIdx) =>
+    Object.fromEntries(cs.flatMap((c) => {
+      const sh = shapeFor(c, idx)
+      return sh ? [[c.symbol, sh.frets]] : []
+    }))
+
   const rampTarget = Math.min(200, tempo + 40)
-  const play = (r: Rhythm, cs: ProgressionChord[], bpm = tempo) => {
+  const play = (r: Rhythm, cs: ProgressionChord[], bpm = tempo, idx = shapeIdx) => {
     if (!cs.length) return
-    void startJam({ ownerId: id, chords: cs, groove: getGroove(r.groove), tempo: bpm, instrument: 'guitar', mutes, rhythm: r, rampTo: ramp ? rampTarget : undefined })
+    void startJam({ ownerId: id, chords: cs, groove: getGroove(r.groove), tempo: bpm, instrument: 'guitar', mutes, rhythm: r, rampTo: ramp ? rampTarget : undefined, shapes: shapesMap(cs, idx) })
   }
 
   useEffect(() => {
@@ -157,7 +171,17 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
 
   const currentIndex = playing ? chordIndexAtBar(chords, jam.bar) : Math.min(selectedChord, chords.length - 1)
   const currentChord = chords[currentIndex]
-  const voicing = useMemo(() => (currentChord ? guitarVoicing(currentChord) : null), [currentChord])
+  const currentShapes = useMemo(() => (currentChord ? chordShapes(currentChord) : []), [currentChord])
+  const currentShapeIndex = currentChord ? Math.min(shapeIdx[currentChord.symbol] ?? 0, Math.max(0, currentShapes.length - 1)) : 0
+  const currentShape = currentShapes[currentShapeIndex]
+  const shapePositions: StringFret[] = currentShape ? currentShape.frets.flatMap((f, i) => (f === null ? [] : [{ string: 6 - i, fret: f }])) : []
+
+  const changeShape = (delta: number) => {
+    if (!currentChord || currentShapes.length < 2) return
+    const next = { ...shapeIdx, [currentChord.symbol]: (currentShapeIndex + delta + currentShapes.length) % currentShapes.length }
+    setShapeIdx(next)
+    if (playing) play(current, chords, tempo, next)
+  }
   const highlights = useMemo(
     () => (currentChord ? makeHighlights(currentChord.notes, currentChord.intervals.map(intervalLabel), 'interval', locale) : new Map()),
     [currentChord, locale],
@@ -313,8 +337,30 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
         )}
       </div>
 
-      {voicing && (
-        <InstrumentView instrument="guitar" highlights={highlights} only={voicing.positions.length ? voicing.positions : undefined} fretCount={12} />
+      {currentChord && currentShape && (
+        <div className="flex flex-wrap items-center gap-4">
+          <ChordDiagram
+            shape={currentShape}
+            name={chordLabel(currentChord)}
+            rootStrings={shapeIntervalLabels(currentShape, currentChord.bass ?? currentChord.root, currentChord.intervals).roots}
+          />
+          <div className="space-y-2 text-sm">
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={() => changeShape(-1)} disabled={currentShapes.length < 2} aria-label={t('shapes.prev')} className="rounded-md border border-stone-300 px-2 py-1 disabled:opacity-40 dark:border-stone-700">
+                ◀
+              </button>
+              <span className="font-medium">{t('shapes.which', { i: currentShapeIndex + 1, n: currentShapes.length })}</span>
+              <button type="button" onClick={() => changeShape(1)} disabled={currentShapes.length < 2} aria-label={t('shapes.next')} className="rounded-md border border-stone-300 px-2 py-1 disabled:opacity-40 dark:border-stone-700">
+                ▶
+              </button>
+            </div>
+            <p className="text-stone-500">{shapeCaption(currentShape, t)}</p>
+            <p className="max-w-xs text-xs text-stone-500">{t('shapes.useInfo')}</p>
+          </div>
+        </div>
+      )}
+      {currentChord && (
+        <InstrumentView instrument="guitar" highlights={highlights} only={shapePositions.length ? shapePositions : undefined} fretCount={15} />
       )}
 
       {!editable && (

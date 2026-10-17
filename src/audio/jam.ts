@@ -20,6 +20,8 @@ export interface JamOptions {
   rhythm?: Rhythm
   /** Tăng tempo thêm 5 bpm sau mỗi vòng cho tới tempo này. */
   rampTo?: number
+  /** Thế bấm guitar đã chọn cho từng hợp âm (theo ký hiệu). */
+  shapes?: Record<string, (number | null)[]>
 }
 
 interface Kit {
@@ -104,7 +106,7 @@ export async function startJam(opts: JamOptions): Promise<void> {
   const raw = T.getContext().rawContext as AudioContext
   const outputLatency = (raw.outputLatency ?? 0) + (raw.baseLatency ?? 0)
 
-  const events = buildJamEvents(opts.chords, opts.groove, opts.instrument, opts.rhythm)
+  const events = buildJamEvents(opts.chords, opts.groove, opts.instrument, opts.rhythm, opts.shapes)
   let loops = 0
   const thisPart: ToneNs.Part = new T.Part<JamEvent & { time: string }>(
     (time, ev) => {

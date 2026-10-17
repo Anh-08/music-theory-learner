@@ -342,7 +342,9 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 
 ## 10. Trạng thái (17/10/2026)
 
-Đã xong toàn bộ 6 giai đoạn: 47 bài học song ngữ (Module 0–10 và nhánh guitar), Explorer, Key Explorer, nhận diện hợp âm, Jam Room, trang tập đệm, ôn tập lặp lại ngắt quãng, kết nối đàn thật, PWA.
+Đã xong toàn bộ 6 giai đoạn: 48 bài học song ngữ (Module 0–10 và nhánh guitar), Explorer, Key Explorer, nhận diện hợp âm, Jam Room, trang tập đệm, ôn tập lặp lại ngắt quãng, kết nối đàn thật, PWA.
+
+Bổ sung sau: trang **Thế bấm hợp âm** (`#/chords`, menu Công cụ) — bộ tìm thế bấm tự động (`src/theory/guitarShapes.ts`) cho 31 loại hợp âm (thêm m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) ở nhiều vị trí, có số ngón và chặn; đổi thế bấm của từng hợp âm ngay trong trang Đệm guitar; bài Đ7 "Thế bấm hợp âm".
 
 Ý tưởng cho sau này:
 - Sample guitar thật thay cho PluckSynth (cần nguồn sample có giấy phép rõ ràng).

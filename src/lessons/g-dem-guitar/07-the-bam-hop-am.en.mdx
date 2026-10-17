@@ -1,0 +1,86 @@
+export const meta = {
+  title: 'Chord shapes: many positions and extended chords',
+  description: 'Reading chord diagrams, several ways to play the same chord, and shapes for sus, dim, 7th, 9th, 11th and 13th chords.',
+  minutes: 25,
+}
+
+A chord sheet says "C" but not where to play it. Knowing **several shapes** for the same chord lets you: change chords with shorter moves, choose a tone colour (open shapes ring, high shapes sound bright and tight), and play "unusual" chords like Cmaj9, G13 or E7♯9.
+
+## Reading a chord diagram
+
+- **Vertical lines** are the strings: **string 6** (low E) on the left, **string 1** on the right.
+- **Horizontal lines** are frets. The thick bar at the top is the nut; if the diagram says **"5fr"**, the first box is fret 5.
+- **Numbered dots** show where to press; the number is the suggested **finger**: 1 = index, 2 = middle, 3 = ring, 4 = little finger. Red dots are the **root**.
+- **A horizontal bar** is a **barre** (one finger pressing several strings).
+- **×** is a muted string, **o** an open string.
+
+## One chord, many shapes
+
+Here are shapes for a C chord across the neck (switch to "Intervals" on the **Chord shapes** page to see whether each note is the 1, 3 or 5):
+
+<ChordShapes root="C" max={6} />
+
+You will recognise the five **CAGED** shapes (Module 3): C, A, G, E and D shapes linking up the neck. Tips for accompanying songs:
+
+- Choose the shape of the next chord that sits closest to the one you are holding → less hand movement, chord changes in time.
+- Playing with another guitarist? One plays open shapes, the other high shapes — the guitars stay distinct instead of "crowding" each other.
+
+## Suspended and diminished chords
+
+<ChordShapes root="D" type="sus4" max={4} />
+
+<ChordShapes root="B" type="dim" max={4} />
+
+<Callout type="tip" title="dim7: one shape, four chords">
+**dim7** chords are symmetrical (Module 9): **move a shape 3 frets** and you get the same chord under another name. Learn one shape and you can play every dim7.
+</Callout>
+
+<ChordShapes root="C" type="dim7" max={4} labels="intervals" />
+
+## Seventh chords
+
+<ChordShapes root="A" type="7" max={4} />
+
+<ChordShapes root="A" type="m7" max={4} />
+
+<ChordShapes root="B" type="m7b5" max={4} />
+
+## 9th, 11th and 13th chords
+
+A guitar only has 6 strings — and you only have so many fingers — so chords with many notes must **leave some out**. The usual order of omission:
+
+1. **The perfect 5th** — it barely changes the chord's colour.
+2. **The 9th** in 11th / 13th chords.
+3. **The 11th** in 13th chords.
+
+Always keep: **the root, the 3rd, the 7th and the highest extension** — those notes give the chord its "name". The Chord shapes page lists which notes may be left out for every chord.
+
+<ChordShapes root="C" type="9" max={4} labels="intervals" />
+
+<ChordShapes root="A" type="m11" max={4} labels="intervals" />
+
+<ChordShapes root="G" type="13" max={4} labels="intervals" />
+
+<ChordShapes root="E" type="7#9" max={4} labels="intervals" />
+
+E7♯9 played as x 7 6 7 8 x is known as the **"Hendrix chord"** — a powerful blues-rock colour.
+
+## Accompanying with extended chords
+
+Replacing triads with 7th / 9th / 13th chords is the quickest way to make your accompaniment sound "jazzier". In the players below, press **◀ ▶** next to the diagram to change the shape of the selected chord — the rhythm will be played with exactly that shape.
+
+<RhythmPlayer rhythm="bossa-pick" progression="Cmaj7 Am7 Dm9 G13" />
+
+<RhythmPlayer rhythm="ballad" progression="Dsus4 D Asus4 A" />
+
+<Quiz id="g-the-bam-q1" question="On a chord diagram, what does × above a string mean?" options={['Don\'t play that string', 'Play it open', 'Barre it', 'Use the little finger']} answer={0} />
+
+<Quiz id="g-the-bam-q2" question="A diagram marked '7fr' at the top means…" options={['The first box of the diagram is fret 7', 'Play 7 strings', 'Use 7 fingers', 'It is a 7th chord']} answer={0} />
+
+<Quiz id="g-the-bam-q3" question="When playing a 13th chord on guitar, which note is usually left out first?" options={['The 5th', 'The 3rd', 'The 7th', 'The 13th']} answer={0} explain="The perfect 5th barely affects the colour; the 3rd, 7th and 13th give the chord its name." />
+
+<Quiz id="g-the-bam-q4" question="Move a dim7 shape up 3 frets. What do you get?" options={['The same dim7 chord with a different root name', 'A major chord', 'An m7♭5 chord', 'No longer a chord']} answer={0} />
+
+<Callout type="practice" title="Pick up your guitar">
+Open the **Chord shapes** page (Tools menu). Choose 3 chords from a song you are learning, find **two different shapes** for each, then play the whole song using only shapes within a 5-fret area (for example frets 3 – 7).
+</Callout>

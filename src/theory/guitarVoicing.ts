@@ -112,8 +112,9 @@ export function chordFrets(chord: ProgressionChord): (number | null)[] | null {
  * Cách đánh hợp âm trên guitar: thế bấm, cao độ từng dây, dây bass và bass luân phiên.
  * Hợp âm không có thế bấm sẵn thì dựng tạm: bass ở dây 6/5, các nốt còn lại xếp lên dây 4 → 1.
  */
-export function guitarVoicing(chord: ProgressionChord): GuitarVoicing {
-  const frets = chordFrets(chord)
+export function guitarVoicing(chord: ProgressionChord, fretsOverride?: (number | null)[]): GuitarVoicing {
+  // `fretsOverride`: một thế bấm người học đã chọn (từ chordShapes) thay cho thế mặc định.
+  const frets = fretsOverride ?? chordFrets(chord)
   const chordChromas = new Set(chord.notes.map(chroma))
   let stringMidis: (number | null)[]
   if (frets) {

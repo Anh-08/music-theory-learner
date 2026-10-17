@@ -10,10 +10,11 @@ Kế hoạch chi tiết: [PLAN.md](PLAN.md)
 
 ## Có gì bên trong
 
-- **Lộ trình 47 bài** (Module 0 – 10 và nhánh guitar): 12 nốt, quãng, scale trưởng, vòng quãng năm, hợp âm ba, thế đảo, CAGED, hợp âm thuận giọng, tiến trình, blues, ngũ cung, hợp âm 7, chord tones, guide tones, điệu thức, át phụ, hợp âm mượn, sáng tác — và nhánh **đệm guitar theo điệu** (móc dây, quạt chả). Mỗi bài hiển thị trên cần đàn hoặc bàn phím tùy nhạc cụ bạn chọn, có nghe minh họa, câu hỏi, bài bấm trên đàn và luyện tai.
+- **Lộ trình 48 bài** (Module 0 – 10 và nhánh guitar): 12 nốt, quãng, scale trưởng, vòng quãng năm, hợp âm ba, thế đảo, CAGED, hợp âm thuận giọng, tiến trình, blues, ngũ cung, hợp âm 7, chord tones, guide tones, điệu thức, át phụ, hợp âm mượn, sáng tác — và nhánh **đệm guitar theo điệu** (móc dây, quạt chả). Mỗi bài hiển thị trên cần đàn hoặc bàn phím tùy nhạc cụ bạn chọn, có nghe minh họa, câu hỏi, bài bấm trên đàn và luyện tai.
 - **Explorer**: scale và hợp âm trên guitar, piano, bass, ukulele, mandolin.
 - **Jam Room**: gõ tiến trình (ký hiệu hợp âm hoặc số La Mã), ứng dụng đoán giọng, phát nhạc nền trống – bass – đệm, tô nốt của hợp âm đang vang theo thời gian thực và gợi ý scale để improvise.
-- **Đệm guitar**: 24 điệu quạt / móc (cả 3/4 và 12/8) trên lưới phách có vạch chạy, tăng tempo dần, tự tạo điệu, chấm độ đều tay qua micro.
+- **Đệm guitar**: 24 điệu quạt / móc (cả 3/4 và 12/8) trên lưới phách có vạch chạy, tăng tempo dần, tự tạo điệu, chấm độ đều tay qua micro, đổi thế bấm của từng hợp âm.
+- **Thế bấm hợp âm**: nhiều cách bấm cho mọi hợp âm (trưởng, thứ, sus, dim, aug, 6, 7, maj7, m7♭5, dim7, 9, 11, 13, 7♭9, 7♯9…) với sơ đồ, số ngón, chặn và nút nghe.
 - **Công cụ**: Key Explorer (vòng quãng năm, hợp âm thuận giọng và chức năng), nhận diện hợp âm, kết nối đàn thật (MIDI hoặc micro).
 - **Ôn tập hằng ngày**: 7 bộ thẻ sinh câu hỏi ngẫu nhiên, lịch ôn lặp lại ngắt quãng.
 - Tiến độ lưu trong trình duyệt, xuất / nhập được bằng file JSON. Không có tài khoản, không gửi dữ liệu đi đâu.

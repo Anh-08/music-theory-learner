@@ -85,7 +85,9 @@ function romanSuffix(rest: string, lower: boolean): string {
 }
 
 function chordFromSymbol(symbol: string, bars: number): ProgressionChord {
-  const [main, bassPart] = symbol.split('/')
+  // "C6/9" là tên hợp âm, không phải hợp âm có bass riêng — chỉ coi "/" là bass khi sau nó là tên nốt.
+  const slash = symbol.match(/^(.*)\/([A-G][#b]?)$/)
+  const [main, bassPart] = slash ? [slash[1], slash[2]] : symbol.includes('/') && /\/\d/.test(symbol) ? [symbol, undefined] : symbol.split('/')
   const c = Chord.get(main)
   if (c.empty || !c.tonic) throw new TheoryError(`Không hiểu hợp âm "${symbol}"`, 'badChord', { symbol })
   let bass: string | undefined
@@ -180,8 +182,18 @@ export function romanNumeral(chord: ProgressionChord, key: KeyRef): string {
     sus4: 'sus4',
     '7sus4': '7sus4',
     add9: 'add9',
+    mMaj7: 'maj7',
+    '7b5': '7♭5',
+    '7#5': '7♯5',
+    '69': '6/9',
+    '9sus4': '9sus4',
+    '7b9': '7♭9',
+    '7#9': '7♯9',
+    '11': '11',
+    m11: '11',
+    '13': '13',
   }
-  const suffix = type ? tail[type] : chord.suffix.replace(/^m(?!aj)/, '')
+  const suffix = type && type in tail ? tail[type] : chord.suffix.replace(/^m(?!aj)/, '')
   return `${acc}${numeral}${suffix}${chord.bass ? `/${displayNote(chord.bass)}` : ''}`
 }
 

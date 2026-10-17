@@ -319,6 +319,25 @@ export const vi = {
   'rhythm.early': 'sớm',
   'rhythm.late': 'muộn',
   'rhythm.onTime': 'chuẩn',
+  'nav.chords': 'Thế bấm hợp âm',
+  'shapes.title': 'Thế bấm hợp âm guitar',
+  'shapes.intro':
+    'Chọn chủ âm và loại hợp âm để xem nhiều cách bấm ở các vị trí khác nhau trên cần đàn — từ thế mở quen thuộc tới hình chặn và thế bấm ở phím cao. Số trên chấm là ngón bấm gợi ý (1 = trỏ, 4 = út); thanh ngang là chặn; × là dây không đánh, o là dây buông.',
+  'shapes.count': '{n} thế bấm',
+  'shapes.open': 'Thế mở',
+  'shapes.fret': 'Phím {n}',
+  'shapes.bass': 'bass dây {n}',
+  'shapes.labels': 'Trên chấm',
+  'shapes.fingers': 'Ngón',
+  'shapes.formula': 'Công thức: {formula} · Nốt: {notes}',
+  'shapes.optional': 'Khi bấm có thể bỏ: {notes}',
+  'shapes.diagramAria': 'Sơ đồ hợp âm {name}: {frets}',
+  'shapes.which': 'Thế {i}/{n}',
+  'shapes.prev': 'Thế trước',
+  'shapes.next': 'Thế tiếp',
+  'shapes.useInfo': 'Điệu được đánh bằng thế bấm này — đổi thế để nghe màu khác.',
+  'shapes.all': 'Xem tất cả thế bấm →',
+  'shapes.none': 'Chưa tìm được thế bấm cho hợp âm này.',
 }
 
 export type MessageKey = keyof typeof vi
@@ -643,6 +662,25 @@ export const en: Record<MessageKey, string> = {
   'rhythm.early': 'early',
   'rhythm.late': 'late',
   'rhythm.onTime': 'spot on',
+  'nav.chords': 'Chord shapes',
+  'shapes.title': 'Guitar chord shapes',
+  'shapes.intro':
+    'Pick a root and a chord type to see several ways of playing it in different positions on the neck — from the familiar open shape to barre chords and high-position voicings. Numbers on the dots are suggested fingers (1 = index, 4 = little finger); a bar means a barre; × is a muted string, o an open string.',
+  'shapes.count': '{n} shapes',
+  'shapes.open': 'Open position',
+  'shapes.fret': 'Fret {n}',
+  'shapes.bass': 'bass on string {n}',
+  'shapes.labels': 'On the dots',
+  'shapes.fingers': 'Fingers',
+  'shapes.formula': 'Formula: {formula} · Notes: {notes}',
+  'shapes.optional': 'May be left out when playing: {notes}',
+  'shapes.diagramAria': 'Chord diagram {name}: {frets}',
+  'shapes.which': 'Shape {i}/{n}',
+  'shapes.prev': 'Previous shape',
+  'shapes.next': 'Next shape',
+  'shapes.useInfo': 'The rhythm is played with this shape — switch shapes to hear a different colour.',
+  'shapes.all': 'See all shapes →',
+  'shapes.none': 'No shape found for this chord yet.',
 }
 
 export const MESSAGES = { vi, en }

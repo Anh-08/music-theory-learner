@@ -43,7 +43,14 @@ function voicingChromas(chord: ProgressionChord): number[] {
  * Dựng toàn bộ sự kiện cho một vòng tiến trình, thời gian tính bằng phách (nốt đen) kể từ đầu vòng.
  * Hợp âm được xếp theo kiểu dẫn giọng (nốt di chuyển ít nhất giữa các hợp âm).
  */
-export function buildJamEvents(chords: ProgressionChord[], groove: Groove, instrument: InstrumentId, rhythm?: Rhythm): JamEvent[] {
+export function buildJamEvents(
+  chords: ProgressionChord[],
+  groove: Groove,
+  instrument: InstrumentId,
+  rhythm?: Rhythm,
+  /** Thế bấm đã chọn cho từng hợp âm (theo ký hiệu), dùng khi chơi điệu guitar. */
+  shapes?: Record<string, (number | null)[]>,
+): JamEvent[] {
   const bars = chordsPerBar(chords)
   const beatsPerBar = groove.beatsPerBar
   const beatsPerStep = beatsPerBar / groove.stepsPerBar
@@ -71,7 +78,7 @@ export function buildJamEvents(chords: ProgressionChord[], groove: Groove, instr
     })
 
     if (useRhythm) {
-      events.push(...rhythmBarEvents(chord, useRhythm, start))
+      events.push(...rhythmBarEvents(chord, useRhythm, start, shapes?.[chord.symbol]))
       return
     }
     const voicing = voiceLead(voicingChromas(chord), prev, low, high)
@@ -90,11 +97,12 @@ export function loopBeats(chords: ProgressionChord[], beatsPerBar = 4): number {
 
 const voicingCache = new Map<string, GuitarVoicing>()
 
-function voicingFor(chord: ProgressionChord): GuitarVoicing {
-  let v = voicingCache.get(chord.symbol)
+function voicingFor(chord: ProgressionChord, frets?: (number | null)[]): GuitarVoicing {
+  const key = `${chord.symbol}|${frets?.join(',') ?? ''}`
+  let v = voicingCache.get(key)
   if (!v) {
-    v = guitarVoicing(chord)
-    voicingCache.set(chord.symbol, v)
+    v = guitarVoicing(chord, frets)
+    voicingCache.set(key, v)
   }
   return v
 }
@@ -109,8 +117,8 @@ function pickMidi(v: GuitarVoicing, n: PickNote): number {
  * Sự kiện của một ô nhịp theo điệu guitar: quạt xuống đánh từ dây trầm lên (bỏ dây không bấm),
  * quạt lên đánh 4 dây cao từ dây 1 xuống; quạt nhẹ chỉ chạm các dây cao; móc là từng nốt theo dây.
  */
-export function rhythmBarEvents(chord: ProgressionChord, r: Rhythm, start: number): JamEvent[] {
-  const v = voicingFor(chord)
+export function rhythmBarEvents(chord: ProgressionChord, r: Rhythm, start: number, frets?: (number | null)[]): JamEvent[] {
+  const v = voicingFor(chord, frets)
   const sounding = v.stringMidis.filter((m): m is number => m !== null)
   const strummed = v.frets ? sounding : [v.bass, ...sounding.filter((m) => m !== v.bass)]
   const events: JamEvent[] = []
