@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useSettings } from '../../store/settingsContext'
 import { CHROMAS, fretboardPositions, isBlackKey, rootLabel, tuning, type HighlightMap, type StringFret } from '../../theory'
 import { useT } from '../../i18n/useT'
+import { useLiveInput, useLiveNote } from '../../input/useLiveInput'
 import { InstrumentView } from '../lesson/InstrumentView'
 import { ExerciseCard, Feedback } from './ExerciseCard'
 import { buttonClass } from './styles'
@@ -31,6 +32,7 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
   const { instrument } = useSettings()
   const { streak, best, answer } = useDrill(id)
   const { t } = useT()
+  const live = useLiveInput()
   const [question, setQuestion] = useState<Question | null>(null)
   const [picked, setPicked] = useState<number | null>(null)
 
@@ -61,6 +63,9 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
     answer(c === question.midi % 12)
   }
 
+  // Trả lời bằng cách chơi nốt trên đàn thật (MIDI / micro).
+  useLiveNote((m) => choose(m % 12), live.status === 'on')
+
   const highlights: HighlightMap = new Map()
   if (question) {
     const c = question.midi % 12
@@ -71,7 +76,9 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
 
   return (
     <ExerciseCard id={id} kind={t('ex.drill')} done={best >= 10} doneLabel={t('ex.record', { n: best })}>
-      <p className="mb-3 text-sm text-stone-600 dark:text-stone-400">{t('ex.drillIntro')}</p>
+      <p className="mb-3 text-sm text-stone-600 dark:text-stone-400">
+        {t('ex.drillIntro')} {live.status === 'on' && t('live.hint')}
+      </p>
       {question ? (
         <InstrumentView
           highlights={highlights}

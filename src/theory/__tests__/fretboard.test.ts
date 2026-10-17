@@ -65,3 +65,23 @@ describe('thế bấm và vị trí', async () => {
     expect(positionMidi(tuning('standard'), { string: 1, fret: 0 })).toBe(64)
   })
 })
+
+describe('nhạc cụ phím đàn khác', () => {
+  it('bass 4 dây và ukulele (dây G cao)', () => {
+    const bass = fretboardPositions(tuning('bass4'), 5)
+    expect(bass).toHaveLength(4 * 6)
+    expect(bass.find((p) => p.string === 4 && p.fret === 0)!.midi).toBe(28) // E1
+    const uke = fretboardPositions(tuning('ukulele'), 3)
+    expect(uke.find((p) => p.string === 4 && p.fret === 0)!.midi).toBe(67) // G4 — dây 4 cao hơn dây 3
+    expect(uke.find((p) => p.string === 1 && p.fret === 3)!.chroma).toBe(0) // A + 3 = C
+  })
+})
+
+describe('positionForMidi', async () => {
+  const { positionForMidi } = await import('../fretboard')
+  it('chọn phím thấp nhất, giới hạn theo dây, hoặc cùng tên nốt khi lệch quãng tám', () => {
+    expect(positionForMidi(tuning('standard'), 45, 12)).toMatchObject({ string: 5, fret: 0 })
+    expect(positionForMidi(tuning('standard'), 45, 12, 6)).toMatchObject({ string: 6, fret: 5 })
+    expect(positionForMidi(tuning('standard'), 26, 12, 5)).toMatchObject({ string: 5, fret: 5 }) // D1 ngoài tầm → D trên dây 5
+  })
+})

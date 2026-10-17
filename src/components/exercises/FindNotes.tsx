@@ -2,8 +2,9 @@ import { useMemo, useState } from 'react'
 import { usePlayer } from '../../audio/usePlayer'
 import { useProgress } from '../../store/progressContext'
 import { useSettings } from '../../store/settingsContext'
-import { chroma, displayNote, fretboardPositions, rootLabel, tuning, type FretPosition, type HighlightMap, type StringFret } from '../../theory'
+import { chroma, displayNote, fretboardPositions, positionForMidi, rootLabel, tuning, type FretPosition, type HighlightMap, type StringFret } from '../../theory'
 import { useT } from '../../i18n/useT'
+import { useLiveInput, useLiveNote } from '../../input/useLiveInput'
 import { InstrumentView } from '../lesson/InstrumentView'
 import { ExerciseCard, Feedback } from './ExerciseCard'
 import { buttonClass } from './styles'
@@ -27,6 +28,7 @@ type Selection = { midi: number; position?: StringFret }
 export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotesProps) {
   const { progress, recordQuiz } = useProgress()
   const { t } = useT()
+  const live = useLiveInput()
   const { instrument } = useSettings()
   const { playNote, activeMidis } = usePlayer(instrument)
   const targetNotes = useMemo(() => targets.trim().split(/\s+/), [targets])
@@ -45,6 +47,15 @@ export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotes
     setResult(null)
     setSelected((sel) => (sel.some((s) => sameSelection(s, item)) ? sel.filter((s) => !sameSelection(s, item)) : [...sel, item]))
   }
+
+  // Nốt chơi trên đàn thật được thêm vào lựa chọn (không bỏ chọn khi chơi lại).
+  useLiveNote((m) => {
+    const p = instrument === 'guitar' ? positionForMidi(tuning('standard'), m, frets, string) : null
+    if (instrument === 'guitar' && !p) return
+    const item: Selection = { midi: p?.midi ?? m, position: p ? { string: p.string, fret: p.fret } : undefined }
+    setResult(null)
+    setSelected((sel) => (sel.some((s) => sameSelection(s, item)) ? sel : [...sel, item]))
+  }, live.status === 'on')
 
   const check = () => {
     const chosen = new Set(selected.map((s) => s.midi % 12))
@@ -78,7 +89,9 @@ export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotes
 
   return (
     <ExerciseCard id={id} kind={t('ex.find')} done={progress.quizzes[id]?.correct}>
-      <p className="mb-3 font-medium">{prompt}</p>
+      <p className="mb-3 font-medium">
+        {prompt} {live.status === 'on' && <span className="text-sm font-normal text-stone-500">{t('live.hint')}</span>}
+      </p>
       <InstrumentView
         highlights={highlights}
         activeMidis={activeMidis}

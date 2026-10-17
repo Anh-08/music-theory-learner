@@ -3,8 +3,9 @@ import { chordEvents } from '../../audio/events'
 import { usePlayer } from '../../audio/usePlayer'
 import { InstrumentView } from '../../components/lesson/InstrumentView'
 import { useT } from '../../i18n/useT'
+import { useLiveInput, useLiveNote } from '../../input/useLiveInput'
 import { useSettings } from '../../store/settingsContext'
-import { chroma, chromaOfMidi, displayNote, identifyChord, noteFromMidi, type FretPosition, type HighlightMap, type StringFret } from '../../theory'
+import { chroma, chromaOfMidi, displayNote, identifyChord, noteFromMidi, positionForMidi, tuning, type FretPosition, type HighlightMap, type StringFret } from '../../theory'
 
 export function ChordIdentifier() {
   const { t } = useT()
@@ -14,10 +15,14 @@ export function ChordIdentifier() {
   const [frets, setFrets] = useState<Map<number, { fret: number; midi: number }>>(new Map())
   const [keys, setKeys] = useState<Set<number>>(new Set())
 
-  const midis = useMemo(
+  // Đàn MIDI: các phím đang giữ thay cho lựa chọn bằng chuột (nhận được cả hợp âm).
+  const live = useLiveInput()
+  const liveChord = live.source === 'midi' && live.held.length ? live.held : null
+  const selectedMidis = useMemo(
     () => (instrument === 'guitar' ? [...frets.values()].map((f) => f.midi) : [...keys]).sort((a, b) => a - b),
     [instrument, frets, keys],
   )
+  const midis = liveChord ?? selectedMidis
   const matches = useMemo(() => identifyChord(midis), [midis])
   const distinct = new Set(midis.map(chromaOfMidi)).size
 
@@ -35,6 +40,14 @@ export function ChordIdentifier() {
       setKeys(next)
     }
   }
+
+  // Micro chỉ nghe nốt đơn: mỗi nốt nghe được thêm vào lựa chọn.
+  useLiveNote((m) => {
+    if (instrument === 'guitar') {
+      const p = positionForMidi(tuning('standard'), m, 12)
+      if (p) setFrets((prev) => new Map(prev).set(p.string, { fret: p.fret, midi: p.midi }))
+    } else setKeys((prev) => new Set(prev).add(m))
+  }, live.source === 'mic' && live.status === 'on')
 
   const clear = () => {
     setFrets(new Map())
@@ -59,7 +72,7 @@ export function ChordIdentifier() {
       <InstrumentView
         highlights={highlights}
         activeMidis={activeMidis}
-        only={instrument === 'guitar' ? only : undefined}
+        only={instrument === 'guitar' && !liveChord ? only : undefined}
         onlyMidis={instrument === 'piano' ? new Set(midis) : undefined}
         fretCount={12}
         pianoRange={[48, 83]}

@@ -8,6 +8,7 @@ import { RhythmPage } from './features/rhythm/RhythmPage'
 import { KeyExplorer } from './features/keys/KeyExplorer'
 import { ChordIdentifier } from './features/identify/ChordIdentifier'
 import { Review } from './features/review/Review'
+import { ConnectPage } from './features/connect/ConnectPage'
 import { LessonPage } from './features/lesson/LessonPage'
 import { ProgressProvider } from './store/ProgressProvider'
 import { SettingsProvider } from './store/SettingsProvider'
@@ -36,6 +37,7 @@ export function AppRoutes() {
         <Route path="keys" element={<KeyExplorer />} />
         <Route path="identify" element={<ChordIdentifier />} />
         <Route path="review" element={<Review />} />
+        <Route path="connect" element={<ConnectPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

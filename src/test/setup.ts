@@ -17,6 +17,7 @@ vi.mock('../audio/jam', async () => {
   return {
     startJam: vi.fn(async (opts: { ownerId: string }) => jamStore.set({ ownerId: opts.ownerId, bar: 0 })),
     updateJam: vi.fn(async () => {}),
+    onRhythmHit: vi.fn(() => () => {}),
     stopJam: vi.fn(async (ownerId?: string) => {
       if (ownerId === undefined || jamStore.get().ownerId === ownerId) jamStore.set({ ownerId: null, bar: 0 })
     }),

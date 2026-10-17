@@ -7,6 +7,7 @@ import { Piano } from '../../components/Piano/Piano'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
 import { useT } from '../../i18n/useT'
+import { useLiveInput } from '../../input/useLiveInput'
 import { usePersistentState } from '../../store/usePersistentState'
 import {
   CHORD_TYPES,
@@ -48,7 +49,13 @@ export function Explorer() {
 
   const { t, locale } = useT()
   const instrument: InstrumentId = view === 'piano' ? 'piano' : 'guitar'
-  const { playing, activeMidis, play, stop, playNote } = usePlayer(instrument)
+  const { playing, activeMidis: playerMidis, play, stop, playNote } = usePlayer(instrument)
+  // Nốt đang chơi trên đàn thật cũng sáng lên.
+  const live = useLiveInput()
+  const activeMidis = useMemo(() => {
+    const extra = live.source === 'midi' ? live.held : live.detected ? [live.detected.midi] : []
+    return extra.length ? new Set([...playerMidis, ...extra]) : playerMidis
+  }, [playerMidis, live.source, live.held, live.detected])
 
   const scale = useMemo(() => getScale(rootChroma, scaleId), [rootChroma, scaleId])
   const chord = useMemo(() => getChord(rootChroma, chordId), [rootChroma, chordId])

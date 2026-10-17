@@ -59,6 +59,16 @@ function createKit(T: Tone): Kit {
 }
 
 let part: ToneNs.Part | null = null
+const hitListeners = new Set<(time: number) => void>()
+
+/**
+ * Nghe thời điểm từng nhịp đánh của điệu guitar (quạt / móc / chặn), kể cả khi phần Guitar bị tắt —
+ * dùng để chấm độ đều tay. Thời điểm đã cộng độ trễ đầu ra của thiết bị (lúc người chơi thực sự nghe thấy).
+ */
+export function onRhythmHit(l: (time: number) => void): () => void {
+  hitListeners.add(l)
+  return () => hitListeners.delete(l)
+}
 let mutes: Record<JamTrack, boolean> = { drums: false, bass: false, chords: false, click: true }
 
 function release() {
@@ -91,6 +101,8 @@ export async function startJam(opts: JamOptions): Promise<void> {
   const ticks = (beats: number) => `${Math.round(beats * ppq)}i`
   const seconds = (beats: number) => (beats * 60) / transport.bpm.value
   const roll = opts.instrument === 'guitar' ? 0.012 : 0
+  const raw = T.getContext().rawContext as AudioContext
+  const outputLatency = (raw.outputLatency ?? 0) + (raw.baseLatency ?? 0)
 
   const events = buildJamEvents(opts.chords, opts.groove, opts.instrument, opts.rhythm)
   let loops = 0
@@ -112,9 +124,11 @@ export async function startJam(opts: JamOptions): Promise<void> {
           if (!mutes.click) kit.click.triggerAttackRelease(ev.accent ? 'C6' : 'G5', 0.03, time, ev.accent ? 1 : 0.6)
           break
         case 'strum':
+          if (hitListeners.size) hitListeners.forEach((l) => l(time + outputLatency))
           if (!mutes.chords) ev.midis.forEach((m, i) => voice.play([m], time + i * ev.spread, seconds(ev.beats) * 0.95, ev.velocity))
           break
         case 'mute':
+          if (hitListeners.size) hitListeners.forEach((l) => l(time + outputLatency))
           if (!mutes.chords) {
             voice.releaseAll(time)
             kit.chop.triggerAttackRelease('32n', time)

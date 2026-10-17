@@ -331,12 +331,25 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 > Ghi chú: trang Ôn tập (`#/review`) có 7 bộ thẻ sinh câu hỏi ngẫu nhiên (gọi tên quãng, đọc nốt hợp âm, hóa biểu, hợp âm thuận giọng, nghe quãng, nghe loại hợp âm kể cả hợp âm 7, nghe tiến trình), lịch ôn theo hộp Leitner lưu trong tiến độ. Key Explorer ở `#/keys`, nhận diện hợp âm ở `#/identify` (cả hai nằm trong menu Công cụ). Nội dung bài học được tải riêng từng bài (plugin `lesson-meta` trong `vite.config.ts`).
 
 ### Giai đoạn 6 — Tùy chọn / mở rộng
-- [ ] Web MIDI input (piano điện).
-- [ ] Nhận diện cao độ qua micro (guitar).
-- [ ] Nghe micro để chấm độ đều tay khi đệm (phát hiện thời điểm quạt/móc so với phách).
-- [ ] PWA dùng offline.
+- [x] Web MIDI input (piano điện).
+- [x] Nhận diện cao độ qua micro (guitar).
+- [x] Nghe micro để chấm độ đều tay khi đệm (phát hiện thời điểm quạt/móc so với phách).
+- [x] PWA dùng offline.
 - [x] Giao diện và bài học tiếng Anh (i18n).
-- [ ] Thêm nhạc cụ khác (bass, ukulele — chỉ cần đổi tuning của `<Fretboard />`).
+- [x] Thêm nhạc cụ khác (bass, ukulele — chỉ cần đổi tuning của `<Fretboard />`).
+
+> Ghi chú: trang `#/connect` (menu Công cụ) kết nối đàn MIDI hoặc micro; nhận diện cao độ bằng phương pháp McLeod tự viết (`src/input/pitch.ts`), không gửi âm thanh đi đâu. Đàn thật dùng được trong bài luyện tên nốt, bài "bấm trên đàn", nhận diện hợp âm, Explorer và chấm nhịp ở trang Đệm guitar. PWA qua `vite-plugin-pwa`: cài được lên điện thoại, dùng offline (sample piano được lưu sau lần nghe đầu). Explorer có thêm tuning bass 4/5 dây, ukulele, ukulele baritone, mandolin.
+
+## 10. Trạng thái (17/10/2026)
+
+Đã xong toàn bộ 6 giai đoạn: 47 bài học song ngữ (Module 0–10 và nhánh guitar), Explorer, Key Explorer, nhận diện hợp âm, Jam Room, trang tập đệm, ôn tập lặp lại ngắt quãng, kết nối đàn thật, PWA.
+
+Ý tưởng cho sau này:
+- Sample guitar thật thay cho PluckSynth (cần nguồn sample có giấy phép rõ ràng).
+- Hiển thị khuông nhạc (VexFlow / abcjs) cho người học piano.
+- Thêm ví dụ phân tích từ các bài hát Việt Nam (chỉ tiến trình hợp âm).
+- Nhánh đệm tương tự cho piano (tay trái, comping).
+- Phụ thuộc `@tailwindcss/typography` kéo theo `postcss-selector-parser` có cảnh báo bảo mật mức trung bình (chỉ dùng lúc build) — cập nhật khi có bản sửa.
 
 ---
 

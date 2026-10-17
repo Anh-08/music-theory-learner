@@ -3,6 +3,7 @@ import { NavLink, Outlet, useLocation } from 'react-router'
 import { Segmented } from '../components/ui/Segmented'
 import type { MessageKey } from '../i18n/messages'
 import { useT } from '../i18n/useT'
+import { useLiveInput } from '../input/useLiveInput'
 import { useSettings } from '../store/settingsContext'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -19,12 +20,14 @@ const TOOLS: { to: string; label: MessageKey }[] = [
   { to: '/explorer', label: 'nav.explorer' },
   { to: '/keys', label: 'nav.keys' },
   { to: '/identify', label: 'nav.identify' },
+  { to: '/connect', label: 'nav.connect' },
 ]
 
 export function Layout() {
   const { instrument, setInstrument, setLocale } = useSettings()
   const { t, locale } = useT()
   const location = useLocation()
+  const live = useLiveInput()
   const tools = useRef<HTMLDetailsElement>(null)
   const inTools = TOOLS.some((x) => location.pathname.startsWith(x.to))
 
@@ -57,7 +60,12 @@ export function Layout() {
               </div>
             </details>
           </nav>
-          <div className="ml-auto flex gap-4">
+          <div className="ml-auto flex items-end gap-4">
+            {live.status === 'on' && (
+              <NavLink to="/connect" className="rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-medium text-emerald-800 dark:bg-emerald-950 dark:text-emerald-200">
+                {t(live.source === 'midi' ? 'live.pillMidi' : 'live.pillMic')}
+              </NavLink>
+            )}
             <Segmented
               label={t('nav.myInstrument')}
               value={instrument}

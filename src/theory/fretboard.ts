@@ -14,6 +14,12 @@ export const TUNINGS: Tuning[] = [
   { id: 'drop-d', name: { vi: 'Drop D (D A D G B E)', en: 'Drop D (D A D G B E)' }, strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
   { id: 'dadgad', name: { vi: 'DADGAD', en: 'DADGAD' }, strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
   { id: 'open-g', name: { vi: 'Open G (D G D G B D)', en: 'Open G (D G D G B D)' }, strings: ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'] },
+  // Nhạc cụ phím đàn khác: chỉ cần đổi danh sách dây.
+  { id: 'bass4', name: { vi: 'Bass 4 dây (E A D G)', en: '4-string bass (E A D G)' }, strings: ['E1', 'A1', 'D2', 'G2'] },
+  { id: 'bass5', name: { vi: 'Bass 5 dây (B E A D G)', en: '5-string bass (B E A D G)' }, strings: ['B0', 'E1', 'A1', 'D2', 'G2'] },
+  { id: 'ukulele', name: { vi: 'Ukulele (G C E A)', en: 'Ukulele (G C E A)' }, strings: ['G4', 'C4', 'E4', 'A4'] },
+  { id: 'baritone-uke', name: { vi: 'Ukulele baritone (D G B E)', en: 'Baritone ukulele (D G B E)' }, strings: ['D3', 'G3', 'B3', 'E4'] },
+  { id: 'mandolin', name: { vi: 'Mandolin (G D A E)', en: 'Mandolin (G D A E)' }, strings: ['G3', 'D4', 'A4', 'E5'] },
 ]
 
 export function tuning(id: string): Tuning {
@@ -93,4 +99,14 @@ export function positionMidi(t: Tuning, p: StringFret): number {
   const open = t.strings[t.strings.length - p.string]
   if (!open) throw new Error(`Tuning không có dây ${p.string}`)
   return midi(open) + p.fret
+}
+
+/**
+ * Vị trí để bấm một cao độ trên cần đàn (phím thấp nhất). Không có đúng cao độ (micro nghe lệch quãng tám…)
+ * thì lấy vị trí thấp nhất cùng tên nốt. `onString` giới hạn trong một dây.
+ */
+export function positionForMidi(t: Tuning, m: number, fretCount: number, onString?: number): FretPosition | null {
+  const all = fretboardPositions(t, fretCount).filter((p) => onString === undefined || p.string === onString)
+  const byFret = (a: FretPosition, b: FretPosition) => a.fret - b.fret || b.string - a.string
+  return all.filter((p) => p.midi === m).sort(byFret)[0] ?? all.filter((p) => p.chroma === ((m % 12) + 12) % 12).sort(byFret)[0] ?? null
 }

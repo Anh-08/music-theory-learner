@@ -5,6 +5,7 @@ import react from '@vitejs/plugin-react'
 import { readFileSync } from 'node:fs'
 import remarkGfm from 'remark-gfm'
 import { defineConfig, type Plugin } from 'vite'
+import { VitePWA } from 'vite-plugin-pwa'
 
 const META_QUERY = '?meta'
 
@@ -50,6 +51,39 @@ export default defineConfig({
     lessonContent(),
     react({ include: /\.(mdx|tsx?)$/ }),
     tailwindcss(),
+    // Cài lên điện thoại / máy tính và dùng offline. Tắt khi chạy test.
+    !process.env.VITEST &&
+      VitePWA({
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.svg', 'apple-touch-icon.png'],
+        manifest: {
+          name: 'Music Theory Learner',
+          short_name: 'Nhạc lý',
+          description: 'Học nhạc lý thực hành trên guitar và piano — Learn music theory on your own instrument.',
+          lang: 'vi',
+          start_url: '.',
+          scope: '.',
+          display: 'standalone',
+          background_color: '#fafaf9',
+          theme_color: '#f43f5e',
+          icons: [
+            { src: 'pwa-192.png', sizes: '192x192', type: 'image/png' },
+            { src: 'pwa-512.png', sizes: '512x512', type: 'image/png' },
+            { src: 'pwa-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          ],
+        },
+        workbox: {
+          globPatterns: ['**/*.{js,css,html,svg,png}'],
+          // Sample piano nạp từ Tone.js: lưu lại sau lần nghe đầu tiên để dùng offline.
+          runtimeCaching: [
+            {
+              urlPattern: /^https:\/\/tonejs\.github\.io\/audio\//,
+              handler: 'CacheFirst',
+              options: { cacheName: 'piano-samples', expiration: { maxEntries: 80, maxAgeSeconds: 60 * 60 * 24 * 365 }, cacheableResponse: { statuses: [0, 200] } },
+            },
+          ],
+        },
+      }),
   ],
   test: {
     environment: 'jsdom',

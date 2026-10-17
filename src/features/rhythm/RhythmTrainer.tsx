@@ -1,7 +1,10 @@
 import { useEffect, useId, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { groove as getGroove } from '../../audio/grooves'
-import { startJam, stopJam, updateJam } from '../../audio/jam'
+import { onRhythmHit, startJam, stopJam, updateJam } from '../../audio/jam'
+import { scoreTiming, type TimingStats } from '../../audio/timing'
+import { connectMic, onLiveOnset } from '../../input/liveInput'
+import { useLiveInput } from '../../input/useLiveInput'
 import type { JamTrack } from '../../audio/jamEvents'
 import { useJamState } from '../../audio/jamStore'
 import { RHYTHMS, formatStep, parsePattern, type Rhythm, type Step } from '../../audio/rhythms'
@@ -60,6 +63,9 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
   const [mutes, setMutes] = useState<Record<JamTrack, boolean>>({ drums: false, bass: false, chords: false, click: true })
   const [ramp, setRamp] = useState(false)
   const [selectedChord, setSelectedChord] = useState(0)
+  const [timing, setTiming] = useState(false)
+  const [stats, setStats] = useState<TimingStats | null>(null)
+  const live = useLiveInput()
 
   const parsed = useMemo(() => tryParse(text), [text])
   const [lastChords, setLastChords] = useState<ProgressionChord[] | null>(parsed.chords)
@@ -80,6 +86,31 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
     if (!playing) return
     return () => void stopJam(id)
   }, [playing, id])
+
+  // Chấm nhịp: gom thời điểm các nhịp của điệu và các tiếng gảy nghe qua micro, chấm trên ~40 cú gần nhất.
+  useEffect(() => {
+    if (!timing || !playing || live.source !== 'mic' || live.status !== 'on') return
+    const hits: number[] = []
+    const onsets: number[] = []
+    const recompute = () => setStats(scoreTiming(hits.slice(-48), onsets.slice(-40)))
+    const offHit = onRhythmHit((tm) => hits.push(tm))
+    const offOnset = onLiveOnset((tm) => {
+      onsets.push(tm)
+      recompute()
+    })
+    return () => {
+      offHit()
+      offOnset()
+    }
+  }, [timing, playing, live.source, live.status])
+
+  const toggleTiming = (on: boolean) => {
+    setTiming(on)
+    setStats(null)
+    if (!on) return
+    setMutes((m) => ({ ...m, chords: true }))
+    if (live.source !== 'mic' || live.status !== 'on') void connectMic()
+  }
 
   const chooseRhythm = (rid: string) => {
     const r = all.find((x) => x.id === rid) ?? RHYTHMS[0]
@@ -252,6 +283,35 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
         </label>
       </div>
       {playing && ramp && <p className="text-sm text-stone-500">{t('rhythm.currentTempo', { bpm: jam.tempo })}</p>}
+
+      <div className="space-y-1 rounded-lg bg-stone-50 p-3 text-sm dark:bg-stone-800/50">
+        <label className="flex items-center gap-2 font-medium">
+          <input type="checkbox" checked={timing} onChange={(e) => toggleTiming(e.target.checked)} className="accent-rose-500" />
+          {t('rhythm.timing')}
+        </label>
+        {timing && (
+          <>
+            <p className="text-xs text-stone-500">{t('rhythm.timingHint')}</p>
+            {live.source === 'mic' && (live.status === 'error' || live.status === 'unsupported') && (
+              <p role="alert" className="text-amber-700 dark:text-amber-300">
+                {t(live.status === 'unsupported' ? 'connect.unsupported' : `connect.${live.error ?? 'other'}`)}
+              </p>
+            )}
+            {playing && (
+              <p aria-live="polite" className="font-medium">
+                {stats && stats.matched
+                  ? t('rhythm.timingStats', {
+                      matched: stats.matched,
+                      mean: stats.meanMs > 0 ? `+${stats.meanMs}` : stats.meanMs,
+                      dir: t(Math.abs(stats.meanMs) <= 15 ? 'rhythm.onTime' : stats.meanMs > 0 ? 'rhythm.late' : 'rhythm.early'),
+                      pct: stats.onTimePct,
+                    })
+                  : t('rhythm.timingWaiting')}
+              </p>
+            )}
+          </>
+        )}
+      </div>
 
       {voicing && (
         <InstrumentView instrument="guitar" highlights={highlights} only={voicing.positions.length ? voicing.positions : undefined} fretCount={12} />
