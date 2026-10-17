@@ -26,18 +26,23 @@ export function ChordIdentifier() {
   const matches = useMemo(() => identifyChord(midis), [midis])
   const distinct = new Set(midis.map(chromaOfMidi)).size
 
+  // Cập nhật dạng hàm để hai lần bấm liên tiếp thật nhanh không làm mất nốt.
   const onPick = (m: number, p?: FretPosition) => {
     playNote(m)
     if (instrument === 'guitar' && p) {
-      const next = new Map(frets)
-      if (next.get(p.string)?.fret === p.fret) next.delete(p.string)
-      else next.set(p.string, { fret: p.fret, midi: m })
-      setFrets(next)
+      setFrets((prev) => {
+        const next = new Map(prev)
+        if (next.get(p.string)?.fret === p.fret) next.delete(p.string)
+        else next.set(p.string, { fret: p.fret, midi: m })
+        return next
+      })
     } else {
-      const next = new Set(keys)
-      if (next.has(m)) next.delete(m)
-      else next.add(m)
-      setKeys(next)
+      setKeys((prev) => {
+        const next = new Set(prev)
+        if (next.has(m)) next.delete(m)
+        else next.add(m)
+        return next
+      })
     }
   }
 

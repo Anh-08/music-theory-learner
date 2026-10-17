@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { AppRoutes } from '../App'
 import { renderWithProviders } from '../test/renderWithProviders'
@@ -58,5 +58,19 @@ describe('Ôn tập', () => {
     expect(Object.keys(srs)).toHaveLength(1)
     fireEvent.click(screen.getByRole('button', { name: 'Câu tiếp →' }))
     expect(screen.getByText(/Thẻ 2\/1[23]/)).toBeInTheDocument()
+  })
+})
+
+describe('Nhận diện hợp âm — bấm nhanh', () => {
+  beforeEach(() => localStorage.clear())
+
+  it('bấm liên tiếp nhiều nốt trong cùng một lượt vẫn giữ đủ nốt', () => {
+    renderWithProviders(<AppRoutes />, { route: '/identify', instrument: 'guitar' })
+    act(() => {
+      for (const label of ['Dây 6, phím 3: G', 'Dây 5, phím 2: B', 'Dây 4, buông: D', 'Dây 1, phím 1: F']) {
+        screen.getByLabelText(label).dispatchEvent(new MouseEvent('click', { bubbles: true }))
+      }
+    })
+    expect(screen.getByText('G7')).toBeInTheDocument()
   })
 })

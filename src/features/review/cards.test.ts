@@ -33,6 +33,14 @@ describe('thẻ ôn tập', () => {
     expect(ear.options[ear.answer]).toBe('Quãng 5 đúng')
   })
 
+  it('câu đọc nốt hợp âm không có dấu hóa kép', () => {
+    const r = seeded(3)
+    for (let i = 0; i < 200; i++) {
+      const q = buildQuestion(`chord-spell:${['M', 'm', 'dim', 'aug', 'maj7', '7', 'm7', 'm7b5'][i % 8]}`, 'vi', r)
+      for (const o of q.options) expect(o, q.params.chord).not.toMatch(/♭♭|♯♯/)
+    }
+  })
+
   it('chọn thẻ đến hạn trước rồi tới thẻ mới', () => {
     const srs = { 'key-sig:G': { box: 2, due: 50 }, 'key-sig:D': { box: 1, due: 10 }, 'key-sig:A': { box: 3, due: 999 } }
     const s = pickSession(srs, ['key-sig'], 100, 5, seeded(1))

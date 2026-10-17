@@ -85,6 +85,11 @@ function withDistractors(answer: string, pool: string[], random: Random): { opti
 }
 
 const ROOTS = ['C', 'D', 'E', 'F', 'G', 'A', 'Bb', 'Eb']
+
+const SPELL_TYPES = ['M', 'm', 'dim', 'aug', 'maj7', '7', 'm7', 'm7b5']
+const SPELL_ROOTS = ['C', 'C#', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'].filter((r) =>
+  SPELL_TYPES.every((id) => chordFromRoot(r, id).notes.every((n) => !/(bb|##)/.test(n))),
+)
 const KEYS = ['C', 'G', 'D', 'A', 'F', 'Bb', 'E', 'Eb']
 
 function sigText(tonic: string): string {
@@ -118,7 +123,8 @@ export function buildQuestion(cardId: string, locale: Locale, random: Random = M
       return { prompt: 'review.q.chordEar', params: {}, options, answer, events: [...chordEvents(midis, 0, 1.4), ...arpeggioThenChord(midis, 0.3).slice(0, midis.length).map((e) => ({ ...e, at: e.at + 1.6 }))] }
     }
     case 'chord-spell': {
-      const root = pick(['C', 'D', 'E', 'F', 'G', 'A', 'B', 'Bb', 'Eb', 'Ab'], random)
+      // Chỉ chọn chủ âm mà mọi phương án đều không cần dấu hóa kép (E♭♭, F𝄪…) — dễ đọc với người học.
+      const root = pick(SPELL_ROOTS, random)
       const spell = (id: string) => chordFromRoot(root, id).notes.map(displayNote).join(' ')
       const { options, answer } = withDistractors(spell(item), d.items.map(spell), random)
       return { prompt: 'review.q.chordSpell', params: { chord: displayNote(root) + chordType(item).suffix }, options, answer }
