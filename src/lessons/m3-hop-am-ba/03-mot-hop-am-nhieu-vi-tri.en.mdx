@@ -1,0 +1,77 @@
+export const meta = {
+  title: 'One chord, many places',
+  description: 'Guitar: the CAGED system. Piano: spreading chords across two hands. Play a chord anywhere on your instrument.',
+  minutes: 15,
+}
+
+The same C chord can be played in many places, with many ways of arranging its notes (**voicings**). Knowing several positions lets you pick the sound that suits the song and change chords with less movement.
+
+<OnlyFor instrument="guitar">
+
+## The CAGED system
+
+The five open chords **C, A, G, E and D** have five different shapes. Here is the magic: replace the nut with your index finger and you can **slide each shape up the neck** to play any chord. And the five shapes **link together** along the neck in exactly the order C – A – G – E – D.
+
+Here are five ways to play a **C** chord, moving up the neck (watch where the red root notes are):
+
+<Show root="C" chord="M" shape="x32010" frets={15} labels="interval" caption="1. C shape (open C chord): x32010" />
+
+<Show root="C" chord="M" shape="x35553" frets={15} labels="interval" caption="2. A shape, barred at fret 3: x35553" />
+
+<Show root="C" chord="M" shape="8,7,5,5,5,8" frets={15} labels="interval" caption="3. G shape, around frets 5–8" />
+
+<Show root="C" chord="M" shape="8,10,10,9,8,8" frets={15} labels="interval" caption="4. E shape, barred at fret 8" />
+
+<Show root="C" chord="M" shape="x,x,10,12,13,12" frets={15} labels="interval" caption="5. D shape, around frets 10–13" />
+
+After the D shape comes the C shape an octave higher (fret 12), and the cycle repeats. Put all five together and you get every C – E – G on the neck:
+
+<Show root="C" chord="M" frets={15} labels="interval" play="none" />
+
+<Callout type="tip" title="How to use CAGED">
+The two most used shapes are the **E shape** (root on string 6) and the **A shape** (root on string 5) — the familiar barre chords. Knowing the notes on strings 6 and 5 (Module 0) means you can play every major chord. The other three shapes (C, G, D) are useful higher up the neck, and as a framework for finding scales around a chord when improvising (Module 5).
+</Callout>
+
+<Quiz id="m3-caged-q1" question="Play the E shape (barre chord, root on string 6) at fret 5. Which chord is it?" options={['G', 'A', 'B', 'C']} answer={1} explain="String 6 fret 5 is A → A major." />
+
+<Quiz id="m3-caged-q2" question="Play the A shape (root on string 5) barred at fret 7. Which chord is it?" options={['D', 'E', 'F', 'G']} answer={1} explain="String 5 fret 7 is E → E major." />
+
+<Quiz id="m3-caged-q3" question="To play G major with the A shape (root on string 5), which fret do you barre?" options={['3', '5', '7', '10']} answer={3} explain="String 5 fret 10 is G." />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Spreading a chord across two hands
+
+A basic accompaniment that always works:
+
+- **Left hand**: the root (optionally adding the octave or the 5th).
+- **Right hand**: the triad, choosing the **closest inversion** to the previous chord.
+
+<Show notes="C3 G3 E4 G4 C5" labels="interval" play="chord" caption="An open C: left hand C3 – G3, right hand E4 – G4 – C5 (1st inversion)" />
+
+Spreading the notes like this (**open voicing**) sounds fuller than three notes bunched together (**close voicing**), especially when playing solo.
+
+## Accompanying C – Am – F – G
+
+Left hand plays the root, right hand keeps the inversions as close together as possible:
+
+| Chord | Left hand | Right hand |
+|---|---|---|
+| C | C3 | C4 – E4 – G4 |
+| Am | A2 | C4 – E4 – A4 |
+| F | F2 | C4 – F4 – A4 |
+| G | G2 | B3 – D4 – G4 |
+
+Listen to the right hand: <Play notes="C4 E4 G4" as="chord">C</Play> <Play notes="C4 E4 A4" as="chord">Am</Play> <Play notes="C4 F4 A4" as="chord">F</Play> <Play notes="B3 D4 G4" as="chord">G</Play>
+
+<Quiz id="m3-voicing-q-piano1" question="Your right hand holds C4 – E4 – G4 (a C chord). What is the closest way to change to Am?" options={['Move the whole hand up to A4 – C5 – E5', 'Just move G4 up to A4', 'Just move C4 down to A3', 'Just move E4 up to F4']} answer={1} explain="Am = A C E. C and E are already there; only G needs to change to A." />
+
+<Quiz id="m3-voicing-q-piano2" question="Which note does the left hand play for an F chord?" options={['C', 'F', 'A', 'G']} answer={1} explain="The left hand plays the root of the chord — F." />
+
+</OnlyFor>
+
+<Callout type="practice" title="Pick up your instrument">
+Take a G major chord and find **at least three different positions / voicings** on your instrument. Play a G – C – D loop using positions that keep your hand movement to a minimum.
+</Callout>

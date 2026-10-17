@@ -1,12 +1,14 @@
 import { NavLink, Outlet } from 'react-router'
 import { Segmented } from '../components/ui/Segmented'
+import { useT } from '../i18n/useT'
 import { useSettings } from '../store/settingsContext'
 
 const navClass = ({ isActive }: { isActive: boolean }) =>
   `rounded-md px-3 py-1.5 text-sm ${isActive ? 'bg-stone-200 font-medium dark:bg-stone-800' : 'text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-white'}`
 
 export function Layout() {
-  const { instrument, setInstrument } = useSettings()
+  const { instrument, setInstrument, setLocale } = useSettings()
+  const { t, locale } = useT()
   return (
     <div className="min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
       <header className="border-b border-stone-200 dark:border-stone-800">
@@ -14,25 +16,34 @@ export function Layout() {
           <NavLink to="/" className="text-lg font-bold tracking-tight">
             Music Theory Learner
           </NavLink>
-          <nav aria-label="Chính" className="flex gap-1">
+          <nav aria-label={t('nav.main')} className="flex gap-1">
             <NavLink to="/" end className={navClass}>
-              Lộ trình
+              {t('nav.curriculum')}
             </NavLink>
             <NavLink to="/explorer" className={navClass}>
-              Explorer
+              {t('nav.explorer')}
             </NavLink>
             <NavLink to="/jam" className={navClass}>
-              Jam Room
+              {t('nav.jam')}
             </NavLink>
           </nav>
-          <div className="ml-auto">
+          <div className="ml-auto flex gap-4">
             <Segmented
-              label="Nhạc cụ của tôi"
+              label={t('nav.myInstrument')}
               value={instrument}
               onChange={setInstrument}
               options={[
-                { value: 'guitar', label: 'Guitar' },
-                { value: 'piano', label: 'Piano' },
+                { value: 'guitar', label: t('common.guitar') },
+                { value: 'piano', label: t('common.piano') },
+              ]}
+            />
+            <Segmented
+              label={t('nav.language')}
+              value={locale}
+              onChange={setLocale}
+              options={[
+                { value: 'vi', label: 'VI' },
+                { value: 'en', label: 'EN' },
               ]}
             />
           </div>

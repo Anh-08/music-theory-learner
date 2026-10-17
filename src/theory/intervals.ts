@@ -1,4 +1,5 @@
 import { Interval } from 'tonal'
+import type { Locale } from '../i18n/locale'
 
 /**
  * Nhãn ngắn của một quãng tính từ chủ âm, dạng dùng trong công thức hợp âm/scale:
@@ -37,16 +38,24 @@ const QUALITY_EN: Record<string, string> = {
 
 const ORDINAL_EN = ['', 'unison', '2nd', '3rd', '4th', '5th', '6th', '7th', 'octave', '9th', '10th', '11th', '12th', '13th']
 
-/** Tên đầy đủ: "3m" → "Quãng 3 thứ (minor 3rd)". */
-export function intervalName(name: string): string {
-  const i = Interval.get(name)
-  if (i.empty) throw new Error(`Quãng không hợp lệ: ${name}`)
-  if (i.num === 1 && i.q === 'P') return 'Đồng âm (unison)'
-  if (i.num === 8 && i.q === 'P') return 'Quãng 8 đúng (octave)'
-  return `Quãng ${i.num} ${QUALITY_VI[i.q]} (${QUALITY_EN[i.q]} ${ORDINAL_EN[i.num] ?? `${i.num}th`})`
+function englishName(i: ReturnType<typeof Interval.get>): string {
+  if (i.num === 1 && i.q === 'P') return 'unison'
+  if (i.num === 8 && i.q === 'P') return 'octave'
+  return `${QUALITY_EN[i.q]} ${ORDINAL_EN[i.num] ?? `${i.num}th`}`
 }
 
-/** Tên tiếng Việt ngắn: "3m" → "Quãng 3 thứ". */
-export function intervalNameVi(name: string): string {
-  return intervalName(name).replace(/ \(.*\)$/, '')
+/** Tên đầy đủ: "3m" → "Quãng 3 thứ (minor 3rd)" (tiếng Việt) hoặc "Minor 3rd" (tiếng Anh). */
+export function intervalName(name: string, locale: Locale = 'vi'): string {
+  const i = Interval.get(name)
+  if (i.empty) throw new Error(`Quãng không hợp lệ: ${name}`)
+  const en = englishName(i)
+  if (locale === 'en') return en[0].toUpperCase() + en.slice(1)
+  if (i.num === 1 && i.q === 'P') return 'Đồng âm (unison)'
+  if (i.num === 8 && i.q === 'P') return 'Quãng 8 đúng (octave)'
+  return `Quãng ${i.num} ${QUALITY_VI[i.q]} (${en})`
+}
+
+/** Tên ngắn: "3m" → "Quãng 3 thứ" / "Minor 3rd". */
+export function intervalShortName(name: string, locale: Locale = 'vi'): string {
+  return intervalName(name, locale).replace(/ \(.*\)$/, '')
 }

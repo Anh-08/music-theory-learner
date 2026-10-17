@@ -1,0 +1,84 @@
+export const meta = {
+  title: 'The 12 notes',
+  description: 'Every piece you have ever played uses just 12 notes. Understand half steps, whole steps, sharps and flats.',
+  minutes: 10,
+}
+
+## Only 12 notes
+
+Ballad, rock or jazz — Western music uses just **12 notes**, repeated at different heights. Seven of them are the **natural notes**, which you probably already know:
+
+| Letter | C | D | E | F | G | A | B |
+|---|---|---|---|---|---|---|---|
+| Solfège | Do | Re | Mi | Fa | Sol | La | Ti |
+
+The other five sit *between* the natural notes. In this app we use letter names (C, D, E…), since that is how chord sheets are written.
+
+## Half steps and whole steps
+
+- A **half step** (semitone) is the smallest distance between two notes. On guitar: move **1 fret**. On piano: move to the **very next key** (black keys included).
+- A **whole step** (tone) = 2 half steps. Guitar: 2 frets. Piano: skip one key.
+
+Here are the 12 notes going up one half step at a time, ending on C again, higher:
+
+<Show notes="C4 C#4 D4 D#4 E4 F4 F#4 G4 G#4 A4 A#4 B4" positions="5:3 5:4 5:5 5:6 5:7 5:8 5:9 5:10 5:11 5:12 5:13 5:14 5:15" frets={15} caption="12 notes in a row — on guitar, string 5 from fret 3 to fret 15" />
+
+<Callout type="note" title="Two special pairs: E–F and B–C">
+**E and F**, and **B and C**, are only a **half step** apart — there is no note between them. On a piano you can see it straight away: no black key sits between these pairs. Every other pair of natural notes is a whole step apart.
+</Callout>
+
+## Sharps (♯) and flats (♭)
+
+- **♯ (sharp)** raises a note by a half step: C♯ is the note just above C.
+- **♭ (flat)** lowers a note by a half step: D♭ is the note just below D.
+
+So C♯ and D♭ are **the same key, the same sound** — they are called **enharmonic** notes. When do we say C♯ and when D♭? That depends on the *key* of the song, which you will learn in Module 2. For now just remember: every black key has two names.
+
+<Callout type="tip">
+In theory there are also E♯ (= F) and C♭ (= B). They look odd, but they show up in keys with many sharps or flats. Don't worry about them yet.
+</Callout>
+
+## The octave: same name, higher
+
+After 12 half steps you arrive at a note with the same name but twice the frequency — an **octave** higher. Two notes an octave apart sound so "alike" that we give them the same name: <Play notes="C4 C5" /> <Play notes="A3 A4" />
+
+The number after a note name tells you the octave: **C4** is "middle C" on the piano and **C5** is one octave higher. On guitar, the open 6th string is **E2**.
+
+<Quiz
+  id="m0-12-not-q1"
+  question="How far apart are E and F?"
+  options={['A half step', 'A whole step', 'A step and a half', 'Not at all — they are the same note']}
+  answer={0}
+  explain="E–F (and B–C) are the two pairs of natural notes only a half step apart."
+/>
+
+<Quiz
+  id="m0-12-not-q2"
+  question="Which note is enharmonic with G♯?"
+  options={['A♭', 'A♯', 'G♭', 'F♯']}
+  answer={0}
+  explain="G♯ is a half step above G, which is also a half step below A — that is, A♭."
+/>
+
+<Quiz
+  id="m0-12-not-q3"
+  question="How far is it from C up to D?"
+  options={['A half step', 'A whole step', 'A step and a half', 'Two whole steps']}
+  answer={1}
+  explain="C → C♯ → D: two half steps, which is one whole step."
+/>
+
+<Quiz
+  id="m0-12-not-q4"
+  question="What note is a half step above B?"
+  options={['B♯ — there is no other note', 'C', 'C♯', 'A♯']}
+  answer={1}
+  explain="B–C is only a half step, so the note right above B is C (in theory it can also be called B♯)."
+/>
+
+<FindNotes id="m0-12-not-find-csharp" prompt="Click any C♯ / D♭ on the instrument." targets="C#" />
+
+<Callout type="practice" title="Pick up your instrument">
+- **Guitar:** play the 12 notes in a row on string 5, from fret 3 (C) to fret 15 (C), saying each note name out loud. Repeat on string 6 starting at fret 8.
+- **Piano:** play from C4 up to C5 on both white and black keys, naming every note — say both names for black keys ("C sharp – D flat").
+</Callout>

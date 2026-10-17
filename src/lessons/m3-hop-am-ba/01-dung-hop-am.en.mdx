@@ -1,0 +1,74 @@
+export const meta = {
+  title: 'Building chords from thirds',
+  description: 'A triad is three notes a third apart. Four kinds: major, minor, diminished, augmented.',
+  minutes: 15,
+}
+
+You have played dozens of chords. This lesson shows you **what is inside them** — so you can build any chord yourself instead of looking it up.
+
+## Stacking thirds
+
+A **triad** has three notes: the **root** (1), a **3rd** and a **5th** above the root. In other words: take a note, stack a 3rd on it, then stack another 3rd.
+
+There are two kinds of 3rd (major and minor), so there are exactly **four** ways to stack them:
+
+| Type | Formula | Stack | Root C | Symbol |
+|---|---|---|---|---|
+| Major | 1 – 3 – 5 | major 3rd + minor 3rd | C E G | C |
+| Minor | 1 – ♭3 – 5 | minor 3rd + major 3rd | C E♭ G | Cm |
+| Diminished | 1 – ♭3 – ♭5 | minor 3rd + minor 3rd | C E♭ G♭ | Cdim, C° |
+| Augmented | 1 – 3 – ♯5 | major 3rd + major 3rd | C E G♯ | Caug, C+ |
+
+<Show root="C" chord="M" labels="interval" caption="C major: 1 – 3 – 5" />
+
+<Show root="C" chord="m" labels="interval" caption="C minor: 1 – ♭3 – 5 — only one note different from C major" />
+
+Hear all four: <Play notes="C4 E4 G4" as="both">Major</Play> <Play notes="C4 Eb4 G4" as="both">Minor</Play> <Play notes="C4 Eb4 Gb4" as="both">Diminished</Play> <Play notes="C4 E4 G#4" as="both">Augmented</Play>
+
+<Callout type="note" title="The 3rd decides the colour">
+Major and minor differ only in the **3rd**: lower it by a half step and the chord turns from bright to sad. The perfect 5th is the solid "floor". A diminished chord (♭5) sounds tense and unstable; an augmented chord (♯5) sounds suspended, as if waiting for something.
+</Callout>
+
+## Looking inside familiar chords
+
+<OnlyFor instrument="guitar">
+
+You have been playing E and Em since your first days. Look at which degrees their notes are:
+
+<Show root="E" chord="M" shape="022100" labels="interval" caption="E (022100): E – B – E – G♯ – B – E. Six strings but only three notes: 1, 3, 5" />
+
+<Show root="E" chord="m" shape="022000" labels="interval" caption="Em (022000): lift the finger on string 3 → G♯ becomes G, the major 3rd becomes a minor 3rd" />
+
+A six-string chord is just **three notes doubled** in several octaves. When you build your own chords, just make sure 1, 3 and 5 are there.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+On piano, a major chord is **4 + 3** half steps and a minor chord is **3 + 4**. Try it on D:
+
+<Show notes="D4 F#4 A4" labels="interval" play="chord" caption="D major: D – F♯ – A" />
+
+<Show notes="D4 F4 A4" labels="interval" play="chord" caption="D minor: D – F – A — the middle finger moves down one key" />
+
+</OnlyFor>
+
+<Quiz id="m3-dung-q1" question="Which notes make a D major chord?" options={['D F A', 'D F♯ A', 'D F♯ A♯', 'D E A']} answer={1} explain="D → F♯ is a major 3rd, F♯ → A is a minor 3rd." />
+
+<Quiz id="m3-dung-q2" question="Which chord is E – G – B?" options={['E', 'Em', 'Edim', 'G']} answer={1} explain="E → G is a minor 3rd and E → B a perfect 5th → E minor." />
+
+<Quiz id="m3-dung-q3" question="What chord is B – D – F?" options={['B minor', 'B diminished', 'D major', 'B augmented']} answer={1} explain="B → D is a minor 3rd and B → F a diminished 5th → Bdim (B°)." />
+
+<Quiz id="m3-dung-q4" question="What chord is F – A – C♯?" options={['F major', 'F augmented', 'A minor', 'F minor']} answer={1} explain="F → A is a major 3rd and A → C♯ is also a major 3rd → F augmented (F+)." />
+
+<FindNotes id="m3-dung-find-dm" prompt="Click all the notes of a Dm chord." targets="D F A" />
+
+<FindNotes id="m3-dung-find-bb" prompt="Click all the notes of a B♭ major chord." targets="Bb D F" />
+
+## Ear training: major or minor?
+
+<EarQuiz id="m3-tai-truong-thu" kind="chord" options="M m" />
+
+Once you are confident, add diminished and augmented:
+
+<EarQuiz id="m3-tai-bon-loai" kind="chord" options="M m dim aug" />

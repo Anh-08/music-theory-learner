@@ -1,0 +1,58 @@
+export const meta = {
+  title: 'Scale degrees and how they feel',
+  description: 'Every note in a scale has a role: a note of rest, a note of tension, a note that wants to go home.',
+  minutes: 12,
+}
+
+Number the notes of a scale from 1 to 7 and you get the **scale degrees**. Talking in degrees instead of note names lets you describe a note's *role* regardless of key: degree 5 of C major is G, of G major it is D, but it plays the same part everywhere.
+
+<Show root="C" scale="major" labels="interval" play="run" caption="C major labelled by degree" />
+
+## Names and roles of each degree
+
+| Degree | Name | Feeling |
+|---|---|---|
+| 1 | Tonic | Home — complete rest |
+| 2 | Supertonic | Floating, wants to go to 1 or up to 3 |
+| 3 | Mediant | Stable, defines the major colour |
+| 4 | Subdominant | Slightly tense, wants to fall to 3 |
+| 5 | Dominant | Stable but "open", like a comma |
+| 6 | Submediant | Soft, a little sad, wants to go to 5 |
+| 7 | Leading tone | Very tense, wants to rise to 1 right away |
+
+## Hear the pull towards the tonic
+
+Play the scale going up and **stop on degree 7**: <Play notes="C4 D4 E4 F4 G4 A4 B4" />
+
+Uncomfortable, right? Your ear wants the next note. Now let it go home: <Play notes="B4 C5" />
+
+Degree 7 is only a **half step** below degree 1, so it is pulled upwards most strongly — hence the name *leading tone*. Similarly, degree 4 is pulled down to degree 3 (also a half step away): <Play notes="F4 E4" />
+
+<Callout type="tip" title="Your first improvisation secret">
+Degrees **1, 3 and 5** are "resting" notes — put them at the end of a phrase or on strong beats and the phrase will sound like it lands somewhere. Degrees **2, 4, 6 and 7** are "passing" notes — use them to move between the resting notes. You will use this principle forever.
+</Callout>
+
+## Why talk in numbers?
+
+Musicians say "this song goes 1 – 5 – 6 – 4" instead of "C – G – Am – F", because numbers work in **every key**. Want to transpose? Just know the scale of the new key and swap the numbers for notes.
+
+<Quiz id="m2-bac-q1" question="What is degree 5 (the dominant) of G major?" options={['C', 'D', 'E', 'F♯']} answer={1} explain="G (1) A (2) B (3) C (4) D (5)." />
+
+<Quiz id="m2-bac-q2" question="What is the leading tone of F major?" options={['E', 'E♭', 'B♭', 'G']} answer={0} explain="The leading tone is degree 7, a half step below the tonic: E." />
+
+<Quiz id="m2-bac-q3" question="Which degree is called the subdominant?" options={['Degree 2', 'Degree 4', 'Degree 6', 'Degree 7']} answer={1} explain="The subdominant is degree 4 — one step 'below the dominant'." />
+
+<Quiz id="m2-bac-q4" question="In A major, which degree is C♯?" options={['2', '3', '4', '6']} answer={1} explain="A (1) B (2) C♯ (3)." />
+
+<Quiz
+  id="m2-bac-q5"
+  question="Listen to this melody. Which degree of C major does it end on?"
+  options={['Degree 1 — it sounds complete', 'Degree 7 — it sounds unfinished']}
+  answer={1}
+  play="E4 D4 C4 D4 E4 G4 B4"
+  explain="It ends on B — the leading tone — so the phrase sounds unfinished."
+/>
+
+<Callout type="practice" title="Pick up your instrument">
+Play a C chord (or have someone hold a C). Improvise a short phrase using only the C major scale and **always end on C, E or G**. Then try ending on B or F to hear the difference.
+</Callout>

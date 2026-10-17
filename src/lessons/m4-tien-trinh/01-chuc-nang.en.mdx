@@ -1,0 +1,56 @@
+export const meta = {
+  title: 'Chord functions: home, away, back home',
+  description: 'Why G wants to go to C, and the three roles every diatonic chord plays.',
+  minutes: 15,
+}
+
+In Module 3 you met the 7 diatonic chords. But they are not equal: each chord plays a **role** in the story of a song. Understanding chord roles is understanding why a progression sounds "right" — and lets you guess the next chord when hearing a new song.
+
+## The three functions
+
+| Function | Feeling | Chords (major key) | In C major |
+|---|---|---|---|
+| **Tonic** (T) | Home, settled | **I**, vi, iii | **C**, Am, Em |
+| **Subdominant** (S) | Leaving home, opening up | **IV**, ii | **F**, Dm |
+| **Dominant** (D) | Tense, wants to go home | **V**, vii° | **G**, B° |
+
+Chords with the same function share many notes: Am (A C E) shares C and E with C (C E G) — so Am can "stand in" for C. Dm (D F A) shares F and A with F (F A C).
+
+The basic journey of harmony is **T → S → D → T** — home, out, tension, home: <PlayChords chords="C F G C" />
+
+## Why does the dominant want to go to the tonic?
+
+The G chord (G – B – D) contains **B — the leading tone** of C. B is only a half step from C, so it is pulled up to C very strongly. Add a 7th to get **G7** (G – B – D – F) and F also wants to fall to E — and B and F form a **tritone**, the most tense interval. That tension is fully released when you land on C: <PlayChords chords="G7 C" seconds={1.8} />
+
+On top of that, the root moves from G down to C — **down a fifth**, the strongest motion around the circle of fifths.
+
+## Cadences: how phrases end
+
+The way a phrase ends creates different feelings:
+
+| Cadence | Progression | Feeling | Listen |
+|---|---|---|---|
+| Authentic | V → I | A full stop. Phrase over. | <PlayChords chords="Dm G C" /> |
+| Plagal | IV → I | Gentle, like "A-men" | <PlayChords chords="C F C" /> |
+| Half | … → V | A comma, an unanswered question | <PlayChords chords="C Am F G" /> |
+| Deceptive | V → vi | You expect home but turn somewhere sad | <PlayChords chords="F G Am" /> |
+
+<Callout type="tip" title="Use it when listening">
+Next time you listen to a song, notice **the end of each phrase**: which chord does the line end on? Mid-song phrases often end on V (a half cadence, so the song can continue), and the final phrase ends on I. Hearing this means you have started "hearing harmony".
+</Callout>
+
+## Try it: T – S – D – T
+
+Start the backing track and notice how each chord feels. The notes of the chord that is sounding light up on the instrument — try humming the red note (the root) of each chord.
+
+<Jam progression="C Am F G" songKey="C" groove="pop" tempo={90} />
+
+<Quiz id="m4-chuc-nang-q1" question="In C major, what function does Am have?" options={['Tonic (T)', 'Subdominant (S)', 'Dominant (D)', 'Not in the key']} answer={0} explain="Am (vi) shares C and E with the tonic chord C — so it belongs to the tonic group." />
+
+<Quiz id="m4-chuc-nang-q2" question="In G major, which chord is the dominant (V)?" options={['C', 'D', 'Em', 'Am']} answer={1} explain="G A B C D → degree 5 is D." />
+
+<Quiz id="m4-chuc-nang-q3" question="A progression ending G → Am in the key of C is which cadence?" options={['Authentic', 'Plagal', 'Half', 'Deceptive']} answer={3} explain="V → vi: the ear expects I (C) but hears Am." />
+
+<Quiz id="m4-chuc-nang-q4" question="Which note in G7 is pulled most strongly towards C?" options={['G', 'B', 'D', 'All three equally']} answer={1} explain="B is the leading tone of C, only a half step below it." />
+
+<Quiz id="m4-chuc-nang-q5" question="The progression C – F – C – G stops on G. Which cadence is that?" options={['Authentic', 'Plagal', 'Half', 'Deceptive']} answer={2} explain="It stops on V (G) — the phrase sounds like a question waiting to return to C." />

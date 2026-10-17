@@ -1,0 +1,54 @@
+export const meta = {
+  title: 'The major pentatonic and the "same notes" secret',
+  description: 'Five bright notes for songs in major keys — and why they share notes with the minor pentatonic.',
+  minutes: 15,
+}
+
+## Five bright notes
+
+The **major pentatonic** is the major scale without degrees **4** and **7** — exactly the two most "tense" notes you met in Module 2:
+
+| | 1 | 2 | 3 | 5 | 6 |
+|---|---|---|---|---|---|
+| C major pentatonic | C | D | E | G | A |
+
+<Show root="C" scale="major pentatonic" labels="interval" />
+
+It sounds happy, open and clear — perfect for pop, country and many folk melodies (including Vietnamese folk songs, which rely heavily on pentatonic scales).
+
+## The secret: the same notes as the minor pentatonic
+
+Compare: C major pentatonic = **C D E G A**. A minor pentatonic = **A C D E G**. The same five notes!
+
+Just as C major and A minor are relative keys (Module 2), **the major pentatonic of X shares its notes with the minor pentatonic starting on degree 6 of X** (three half steps below X). What differs is **which note is "home"**:
+
+- Over a progression in C major → think "C is home", end phrases on C, E, G.
+- Over a progression in A minor → think "A is home", end phrases on A, C, E.
+
+<OnlyFor instrument="guitar">
+
+So box 1 of A minor pentatonic (fret 5) is also a C major pentatonic shape — you just change the home note. Look at the interval labels counted from C:
+
+<Show root="C" scale="major pentatonic" positions="6:5 6:8 5:5 5:7 4:5 4:7 3:5 3:7 2:5 2:8 1:5 1:8" frets={15} labels="interval" caption="The same box 1 shape at fret 5, but now the red note is C" />
+
+Quick trick: want G major pentatonic? Take the minor pentatonic box 1 shape and put your index finger on **E** (three frets below G) — string 6 fret 12 (or fret 0).
+
+</OnlyFor>
+
+## Playing over a major-key progression
+
+Start I – V – vi – IV in C. Improvise with C major pentatonic, and try to **end phrases on a note of the current chord** (the blue / red notes on the instrument).
+
+<Jam progression="C G Am F" songKey="C" groove="pop" tempo={96} scale="major pentatonic" />
+
+<Callout type="tip" title="Same notes, different feeling">
+Try playing exactly the phrases you used over Am – Dm in the previous lesson. Over a C major backing they naturally sound brighter — because the chords change which note feels like home. Harmony decides the colour of a melody.
+</Callout>
+
+<Quiz id="m5-ngu-cung-truong-q1" question="Which notes are in G major pentatonic?" options={['G A B D E', 'G A B C D', 'G B♭ C D F', 'G A C D E']} answer={0} explain="G (1) A (2) B (3) D (5) E (6)." />
+
+<Quiz id="m5-ngu-cung-truong-q2" question="D major pentatonic shares its notes with which minor pentatonic?" options={['A minor pentatonic', 'B minor pentatonic', 'E minor pentatonic', 'F♯ minor pentatonic']} answer={1} explain="Degree 6 of D major is B: D E F♯ A B = B D E F♯ A." />
+
+<Quiz id="m5-ngu-cung-truong-q3" question="Which degrees of the major scale does the major pentatonic leave out?" options={['2 and 6', '4 and 7', '3 and 7', '2 and 4']} answer={1} explain="It drops degrees 4 and 7 — the two notes a half step from their neighbours." />
+
+<FindNotes id="m5-ngu-cung-truong-find-f" prompt="Click all 5 notes of F major pentatonic." targets="F G A C D" />

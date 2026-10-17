@@ -1,18 +1,19 @@
+import type { Localized } from '../i18n/locale'
 import { chromaOfMidi, midi, type Chroma } from './notes'
 
 export interface Tuning {
   id: string
-  name: string
+  name: Localized
   /** Dây buông từ dây trầm nhất (dây 6) đến dây cao nhất (dây 1). */
   strings: string[]
 }
 
 export const TUNINGS: Tuning[] = [
-  { id: 'standard', name: 'Standard (E A D G B E)', strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
-  { id: 'half-down', name: 'Hạ nửa cung (E♭ A♭ D♭ G♭ B♭ E♭)', strings: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'] },
-  { id: 'drop-d', name: 'Drop D (D A D G B E)', strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
-  { id: 'dadgad', name: 'DADGAD', strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
-  { id: 'open-g', name: 'Open G (D G D G B D)', strings: ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'] },
+  { id: 'standard', name: { vi: 'Standard (E A D G B E)', en: 'Standard (E A D G B E)' }, strings: ['E2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
+  { id: 'half-down', name: { vi: 'Hạ nửa cung (E♭ A♭ D♭ G♭ B♭ E♭)', en: 'Half-step down (E♭ A♭ D♭ G♭ B♭ E♭)' }, strings: ['Eb2', 'Ab2', 'Db3', 'Gb3', 'Bb3', 'Eb4'] },
+  { id: 'drop-d', name: { vi: 'Drop D (D A D G B E)', en: 'Drop D (D A D G B E)' }, strings: ['D2', 'A2', 'D3', 'G3', 'B3', 'E4'] },
+  { id: 'dadgad', name: { vi: 'DADGAD', en: 'DADGAD' }, strings: ['D2', 'A2', 'D3', 'G3', 'A3', 'D4'] },
+  { id: 'open-g', name: { vi: 'Open G (D G D G B D)', en: 'Open G (D G D G B D)' }, strings: ['D2', 'G2', 'D3', 'G3', 'B3', 'D4'] },
 ]
 
 export function tuning(id: string): Tuning {

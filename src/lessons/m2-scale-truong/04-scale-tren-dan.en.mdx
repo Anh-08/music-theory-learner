@@ -1,0 +1,67 @@
+export const meta = {
+  title: 'The major scale on your instrument',
+  description: 'Shapes and fingerings that let you play the major scale in any key without thinking.',
+  minutes: 15,
+}
+
+Understanding the formula is one thing; playing the scale fluently is another. This lesson gives you **shapes** so your hands can run on autopilot while your mind listens to the music.
+
+<OnlyFor instrument="guitar">
+
+## One-octave shape, root on string 6
+
+This shape starts with the root on string 6. Put your **2nd finger** on the root. For example, G major at fret 3:
+
+<Show root="G" scale="major" positions="6:3 6:5 5:2 5:3 5:5 4:2 4:4 4:5" labels="interval" caption="G major, one octave: string 6 (3, 5) – string 5 (2, 3, 5) – string 4 (2, 4, 5)" />
+
+This is a **movable** shape: slide it up to fret 5 and you have A major, to fret 8 and it is C major. Knowing the notes on string 6 (Module 0) = being able to play the major scale in every key.
+
+## One-octave shape, root on string 5
+
+<Show root="C" scale="major" positions="5:3 5:5 4:2 4:3 4:5 3:2 3:4 3:5" labels="interval" caption="C major, root on string 5 fret 3: string 5 (3, 5) – string 4 (2, 3, 5) – string 3 (2, 4, 5)" />
+
+## A full two-octave position
+
+Join the two shapes and extend up to string 1 and you get a complete position between frets 2 and 5:
+
+<Show root="G" scale="major" positions="6:3 6:5 5:2 5:3 5:5 4:2 4:4 4:5 3:2 3:4 3:5 2:3 2:5 1:2 1:3 1:5" labels="interval" caption="G major, frets 2–5 position, two octaves" />
+
+And here are all the notes of G major on the neck — every other position is just a "slice" of this picture:
+
+<Show root="G" scale="major" frets={15} labels="interval" play="none" />
+
+<Quiz id="m2-tren-dan-q-guitar1" question="Start the one-octave scale shape (root on string 6) at fret 7. Which major scale is it?" options={['A major', 'B major', 'C major', 'E major']} answer={1} explain="String 6 fret 7 is B → B major." />
+
+<Quiz id="m2-tren-dan-q-guitar2" question="Slide the G major position (root on string 6 fret 3) up to fret 10. Which scale do you get?" options={['C major', 'D major', 'E major', 'F major']} answer={1} explain="String 6 fret 10 is D → D major. Same shape, different key." />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Fingering for C major
+
+**Right hand** (going up): **1 2 3 – 1 2 3 4 5**. The thumb (1) passes under the hand after finger 3 to play F.
+**Left hand** (going up): **5 4 3 2 1 – 3 2 1**. Finger 3 crosses over the thumb to play A.
+
+<Show notes="C4 D4 E4 F4 G4 A4 B4 C5" labels="interval" caption="C major — the right-hand thumb-under happens after E: thumb plays F" />
+
+## Other keys
+
+- **G, D, A and E major**: use **exactly the same fingering as C major**. Just remember which black keys you need.
+- **F major**, right hand: **1 2 3 4 – 1 2 3 4** (finger 4 plays B♭, then the thumb passes under to C).
+
+<Show notes="D4 E4 F#4 G4 A4 B4 C#5 D5" labels="interval" caption="D major: two black keys, F♯ and C♯, same fingering as C major" />
+
+<Show notes="F4 G4 A4 Bb4 C5 D5 E5 F5" labels="interval" caption="F major: one black key, B♭ — right hand 1 2 3 4 / 1 2 3 4" />
+
+<Quiz id="m2-tren-dan-q-piano1" question="Which major scale uses only white keys?" options={['G major', 'C major', 'F major', 'A major']} answer={1} explain="C major has no sharps or flats." />
+
+<Quiz id="m2-tren-dan-q-piano2" question="Playing C major with the right hand, the thumb passes under to play which note?" options={['D', 'E', 'F', 'G']} answer={2} explain="1 2 3 (C D E), then the thumb passes under to F: 1 2 3 4 5 (F G A B C)." />
+
+</OnlyFor>
+
+<FindNotes id="m2-tren-dan-find-a" prompt="Click all 7 notes of the A major scale." targets="A B C# D E F# G#" />
+
+<Callout type="practice" title="Pick up your instrument">
+Set a metronome to 60 bpm. Play the major scale up and down, one note per beat, in 3 keys: C, G and F. When it runs smoothly, move to 2 notes per beat. The goal is not speed but **not having to think** — keep your mind free for listening when you improvise.
+</Callout>

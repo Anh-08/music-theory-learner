@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { useT } from '../../i18n/useT'
 
 interface ExerciseCardProps {
   /** Id bài tập — cũng dùng làm khóa lưu tiến độ, phải duy nhất trong toàn bộ bài học. */
@@ -10,12 +11,13 @@ interface ExerciseCardProps {
 }
 
 /** Khung chung cho mọi bài tập trong bài học. */
-export function ExerciseCard({ id, kind, done, doneLabel = 'Đã làm đúng', children }: ExerciseCardProps) {
+export function ExerciseCard({ id, kind, done, doneLabel, children }: ExerciseCardProps) {
+  const { t } = useT()
   return (
     <section data-exercise-id={id} className="not-prose my-8 rounded-xl border border-stone-200 bg-white p-4 shadow-sm dark:border-stone-800 dark:bg-stone-900">
       <header className="mb-3 flex items-center justify-between gap-2">
         <span className="text-xs font-semibold tracking-wide text-violet-600 uppercase dark:text-violet-400">{kind}</span>
-        {done && <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">✓ {doneLabel}</span>}
+        {done && <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-xs text-emerald-700 dark:bg-emerald-950 dark:text-emerald-300">✓ {doneLabel ?? t('ex.solved')}</span>}
       </header>
       {children}
     </section>

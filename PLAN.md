@@ -16,7 +16,7 @@
 2. **Nghe trước, lý thuyết sau.** Mỗi khái niệm đều bấm vào là nghe được. Nhạc lý là để giải thích âm thanh, không phải ngược lại.
 3. **Mỗi bài học kết thúc bằng việc chơi.** Không chỉ quiz: có bài tập "chơi theo backing track" để áp dụng ngay.
 4. **Không bắt đầu từ con số 0.** Bỏ qua phần đọc nốt nhạc trên khuông, nhịp cơ bản… vì người dùng đã chơi được. Tập trung vào quãng → scale → hợp âm → tiến trình → improvise.
-5. **Tiếng Việt là chính**, thuật ngữ kèm tiếng Anh trong ngoặc, ví dụ: *quãng (interval)*, *điệu thức (mode)* — vì phần lớn tài liệu, video bên ngoài dùng tiếng Anh.
+5. **Song ngữ Việt – Anh**, tiếng Việt là bản gốc; trong bản tiếng Việt, thuật ngữ kèm tiếng Anh trong ngoặc, ví dụ: *quãng (interval)*, *điệu thức (mode)* — vì phần lớn tài liệu, video bên ngoài dùng tiếng Anh. Nút VI / EN ở thanh trên đổi cả giao diện lẫn bài học.
 
 ### Không làm (ít nhất ở giai đoạn đầu)
 - Không có tài khoản, server, thanh toán. Đây là repo cá nhân, chạy hoàn toàn trên trình duyệt.
@@ -294,7 +294,7 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 - [x] Lưu tiến độ trong localStorage.
 - [x] Viết nội dung **Module 0 → 3**.
 
-> Cách viết bài học: mỗi bài là một file `src/lessons/<module>/<NN-ten-bai>.mdx` có `export const meta = { title, description, minutes }`. Dùng được trực tiếp các component `<Show>`, `<Play>`, `<PlayChords>`, `<OnlyFor>`, `<Callout>`, `<CircleOfFifths>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`, `<NoteDrill>` (xem `src/lessons/mdxComponents.ts`). Mỗi bài tập cần `id` duy nhất — test sẽ báo nếu trùng.
+> Cách viết bài học: mỗi bài là một file `src/lessons/<module>/<NN-ten-bai>.mdx` có `export const meta = { title, description, minutes }`. Dùng được trực tiếp các component `<Show>`, `<Play>`, `<PlayChords>`, `<OnlyFor>`, `<Callout>`, `<CircleOfFifths>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`, `<NoteDrill>` (xem `src/lessons/mdxComponents.ts`). Mỗi bài tập cần `id` duy nhất — test sẽ báo nếu trùng. Bản tiếng Anh là file `<NN-ten-bai>.en.mdx` cạnh bản tiếng Việt, dùng **đúng cùng các `id`** để tiến độ dùng chung (test kiểm tra). Chuỗi giao diện nằm ở `src/i18n/messages.ts`.
 
 ✅ *Kết quả: MVP — học được từ đầu đến hợp âm thuận giọng.*
 
@@ -331,7 +331,7 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 - [ ] Nhận diện cao độ qua micro (guitar).
 - [ ] Nghe micro để chấm độ đều tay khi đệm (phát hiện thời điểm quạt/móc so với phách).
 - [ ] PWA dùng offline.
-- [ ] Giao diện tiếng Anh (i18n).
+- [x] Giao diện và bài học tiếng Anh (i18n).
 - [ ] Thêm nhạc cụ khác (bass, ukulele — chỉ cần đổi tuning của `<Fretboard />`).
 
 ---

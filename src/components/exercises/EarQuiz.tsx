@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { chordEvents, sequenceEvents, type PlayEvent } from '../../audio/events'
 import { usePlayer } from '../../audio/usePlayer'
 import { useSettings } from '../../store/settingsContext'
-import { chordFromRoot, chordType, intervalNameVi, semitones, stackIntervals } from '../../theory'
+import { useT } from '../../i18n/useT'
+import { chordFromRoot, chordType, intervalShortName, semitones, stackIntervals } from '../../theory'
 import { ExerciseCard, Feedback } from './ExerciseCard'
 import { buttonClass } from './styles'
 import { pick, randomInt } from './random'
@@ -27,11 +28,15 @@ export function EarQuiz({ id, kind, options, direction = 'up' }: EarQuizProps) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)
   const { streak, best, answer } = useDrill(id)
+  const { t, locale } = useT()
   const choices = useMemo(() => options.trim().split(/\s+/), [options])
   const [question, setQuestion] = useState<Question | null>(null)
   const [picked, setPicked] = useState<string | null>(null)
 
-  const label = (o: string) => (kind === 'interval' ? intervalNameVi(o) : `Hợp âm ${chordType(o).nameVi.toLowerCase()}`)
+  const label = (o: string) =>
+    kind === 'interval'
+      ? intervalShortName(o, locale)
+      : t('ex.chordQuality', { name: locale === 'vi' ? chordType(o).nameVi.toLowerCase() : chordType(o).nameEn })
 
   const eventsFor = (q: Question): PlayEvent[] => {
     const roll = instrument === 'guitar' ? 0.035 : 0
@@ -59,29 +64,29 @@ export function EarQuiz({ id, kind, options, direction = 'up' }: EarQuizProps) {
   }
 
   return (
-    <ExerciseCard id={id} kind="Luyện tai" done={best >= 5} doneLabel={`Kỷ lục ${best} câu liên tiếp`}>
+    <ExerciseCard id={id} kind={t('ex.ear')} done={best >= 5} doneLabel={t('ex.record', { n: best })}>
       <p className="text-sm text-stone-600 dark:text-stone-400">
-        Nghe và chọn {kind === 'interval' ? 'quãng' : 'loại hợp âm'}. Cố gắng đúng 5 câu liên tiếp.
+        {t('ex.earIntro', { what: t(kind === 'interval' ? 'ex.earWhatInterval' : 'ex.earWhatChord') })}
       </p>
       <div className="mt-3 flex flex-wrap items-center gap-2">
         {!question ? (
           <button type="button" onClick={next} className={buttonClass.primary}>
-            ▶ Bắt đầu
+            {t('ex.start')}
           </button>
         ) : (
           <>
             <button type="button" onClick={() => void play(eventsFor(question))} className={buttonClass.secondary}>
-              ▶ Nghe lại
+              {t('ex.replay')}
             </button>
             {picked && (
               <button type="button" onClick={next} className={buttonClass.primary}>
-                Câu tiếp →
+                {t('ex.next')}
               </button>
             )}
           </>
         )}
         <span className="ml-auto text-sm text-stone-500">
-          Chuỗi đúng: <strong>{streak}</strong> · Kỷ lục: {best}
+          {t('ex.streak')} <strong>{streak}</strong> · {t('ex.best')} {best}
         </span>
       </div>
       {question && (
@@ -110,7 +115,7 @@ export function EarQuiz({ id, kind, options, direction = 'up' }: EarQuizProps) {
       )}
       {question && picked && (
         <Feedback correct={picked === question.answer}>
-          {picked === question.answer ? 'Đúng rồi!' : `Chưa đúng — đó là ${label(question.answer).toLowerCase()}.`}
+          {picked === question.answer ? t('ex.right') : t('ex.wasActually', { answer: locale === 'vi' ? label(question.answer).toLowerCase() : label(question.answer) })}
         </Feedback>
       )}
     </ExerciseCard>

@@ -1,0 +1,71 @@
+export const meta = {
+  title: 'The 7 diatonic chords',
+  description: 'Why songs in C always use C, F, G, Am, Dm and Em — and how to find those chords in any key.',
+  minutes: 18,
+}
+
+This is the most important lesson of Module 3. Once you understand it, you will see why each song uses only a certain group of chords — and be able to guess the next chord yourself.
+
+## Building a chord on each degree
+
+Take the C major scale. On each degree, build a triad by stacking 3rds — but **using only notes from the scale** (take every other note):
+
+| Degree | Notes | Chord | Type |
+|---|---|---|---|
+| I | C – E – G | C | Major |
+| ii | D – F – A | Dm | Minor |
+| iii | E – G – B | Em | Minor |
+| IV | F – A – C | F | Major |
+| V | G – B – D | G | Major |
+| vi | A – C – E | Am | Minor |
+| vii° | B – D – F | B° | Diminished |
+
+Listen in order: <PlayChords chords="C Dm Em F G Am Bdim C" seconds={1.1} />
+
+These are the **7 diatonic chords** of C major. Most songs in C use mainly these chords.
+
+## The pattern for every key
+
+Because every major scale has the same formula, the order of chord types is **always the same**:
+
+<Callout type="note" title="Major – minor – minor – Major – Major – minor – diminished">
+**I – ii – iii – IV – V – vi – vii°**. **Upper-case** Roman numerals are major chords, **lower-case** are minor, and **°** means diminished. Memorise this line and you know the chords of every major key.
+</Callout>
+
+| Key | I | ii | iii | IV | V | vi | vii° |
+|---|---|---|---|---|---|---|---|
+| C | C | Dm | Em | F | G | Am | B° |
+| G | G | Am | Bm | C | D | Em | F♯° |
+| D | D | Em | F♯m | G | A | Bm | C♯° |
+| A | A | Bm | C♯m | D | E | F♯m | G♯° |
+| F | F | Gm | Am | B♭ | C | Dm | E° |
+
+## The three primary chords and the relative minor
+
+- **I, IV and V** are the three major chords — the backbone of countless songs: <PlayChords chords="C F G C" />
+- **vi** is the tonic chord of the relative minor (Am for C major) — add it and the song instantly gets a sadder colour: <PlayChords chords="Am F C G" />
+- **I – V – vi – IV** is probably the most common progression in pop music: <PlayChords chords="C G Am F" />
+
+Because you think in Roman numerals, you can play I – V – vi – IV in **any key**: in G it is G – D – Em – C, in D it is D – A – Bm – G. That is the fastest way to transpose.
+
+<Show root="C" scale="major" labels="interval" play="none" caption="The C major scale — the source of all 7 chords" />
+
+<Quiz id="m3-thuan-giong-q1" question="In G major, what is the vi chord?" options={['Am', 'Em', 'Bm', 'E']} answer={1} explain="G A B C D E F♯ → degree 6 is E, a minor chord → Em." />
+
+<Quiz id="m3-thuan-giong-q2" question="In D major, what is the IV chord?" options={['G', 'Gm', 'A', 'F♯m']} answer={0} explain="D E F♯ G → degree 4 is G, a major chord." />
+
+<Quiz id="m3-thuan-giong-q3" question="Which degree of a major key is a diminished chord?" options={['ii', 'iii', 'vi', 'vii']} answer={3} explain="vii° — for example B° in C major (B D F)." />
+
+<Quiz id="m3-thuan-giong-q4" question="In F major, what is the ii chord?" options={['G', 'Gm', 'Dm', 'B♭']} answer={1} explain="F G A B♭ C D E → degree 2 is G, a minor chord → Gm." />
+
+<Quiz id="m3-thuan-giong-q5" question="In the key of C, the progression C – Am – F – G is…" options={['I – vi – IV – V', 'I – iii – IV – V', 'I – vi – ii – V', 'I – IV – vi – V']} answer={0} explain="C = I, Am = vi, F = IV, G = V. A classic progression." />
+
+<Quiz id="m3-thuan-giong-q6" question="Which chord does NOT belong to C major?" options={['Dm', 'Em', 'D', 'F']} answer={2} explain="Degree ii of C major is Dm (D F A). D major needs F♯ — which is not in the C major scale." />
+
+<FindNotes id="m3-thuan-giong-find-v-d" prompt="Click the notes of the V chord in D major." targets="A C# E" />
+
+<Callout type="practice" title="Pick up your instrument">
+1. Play I – IV – V – I in three keys: C, G and D.
+2. Play I – V – vi – IV in those keys.
+3. Write your own 4-chord progression using only the diatonic chords of G major, and loop it 4 times. Which songs you know does it sound like?
+</Callout>

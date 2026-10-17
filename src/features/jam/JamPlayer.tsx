@@ -8,8 +8,11 @@ import { usePlayer } from '../../audio/usePlayer'
 import { InstrumentView } from '../../components/lesson/InstrumentView'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
+import type { Locale } from '../../i18n/locale'
+import type { MessageKey } from '../../i18n/messages'
+import { useT, type Translate } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
-import { CHROMAS, keyLabel, spellingsOf } from '../../theory'
+import { CHROMAS, TheoryError, keyLabel, spellingsOf, type ScaleSuggestion } from '../../theory'
 import { analyze, chordIndexAtBar, chordLabel, jamHighlights, scaleLabel, type Analysis } from './jamModel'
 import { JAM_PRESETS, type JamPreset } from './presets'
 
@@ -27,29 +30,40 @@ export interface JamPlayerProps {
 }
 
 // Giọng trưởng viết theo dấu giáng (D♭, E♭…), giọng thứ theo cách viết thông dụng (C♯m, F♯m…).
-const KEY_OPTIONS = [
-  { value: 'auto', label: 'Tự đoán', group: 'Tự động' },
-  ...CHROMAS.map((c) => spellingsOf(c).at(-1)!).map((t) => ({ value: t, label: keyLabel({ tonic: t, mode: 'major' }), group: 'Giọng trưởng' })),
-  ...['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'].map((t) => ({ value: `${t}m`, label: keyLabel({ tonic: t, mode: 'minor' }), group: 'Giọng thứ' })),
+function keyOptions(t: Translate, locale: Locale) {
+  return [
+    { value: 'auto', label: t('jam.auto'), group: t('jam.autoGroup') },
+    ...CHROMAS.map((c) => spellingsOf(c).at(-1)!).map((k) => ({ value: k, label: keyLabel({ tonic: k, mode: 'major' }, locale), group: t('jam.majorKeys') })),
+    ...['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'].map((k) => ({ value: `${k}m`, label: keyLabel({ tonic: k, mode: 'minor' }, locale), group: t('jam.minorKeys') })),
+  ]
+}
+
+const TRACKS: { id: JamTrack; label: MessageKey }[] = [
+  { id: 'drums', label: 'jam.drums' },
+  { id: 'bass', label: 'jam.bass' },
+  { id: 'chords', label: 'jam.chords' },
 ]
 
-const TRACKS: { id: JamTrack; label: string }[] = [
-  { id: 'drums', label: 'Trống' },
-  { id: 'bass', label: 'Bass' },
-  { id: 'chords', label: 'Hợp âm' },
-]
+/** Lựa chọn scale: gợi ý tự động, hoặc scale riêng của bài học. */
+type ScaleOption = Omit<ScaleSuggestion, 'reason'> & { reason: ScaleSuggestion['reason'] | 'custom' }
 
-function tryAnalyze(text: string, keyChoice: string): { analysis: Analysis | null; error: string | null } {
+function errorMessage(error: unknown, t: Translate): string {
+  if (error instanceof TheoryError) return t(`error.${error.code}`, error.params)
+  return error instanceof Error ? error.message : String(error)
+}
+
+function tryAnalyze(text: string, keyChoice: string): { analysis: Analysis | null; error: unknown } {
   try {
     return { analysis: analyze(text, keyChoice === 'auto' ? null : keyChoice), error: null }
   } catch (e) {
-    return { analysis: null, error: e instanceof Error ? e.message : String(e) }
+    return { analysis: null, error: e }
   }
 }
 
 export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initialTempo, scale, scaleRoot, editable = false }: JamPlayerProps) {
   const id = useId()
   const { instrument } = useSettings()
+  const { t, locale } = useT()
   const jam = useJamState()
   const playing = jam.ownerId === id
   const { playNote, activeMidis } = usePlayer(instrument)
@@ -71,11 +85,11 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
   const analysis = parsed.analysis ?? lastGood
   const error = parsed.error
 
-  const scaleOptions = useMemo(() => {
+  const scaleOptions = useMemo((): ScaleOption[] => {
     if (!analysis) return []
     const base = analysis.suggestions
     if (!scale) return base
-    const custom = { root: scaleRoot ?? analysis.key.tonic, typeId: scale, why: 'Scale gợi ý cho bài này.' }
+    const custom: ScaleOption = { root: scaleRoot ?? analysis.key.tonic, typeId: scale, reason: 'custom' }
     return [custom, ...base.filter((s) => !(s.root === custom.root && s.typeId === custom.typeId))]
   }, [analysis, scale, scaleRoot])
   const currentScale = scaleOptions[Math.min(scaleIndex, scaleOptions.length - 1)] ?? null
@@ -139,37 +153,37 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
       {editable && (
         <div className="space-y-3">
           <label className="block">
-            <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">Tiến trình (hợp âm hoặc số La Mã, mỗi hợp âm một ô nhịp; "C*2" = hai ô nhịp)</span>
+            <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">{t('jam.inputLabel')}</span>
             <input
               value={text}
               onChange={(e) => changeText(e.target.value)}
               spellCheck={false}
               className="w-full rounded-lg border border-stone-300 bg-white px-3 py-2 font-mono text-sm dark:border-stone-700 dark:bg-stone-950"
-              aria-label="Tiến trình hợp âm"
+              aria-label={t('jam.inputAria')}
             />
           </label>
           <div className="flex flex-wrap gap-1.5">
             {JAM_PRESETS.map((p) => (
               <button
-                key={p.name}
+                key={p.name.en}
                 type="button"
                 onClick={() => choosePreset(p)}
                 className="rounded-full border border-stone-300 px-2.5 py-1 text-xs hover:bg-stone-100 dark:border-stone-700 dark:hover:bg-stone-800"
               >
-                {p.name}
+                {p.name[locale]}
               </button>
             ))}
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
-            <Select label="Giọng" value={keyChoice} onChange={chooseKey} options={KEY_OPTIONS} />
-            <Select label="Nhịp điệu" value={grooveId} onChange={chooseGroove} options={GROOVES.map((g) => ({ value: g.id, label: `${g.name} — ${g.description}` }))} />
+            <Select label={t('jam.key')} value={keyChoice} onChange={chooseKey} options={keyOptions(t, locale)} />
+            <Select label={t('jam.groove')} value={grooveId} onChange={chooseGroove} options={GROOVES.map((g) => ({ value: g.id, label: `${g.name} — ${t(`groove.${g.id}`)}` }))} />
           </div>
         </div>
       )}
 
-      {error && (
+      {error !== null && (
         <p role="alert" className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:bg-amber-950/50 dark:text-amber-200">
-          {error}
+          {errorMessage(error, t)}
         </p>
       )}
 
@@ -177,13 +191,13 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
         <>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-stone-500">
             <span>
-              Giọng: <strong className="text-stone-800 dark:text-stone-200">{keyLabel(analysis.key)}</strong>
-              {keyChoice === 'auto' && ' (tự đoán)'}
+              {t('jam.keyLine')} <strong className="text-stone-800 dark:text-stone-200">{keyLabel(analysis.key, locale)}</strong>
+              {keyChoice === 'auto' && t('jam.autoDetected')}
             </span>
-            {!editable && <span>Nhịp: {getGroove(grooveId).name}</span>}
+            {!editable && <span>{t('jam.grooveLine', { name: getGroove(grooveId).name })}</span>}
           </div>
 
-          <ol aria-label="Các hợp âm" className="flex flex-wrap gap-2">
+          <ol aria-label={t('jam.chordsList')} className="flex flex-wrap gap-2">
             {chords.map((c, i) => (
               <li key={i}>
                 <button
@@ -212,22 +226,22 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
               onClick={() => (playing ? void stopJam(id) : start())}
               className="rounded-lg bg-rose-500 px-5 py-2 text-sm font-medium text-white hover:bg-rose-600"
             >
-              {playing ? '■ Dừng' : '▶ Phát nhạc nền'}
+              {playing ? t('common.stop') : t('jam.play')}
             </button>
             <label className="text-sm">
               <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">Tempo: {tempo} bpm</span>
               <input type="range" min={40} max={200} value={tempo} onChange={(e) => setTempo(Number(e.target.value))} aria-label="Tempo" className="w-40 accent-rose-500" />
             </label>
-            <div role="group" aria-label="Bật / tắt phần nhạc" className="flex gap-1">
-              {TRACKS.map((t) => (
+            <div role="group" aria-label={t('jam.tracks')} className="flex gap-1">
+              {TRACKS.map((track) => (
                 <button
-                  key={t.id}
+                  key={track.id}
                   type="button"
-                  aria-pressed={!mutes[t.id]}
-                  onClick={() => setMutes((m) => ({ ...m, [t.id]: !m[t.id] }))}
-                  className={`rounded-md border px-2.5 py-1 text-xs ${mutes[t.id] ? 'border-stone-300 text-stone-400 line-through dark:border-stone-700' : 'border-stone-400 bg-stone-100 dark:border-stone-600 dark:bg-stone-800'}`}
+                  aria-pressed={!mutes[track.id]}
+                  onClick={() => setMutes((m) => ({ ...m, [track.id]: !m[track.id] }))}
+                  className={`rounded-md border px-2.5 py-1 text-xs ${mutes[track.id] ? 'border-stone-300 text-stone-400 line-through dark:border-stone-700' : 'border-stone-400 bg-stone-100 dark:border-stone-600 dark:bg-stone-800'}`}
                 >
-                  {t.label}
+                  {t(track.label)}
                 </button>
               ))}
             </div>
@@ -235,36 +249,36 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
 
           <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end">
             <Select
-              label="Scale để improvise"
+              label={t('jam.scale')}
               value={String(Math.min(scaleIndex, scaleOptions.length - 1))}
               onChange={(v) => setScaleIndex(Number(v))}
-              options={scaleOptions.map((s, i) => ({ value: String(i), label: `${scaleLabel(s)} — ${s.why}` }))}
+              options={scaleOptions.map((s, i) => ({ value: String(i), label: `${scaleLabel(s, locale)} — ${s.reason === 'custom' ? t('jam.customScale') : t(`suggest.${s.reason}`, s.params)}` }))}
             />
             <Segmented
-              label="Nhãn"
+              label={t('jam.labels')}
               value={labels}
               onChange={setLabels}
               options={[
-                { value: 'interval', label: 'Quãng' },
-                { value: 'note', label: 'Tên nốt' },
+                { value: 'interval', label: t('labels.interval') },
+                { value: 'note', label: t('labels.note') },
               ]}
             />
             <label className="flex items-center gap-2 pb-1.5 text-sm">
               <input type="checkbox" checked={showScale} onChange={(e) => setShowScale(e.target.checked)} className="accent-rose-500" />
-              Hiện nốt scale
+              {t('jam.showScale')}
             </label>
           </div>
 
           <InstrumentView highlights={highlights} activeMidis={activeMidis} fretCount={15} pianoRange={[48, 83]} onPick={(m) => playNote(m)} />
 
           <p className="text-xs text-stone-500">
-            <span className="text-rose-500">●</span> nốt gốc của hợp âm đang vang · <span className="text-sky-600">●</span> các nốt khác của hợp âm (chord tones — nốt "an toàn" nhất) · <span className="text-stone-400">●</span> nốt khác trong scale{' '}
-            {labels === 'interval' && currentChord && `· nhãn là quãng tính từ ${chordLabel(currentChord).replace(/\/.*/, '')}`}
+            <span className="text-rose-500">●</span> {t('jam.legendRoot')} · <span className="text-sky-600">●</span> {t('jam.legendTones')} · <span className="text-stone-400">●</span> {t('jam.legendScale')}{' '}
+            {labels === 'interval' && currentChord && t('jam.legendRelative', { chord: chordLabel(currentChord).replace(/\/.*/, '') })}
           </p>
 
           {!editable && (
             <Link to={jamLink} className="inline-block text-sm text-rose-600 hover:underline">
-              Mở trong Jam Room để sửa tiến trình →
+              {t('jam.openInRoom')}
             </Link>
           )}
         </>

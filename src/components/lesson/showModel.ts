@@ -1,6 +1,7 @@
 import { Interval, Note } from 'tonal'
 import { arpeggioThenChord, chordEvents, sequenceEvents, type PlayEvent } from '../../audio/events'
 import { PLAY_RANGE, type InstrumentId } from '../../audio/instruments'
+import type { Locale } from '../../i18n/locale'
 import {
   chordFromRoot,
   chroma,
@@ -61,7 +62,7 @@ export function ascendingMidis(notes: string[], low: number): number[] {
   return out
 }
 
-export function buildShow(spec: ShowSpec, instrument: InstrumentId): ShowModel {
+export function buildShow(spec: ShowSpec, instrument: InstrumentId, locale: Locale = 'vi'): ShowModel {
   const range = PLAY_RANGE[instrument]
   const labelMode = spec.labels ?? 'note'
   let notes: string[]
@@ -124,7 +125,7 @@ export function buildShow(spec: ShowSpec, instrument: InstrumentId): ShowModel {
             ? chordEvents(midis, roll)
             : sequenceEvents(midis, 0.4)
 
-  return { notes, labels, highlights: makeHighlights(notes, labels, labelMode), only, onlyMidis, events }
+  return { notes, labels, highlights: makeHighlights(notes, labels, labelMode, locale), only, onlyMidis, events }
 }
 
 /** Khoảng phím piano đủ chứa các phím cần tô, tối thiểu C3–B4, luôn bắt đầu ở C và kết thúc ở B. */

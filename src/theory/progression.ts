@@ -1,4 +1,5 @@
 import { Chord, Note, Scale } from 'tonal'
+import type { Locale } from '../i18n/locale'
 import { CHORD_TYPES, chordFromRoot } from './chords'
 import { chroma, displayNote } from './notes'
 
@@ -23,6 +24,20 @@ export interface ProgressionChord {
   bars: number
 }
 
+export type TheoryErrorCode = 'empty' | 'badChord' | 'badBass' | 'repeatFirst' | 'badBars' | 'badKey'
+
+/** Lỗi do người dùng nhập sai; giao diện dịch theo `code` + `params`, `message` là bản tiếng Việt. */
+export class TheoryError extends Error {
+  readonly code: TheoryErrorCode
+  readonly params: Record<string, string>
+
+  constructor(message: string, code: TheoryErrorCode, params: Record<string, string> = {}) {
+    super(message)
+    this.code = code
+    this.params = params
+  }
+}
+
 const ROMAN = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII']
 const ROMAN_RE = /^([b#♭♯]?)(VII|VI|V|IV|III|II|I|vii|vi|v|iv|iii|ii|i)(.*)$/
 
@@ -39,11 +54,12 @@ export function parseKey(text: string): KeyRef {
   const t = normalizeAccidentals(text.trim())
   const minor = /m$/.test(t)
   const tonic = minor ? t.slice(0, -1) : t
-  if (!/^[A-G][#b]?$/.test(tonic)) throw new Error(`Giọng không hợp lệ: ${text}`)
+  if (!/^[A-G][#b]?$/.test(tonic)) throw new TheoryError(`Giọng không hợp lệ: ${text}`, 'badKey', { key: text })
   return { tonic, mode: minor ? 'minor' : 'major' }
 }
 
-export function keyLabel(key: KeyRef): string {
+export function keyLabel(key: KeyRef, locale: Locale = 'vi'): string {
+  if (locale === 'en') return `${displayNote(key.tonic)} ${key.mode}`
   return `${displayNote(key.tonic)} ${key.mode === 'major' ? 'trưởng' : 'thứ'}`
 }
 
@@ -71,10 +87,10 @@ function romanSuffix(rest: string, lower: boolean): string {
 function chordFromSymbol(symbol: string, bars: number): ProgressionChord {
   const [main, bassPart] = symbol.split('/')
   const c = Chord.get(main)
-  if (c.empty || !c.tonic) throw new Error(`Không hiểu hợp âm "${symbol}"`)
+  if (c.empty || !c.tonic) throw new TheoryError(`Không hiểu hợp âm "${symbol}"`, 'badChord', { symbol })
   let bass: string | undefined
   if (bassPart !== undefined) {
-    if (!/^[A-G][#b]?$/.test(bassPart)) throw new Error(`Nốt bass không hợp lệ trong "${symbol}"`)
+    if (!/^[A-G][#b]?$/.test(bassPart)) throw new TheoryError(`Nốt bass không hợp lệ trong "${symbol}"`, 'badBass', { symbol })
     bass = bassPart
   }
   return { symbol, root: c.tonic, suffix: main.slice(c.tonic.length), intervals: c.intervals, notes: c.notes, bass, bars }
@@ -100,17 +116,17 @@ export function parseProgression(text: string, key: KeyRef = { tonic: 'C', mode:
   const tokens = normalizeAccidentals(text)
     .split(/[\s|,–-]+/)
     .filter(Boolean)
-  if (tokens.length === 0) throw new Error('Chưa có hợp âm nào')
+  if (tokens.length === 0) throw new TheoryError('Chưa có hợp âm nào', 'empty')
   const out: ProgressionChord[] = []
   for (const raw of tokens) {
     if (raw === '%') {
-      if (!out.length) throw new Error('"%" phải đứng sau một hợp âm')
+      if (!out.length) throw new TheoryError('"%" phải đứng sau một hợp âm', 'repeatFirst')
       out[out.length - 1] = { ...out[out.length - 1], bars: out[out.length - 1].bars + 1 }
       continue
     }
     const [body, times] = raw.split('*')
     const bars = times === undefined ? 1 : Number(times)
-    if (!Number.isInteger(bars) || bars < 1 || bars > 16) throw new Error(`Số ô nhịp không hợp lệ trong "${raw}"`)
+    if (!Number.isInteger(bars) || bars < 1 || bars > 16) throw new TheoryError(`Số ô nhịp không hợp lệ trong "${raw}"`, 'badBars', { token: raw })
     const symbol = ROMAN_RE.test(body) ? romanToSymbol(body, key) : body
     out.push(chordFromSymbol(symbol, bars))
   }

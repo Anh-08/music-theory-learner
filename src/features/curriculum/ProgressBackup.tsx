@@ -1,10 +1,12 @@
 import { useRef, useState, type ChangeEvent } from 'react'
+import { useT } from '../../i18n/useT'
 import { emptyProgress, parseProgress } from '../../store/progress'
 import { useProgress } from '../../store/progressContext'
 
 /** Xuất / nhập / xóa tiến độ (tiến độ chỉ nằm trong trình duyệt này). */
 export function ProgressBackup() {
   const { progress, replace } = useProgress()
+  const { t } = useT()
   const fileInput = useRef<HTMLInputElement>(null)
   const [message, setMessage] = useState<string | null>(null)
 
@@ -23,35 +25,35 @@ export function ProgressBackup() {
     e.target.value = ''
     if (!file) return
     const parsed = parseProgress(await file.text())
-    if (!parsed) return setMessage('File không đúng định dạng tiến độ.')
-    if (!window.confirm('Thay tiến độ hiện tại bằng tiến độ trong file?')) return
+    if (!parsed) return setMessage(t('backup.invalid'))
+    if (!window.confirm(t('backup.confirmReplace'))) return
     replace(parsed)
-    setMessage(`Đã nhập: ${parsed.completedLessons.length} bài đã học.`)
+    setMessage(t('backup.imported', { n: parsed.completedLessons.length }))
   }
 
   const reset = () => {
-    if (!window.confirm('Xóa toàn bộ tiến độ học? Không thể hoàn tác.')) return
+    if (!window.confirm(t('backup.confirmReset'))) return
     replace(emptyProgress())
-    setMessage('Đã xóa tiến độ.')
+    setMessage(t('backup.resetDone'))
   }
 
   const btn = 'rounded-lg border border-stone-300 px-3 py-1.5 hover:bg-stone-100 dark:border-stone-700 dark:hover:bg-stone-800'
 
   return (
     <section className="rounded-xl border border-stone-200 p-4 text-sm dark:border-stone-800">
-      <h2 className="font-semibold">Tiến độ của bạn</h2>
-      <p className="mt-1 text-stone-500">Tiến độ chỉ lưu trong trình duyệt này. Tải file về để sao lưu hoặc chuyển sang máy khác.</p>
+      <h2 className="font-semibold">{t('backup.title')}</h2>
+      <p className="mt-1 text-stone-500">{t('backup.desc')}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" onClick={exportJson} className={btn}>
-          Tải tiến độ về
+          {t('backup.export')}
         </button>
         <button type="button" onClick={() => fileInput.current?.click()} className={btn}>
-          Nhập từ file
+          {t('backup.import')}
         </button>
         <button type="button" onClick={reset} className={`${btn} text-rose-600`}>
-          Xóa tiến độ
+          {t('backup.reset')}
         </button>
-        <input ref={fileInput} type="file" accept="application/json,.json" className="hidden" onChange={importJson} aria-label="Chọn file tiến độ" />
+        <input ref={fileInput} type="file" accept="application/json,.json" className="hidden" onChange={importJson} aria-label={t('backup.chooseFile')} />
       </div>
       {message && (
         <p role="status" className="mt-2 text-stone-600 dark:text-stone-300">

@@ -1,6 +1,7 @@
 import { chordEvents } from '../../audio/events'
 import { PLAY_RANGE } from '../../audio/instruments'
 import { usePlayer } from '../../audio/usePlayer'
+import { useT } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
 import { chordFromRoot, chroma, displayNote, rootMidiAtOrAbove, stackIntervals } from '../../theory'
 
@@ -27,6 +28,7 @@ const C = SIZE / 2
 export function CircleOfFifths({ highlight }: { highlight?: string }) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)
+  const { t } = useT()
 
   const playChord = (root: string, type: 'M' | 'm') => {
     const info = chordFromRoot(root, type)
@@ -41,7 +43,7 @@ export function CircleOfFifths({ highlight }: { highlight?: string }) {
 
   return (
     <figure className="not-prose my-6 flex flex-col items-center">
-      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-sm select-none" role="group" aria-label="Vòng quãng năm">
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`} className="w-full max-w-sm select-none" role="group" aria-label={t('circle.aria')}>
         <circle cx={C} cy={C} r={160} className="fill-stone-100 dark:fill-stone-800" />
         <circle cx={C} cy={C} r={100} className="fill-stone-200 dark:fill-stone-700" />
         <circle cx={C} cy={C} r={58} className="fill-stone-50 dark:fill-stone-900" />
@@ -52,7 +54,7 @@ export function CircleOfFifths({ highlight }: { highlight?: string }) {
           const isHi = highlight === k.major
           return (
             <g key={k.major}>
-              <g role="button" aria-label={`Hợp âm ${displayNote(k.major)} trưởng`} className="cursor-pointer" onClick={() => playChord(k.major, 'M')}>
+              <g role="button" aria-label={t('circle.majorChord', { name: displayNote(k.major) })} className="cursor-pointer" onClick={() => playChord(k.major, 'M')}>
                 <circle cx={outer.x} cy={outer.y} r={19} className={isHi ? 'fill-rose-500' : 'fill-white hover:fill-rose-100 dark:fill-stone-950 dark:hover:fill-rose-950'} />
                 <text x={outer.x} y={outer.y + 5} textAnchor="middle" className={`pointer-events-none text-[14px] font-bold ${isHi ? 'fill-white' : 'fill-stone-800 dark:fill-stone-100'}`}>
                   {displayNote(k.major)}
@@ -61,7 +63,7 @@ export function CircleOfFifths({ highlight }: { highlight?: string }) {
               <text x={sig.x} y={sig.y + 3} textAnchor="middle" className="pointer-events-none fill-stone-500 text-[8px]">
                 {k.sig}
               </text>
-              <g role="button" aria-label={`Hợp âm ${displayNote(k.minor)} thứ`} className="cursor-pointer" onClick={() => playChord(k.minor, 'm')}>
+              <g role="button" aria-label={t('circle.minorChord', { name: displayNote(k.minor) })} className="cursor-pointer" onClick={() => playChord(k.minor, 'm')}>
                 <circle cx={inner.x} cy={inner.y} r={15} className="fill-transparent hover:fill-sky-100 dark:hover:fill-sky-950" />
                 <text x={inner.x} y={inner.y + 4} textAnchor="middle" className="pointer-events-none fill-stone-600 text-[11px] dark:fill-stone-300">
                   {displayNote(k.minor)}m
@@ -71,13 +73,13 @@ export function CircleOfFifths({ highlight }: { highlight?: string }) {
           )
         })}
         <text x={C} y={C - 4} textAnchor="middle" className="fill-stone-500 text-[10px]">
-          ↻ lên quãng 5
+          {t('circle.up5')}
         </text>
         <text x={C} y={C + 12} textAnchor="middle" className="fill-stone-500 text-[10px]">
-          ↺ lên quãng 4
+          {t('circle.up4')}
         </text>
       </svg>
-      <figcaption className="mt-1 text-sm text-stone-500">Vòng ngoài: giọng trưởng · vòng trong: giọng thứ tương ứng · bấm để nghe</figcaption>
+      <figcaption className="mt-1 text-sm text-stone-500">{t('circle.caption')}</figcaption>
     </figure>
   )
 }

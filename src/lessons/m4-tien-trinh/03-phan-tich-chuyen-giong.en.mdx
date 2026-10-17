@@ -1,0 +1,78 @@
+export const meta = {
+  title: 'Analysing songs and transposing',
+  description: 'From any chord sheet: find the key, write the Roman numerals, move it to a key that suits the singer.',
+  minutes: 15,
+}
+
+This is a skill you will use every day: take a chord sheet, understand it, and play it in the key you want.
+
+## Step 1 — Find the key
+
+A few clues, taken together:
+
+1. **The first and last chords** of a song are usually the tonic chord (I or i).
+2. **All the chords belong to one key**: the three major chords I, IV and V of a key sit next to each other on the circle of fifths, with the tonic **in the middle**. For example F, C, G → the key of C (F = IV, G = V).
+3. **Frequent sharps or flats** reveal the key signature: lots of F♯m, Bm, D → probably D or G major.
+4. **Major or minor?** If the song starts and ends on a minor chord (like Am), the relative minor (A minor) is usually the better answer.
+
+<Callout type="tip">
+The Jam Room has a built-in **key detector**: type a progression and it tells you the key and the Roman numeral of each chord. Use it to check your analysis — but make your own guess first!
+</Callout>
+
+## Step 2 — Write the Roman numerals
+
+Once you have the key, convert each chord to a degree. For example **E – B – C♯m – A** in E major (E F♯ G♯ A B C♯ D♯):
+
+| Chord | E | B | C♯m | A |
+|---|---|---|---|---|
+| Degree | I | V | vi | IV |
+
+It is the familiar I – V – vi – IV again!
+
+<Jam progression="E B C#m A" groove="pop" />
+
+## Step 3 — Transpose
+
+With Roman numerals, transposing is just **swapping notes**: I – V – vi – IV in C is **C – G – Am – F**. In G it is **G – D – Em – C**.
+
+Another way: move every chord up or down by the same number of half steps. E → C is down 4 half steps, so B → G, C♯m → Am, A → F.
+
+<OnlyFor instrument="guitar">
+
+## The capo: changing key without changing shapes
+
+A **capo** at fret *n* raises everything by *n* half steps. You keep the shapes you know while the sound moves up:
+
+| Chord shapes from the key of | Capo fret 2 | Capo fret 3 | Capo fret 4 |
+|---|---|---|---|
+| G (G C D Em) | A | B♭ | B |
+| C (C F G Am) | D | E♭ | E |
+| D (D G A Bm) | E | F | F♯ |
+
+For example, a song in E major that you want to play with easy shapes: use C-key shapes with a capo at fret 4, or D-key shapes with a capo at fret 2.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+<Callout type="note" title="Choosing a comfortable key">
+On piano, keys with few black keys (C, G, F, Am) are often easier to read when starting out, but practise flat keys like E♭ and A♭ too — they are very common in pop and jazz, and often sit quite comfortably under the hand.
+</Callout>
+
+</OnlyFor>
+
+<Quiz id="m4-chuyen-giong-q1" question="Transpose G – Em – C – D to D major." options={['D – Bm – G – A', 'D – Em – G – A', 'G – Em – C – D', 'A – F♯m – D – E']} answer={0} explain="I – vi – IV – V in D: D – Bm – G – A." />
+
+<Quiz id="m4-chuyen-giong-q2" question="What key and Roman numerals is F – C – Dm – B♭?" options={['F major: I – V – vi – IV', 'C major: IV – I – ii – ♭VII', 'D minor: III – VII – i – VI', 'B♭ major: V – II – iii – I']} answer={0} explain="Everything fits F major (one flat, B♭), and it starts on F." />
+
+<Quiz id="m4-chuyen-giong-q3" question="Am – F – C – G starts and ends on Am. The key is most likely…" options={['C major', 'A minor', 'F major', 'G major']} answer={1} explain="The chords belong to C major / A minor; Am at the start and end shows that 'home' is A minor. (Seen from C major it is vi – IV – I – V — both views are useful.)" />
+
+<OnlyFor instrument="guitar">
+
+<Quiz id="m4-chuyen-giong-q-capo" question="With a capo at fret 3 you play G-key shapes. Which key does the song sound in?" options={['A', 'B♭', 'B', 'C']} answer={1} explain="G raised 3 half steps: G → G♯ → A → B♭." />
+
+</OnlyFor>
+
+<Callout type="practice" title="Pick up your instrument">
+Take the chord sheet of a song you like. Find the key, write the Roman numeral under each chord, then play the song in **a different key**. Type the progression into the Jam Room to check.
+</Callout>

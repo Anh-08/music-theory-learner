@@ -6,11 +6,14 @@ import { Fretboard } from '../../components/Fretboard/Fretboard'
 import { Piano } from '../../components/Piano/Piano'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
+import { useT } from '../../i18n/useT'
 import { usePersistentState } from '../../store/usePersistentState'
 import {
   CHORD_TYPES,
+  chordTypeName,
   CHROMAS,
   SCALE_TYPES,
+  scaleTypeName,
   TUNINGS,
   displayNote,
   getChord,
@@ -43,17 +46,24 @@ export function Explorer() {
   const [tuningId, setTuningId] = usePersistentState('explorer.tuning', 'standard')
   const [fretCount, setFretCount] = usePersistentState('explorer.frets', 15)
 
+  const { t, locale } = useT()
   const instrument: InstrumentId = view === 'piano' ? 'piano' : 'guitar'
   const { playing, activeMidis, play, stop, playNote } = usePlayer(instrument)
 
   const scale = useMemo(() => getScale(rootChroma, scaleId), [rootChroma, scaleId])
   const chord = useMemo(() => getChord(rootChroma, chordId), [rootChroma, chordId])
   const info = kind === 'scale' ? scale : chord
-  const highlights = useMemo(() => makeHighlights(info.notes, info.labels, labelMode), [info, labelMode])
+  const highlights = useMemo(() => makeHighlights(info.notes, info.labels, labelMode, locale), [info, labelMode, locale])
   const tuning = getTuning(tuningId)
 
-  const title = kind === 'scale' ? `${displayNote(scale.root)} ${scale.type.nameVi}` : `${displayNote(chord.root)}${chord.type.suffix}`
-  const subtitle = kind === 'scale' ? scale.type.name : `Hợp âm ${chord.type.nameVi.toLowerCase()}`
+  const title = kind === 'scale' ? `${displayNote(scale.root)} ${scaleTypeName(scale.type, locale)}` : `${displayNote(chord.root)}${chord.type.suffix}`
+  // Tiếng Việt: kèm tên tiếng Anh của scale; tiếng Anh: tên đã nằm ở tiêu đề.
+  const subtitle =
+    kind === 'scale'
+      ? locale === 'vi'
+        ? scale.type.name
+        : ''
+      : t('explorer.chordSubtitle', { name: locale === 'vi' ? chord.type.nameVi.toLowerCase() : chord.type.nameEn })
 
   const handlePlay = () => {
     if (playing) {
@@ -80,63 +90,63 @@ export function Explorer() {
     <div className="space-y-6">
       <section className="grid gap-4 rounded-xl border border-stone-200 bg-white p-4 sm:grid-cols-2 lg:grid-cols-4 dark:border-stone-800 dark:bg-stone-900">
         <Segmented
-          label="Nhạc cụ"
+          label={t('explorer.instrument')}
           value={view}
           onChange={setView}
           options={[
-            { value: 'guitar', label: 'Guitar' },
-            { value: 'piano', label: 'Piano' },
-            { value: 'both', label: 'Cả hai' },
+            { value: 'guitar', label: t('common.guitar') },
+            { value: 'piano', label: t('common.piano') },
+            { value: 'both', label: t('common.both') },
           ]}
         />
         <Segmented
-          label="Xem"
+          label={t('explorer.view')}
           value={kind}
           onChange={setKind}
           options={[
-            { value: 'scale', label: 'Scale' },
-            { value: 'chord', label: 'Hợp âm' },
+            { value: 'scale', label: t('explorer.scale') },
+            { value: 'chord', label: t('explorer.chord') },
           ]}
         />
         <Select
-          label="Chủ âm"
+          label={t('explorer.root')}
           value={String(rootChroma)}
           onChange={(v) => setRootChroma(Number(v))}
           options={CHROMAS.map((c) => ({ value: String(c), label: rootLabel(c) }))}
         />
         {kind === 'scale' ? (
           <Select
-            label="Loại scale"
+            label={t('explorer.scaleType')}
             value={scaleId}
             onChange={setScaleId}
-            options={SCALE_TYPES.map((s) => ({ value: s.id, label: s.nameVi === s.name ? s.name : `${s.nameVi} (${s.name})` }))}
+            options={SCALE_TYPES.map((s) => ({ value: s.id, label: locale === 'en' || s.nameVi === s.name ? scaleTypeName(s, locale) : `${s.nameVi} (${s.name})` }))}
           />
         ) : (
           <Select
-            label="Loại hợp âm"
+            label={t('explorer.chordType')}
             value={chordId}
             onChange={setChordId}
-            options={CHORD_TYPES.map((c) => ({ value: c.id, label: `${displayNote(getChord(rootChroma, c.id).root)}${c.suffix} — ${c.nameVi}`, group: c.group }))}
+            options={CHORD_TYPES.map((c) => ({ value: c.id, label: `${displayNote(getChord(rootChroma, c.id).root)}${c.suffix} — ${chordTypeName(c, locale)}`, group: t(`chordGroup.${c.group}`) }))}
           />
         )}
         <Segmented
-          label="Nhãn trên nốt"
+          label={t('explorer.labels')}
           value={labelMode}
           onChange={setLabelMode}
           options={[
-            { value: 'note', label: 'Tên nốt' },
-            { value: 'interval', label: 'Quãng' },
-            { value: 'solfege', label: 'Đô Rê Mi' },
+            { value: 'note', label: t('labels.note') },
+            { value: 'interval', label: t('labels.interval') },
+            { value: 'solfege', label: t('labels.solfege') },
           ]}
         />
         {view !== 'piano' && (
           <>
-            <Select label="Tuning" value={tuningId} onChange={setTuningId} options={TUNINGS.map((t) => ({ value: t.id, label: t.name }))} />
+            <Select label={t('explorer.tuning')} value={tuningId} onChange={setTuningId} options={TUNINGS.map((tu) => ({ value: tu.id, label: tu.name[locale] }))} />
             <Select
-              label="Số phím"
+              label={t('explorer.frets')}
               value={String(fretCount)}
               onChange={(v) => setFretCount(Number(v))}
-              options={FRET_COUNTS.map((n) => ({ value: n, label: `${n} phím` }))}
+              options={FRET_COUNTS.map((n) => ({ value: n, label: t('explorer.fretsOption', { n }) }))}
             />
           </>
         )}
@@ -146,7 +156,7 @@ export function Explorer() {
         <div className="min-w-0 flex-1">
           <h2 className="text-2xl font-bold">{title}</h2>
           <p className="text-sm text-stone-500 dark:text-stone-400">{subtitle}</p>
-          {kind === 'scale' && <p className="mt-2 max-w-2xl text-sm text-stone-600 dark:text-stone-300">{scale.type.description}</p>}
+          {kind === 'scale' && <p className="mt-2 max-w-2xl text-sm text-stone-600 dark:text-stone-300">{scale.type.description[locale]}</p>}
         </div>
         <div className="flex gap-2">
           <button
@@ -154,7 +164,7 @@ export function Explorer() {
             onClick={handlePlay}
             className="rounded-lg bg-rose-500 px-4 py-2 text-sm font-medium text-white hover:bg-rose-600"
           >
-            {playing ? '■ Dừng' : '▶ Nghe'}
+            {playing ? t('common.stop') : t('common.play')}
           </button>
           {kind === 'chord' && !playing && (
             <button
@@ -162,17 +172,17 @@ export function Explorer() {
               onClick={handleChordOnly}
               className="rounded-lg border border-stone-300 px-4 py-2 text-sm hover:bg-stone-100 dark:border-stone-700 dark:hover:bg-stone-800"
             >
-              Đánh hợp âm
+              {t('explorer.playChord')}
             </button>
           )}
         </div>
       </section>
 
-      <section aria-label="Các nốt" className="overflow-x-auto">
+      <section aria-label={t('explorer.notesRegion')} className="overflow-x-auto">
         <table className="text-center text-sm">
           <tbody>
             <tr>
-              <th scope="row" className="pr-3 text-left text-xs font-medium text-stone-500">Nốt</th>
+              <th scope="row" className="pr-3 text-left text-xs font-medium text-stone-500">{t('explorer.rowNotes')}</th>
               {info.notes.map((n, i) => (
                 <td key={n} className="px-1 py-1">
                   <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full font-semibold text-white ${i === 0 ? 'bg-rose-500' : 'bg-sky-600 dark:bg-sky-500'}`}>
@@ -182,16 +192,16 @@ export function Explorer() {
               ))}
             </tr>
             <tr>
-              <th scope="row" className="pr-3 text-left text-xs font-medium text-stone-500">Quãng</th>
+              <th scope="row" className="pr-3 text-left text-xs font-medium text-stone-500">{t('explorer.rowIntervals')}</th>
               {info.labels.map((l, i) => (
-                <td key={i} className="px-1 font-mono text-stone-700 dark:text-stone-300" title={intervalName(info.intervals[i])}>
+                <td key={i} className="px-1 font-mono text-stone-700 dark:text-stone-300" title={intervalName(info.intervals[i], locale)}>
                   {l}
                 </td>
               ))}
             </tr>
             {kind === 'scale' && (
               <tr>
-                <th scope="row" className="pr-3 text-left text-xs font-medium text-stone-500">Khoảng cách (cung)</th>
+                <th scope="row" className="pr-3 text-left text-xs font-medium text-stone-500">{t('explorer.rowSteps')}</th>
                 {stepPattern(info.intervals).map((s, i) => (
                   <td key={i} className="px-1 text-xs text-stone-500">
                     → {stepLabel(s)}
@@ -215,7 +225,7 @@ export function Explorer() {
       )}
 
       <p className="text-xs text-stone-500">
-        Bấm vào nốt bất kỳ trên đàn để nghe. <span className="text-rose-500">●</span> chủ âm · <span className="text-sky-600">●</span> các nốt còn lại.
+        {t('explorer.hint')} <span className="text-rose-500">●</span> {t('legend.root')} · <span className="text-sky-600">●</span> {t('legend.others')}.
       </p>
     </div>
   )

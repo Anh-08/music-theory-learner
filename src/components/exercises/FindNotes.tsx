@@ -3,6 +3,7 @@ import { usePlayer } from '../../audio/usePlayer'
 import { useProgress } from '../../store/progressContext'
 import { useSettings } from '../../store/settingsContext'
 import { chroma, displayNote, fretboardPositions, rootLabel, tuning, type FretPosition, type HighlightMap, type StringFret } from '../../theory'
+import { useT } from '../../i18n/useT'
 import { InstrumentView } from '../lesson/InstrumentView'
 import { ExerciseCard, Feedback } from './ExerciseCard'
 import { buttonClass } from './styles'
@@ -25,6 +26,7 @@ type Selection = { midi: number; position?: StringFret }
  */
 export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotesProps) {
   const { progress, recordQuiz } = useProgress()
+  const { t } = useT()
   const { instrument } = useSettings()
   const { playNote, activeMidis } = usePlayer(instrument)
   const targetNotes = useMemo(() => targets.trim().split(/\s+/), [targets])
@@ -75,7 +77,7 @@ export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotes
   }
 
   return (
-    <ExerciseCard id={id} kind="Bấm trên đàn" done={progress.quizzes[id]?.correct}>
+    <ExerciseCard id={id} kind={t('ex.find')} done={progress.quizzes[id]?.correct}>
       <p className="mb-3 font-medium">{prompt}</p>
       <InstrumentView
         highlights={highlights}
@@ -87,18 +89,18 @@ export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotes
       />
       <div className="mt-3 flex flex-wrap gap-2">
         <button type="button" onClick={check} disabled={selected.length === 0} className={buttonClass.primary}>
-          Kiểm tra
+          {t('ex.check')}
         </button>
         <button type="button" onClick={clear} className={buttonClass.secondary}>
-          Xóa chọn
+          {t('ex.clear')}
         </button>
         <button type="button" onClick={reveal} className={buttonClass.secondary}>
-          Xem đáp án
+          {t('ex.reveal')}
         </button>
       </div>
-      {result === 'correct' && <Feedback correct>Chính xác!</Feedback>}
-      {result === 'wrong' && <Feedback correct={false}>Chưa đúng — nốt màu cam không thuộc đáp án, hoặc còn thiếu nốt. Bấm lại vào nốt để bỏ chọn.</Feedback>}
-      {result === 'revealed' && <Feedback correct>Đáp án: {targetNotes.map(displayNote).join(', ')}.</Feedback>}
+      {result === 'correct' && <Feedback correct>{t('ex.correct')}</Feedback>}
+      {result === 'wrong' && <Feedback correct={false}>{t('ex.findWrong')}</Feedback>}
+      {result === 'revealed' && <Feedback correct>{t('ex.answer', { notes: targetNotes.map(displayNote).join(', ') })}</Feedback>}
     </ExerciseCard>
   )
 }

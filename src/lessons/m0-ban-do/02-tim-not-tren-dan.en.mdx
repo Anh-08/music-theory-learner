@@ -1,0 +1,90 @@
+export const meta = {
+  title: 'Finding notes fast',
+  description: 'Know the name of any note anywhere on the fretboard or keyboard — the foundation for everything that follows.',
+  minutes: 15,
+}
+
+Everything in music theory — intervals, scales, chords — is described with note names. If you have to count frets or keys to know what you are playing, every later lesson will feel slow. This lesson helps you find notes **instantly**.
+
+<OnlyFor instrument="guitar">
+
+## Guitar: open strings and two anchor strings
+
+The six open strings, from the lowest (string 6) to the highest (string 1): **E – A – D – G – B – E**.
+
+The fastest way in is to know the **natural notes on strings 6 and 5** really well — that is where the roots of most barre chords and scale shapes live:
+
+<Show notes="C D E F G A B" positions="6:0 6:1 6:3 6:5 6:7 6:8 6:10 6:12 5:0 5:2 5:3 5:5 5:7 5:8 5:10 5:12" play="none" caption="Natural notes on strings 6 and 5 — C is shown in red as a landmark" />
+
+A few memory aids:
+
+- The **fret markers** (frets 3, 5, 7, 9, 12) are landmarks: string 6 fret 3 = G, fret 5 = A, fret 7 = B; string 5 fret 3 = C, fret 5 = D, fret 7 = E.
+- **Fret 12** is the open string an octave higher — from fret 12 on, everything repeats.
+- Remember that E–F and B–C are only 1 fret apart: string 6 fret 0 (E) → fret 1 (F); string 5 fret 2 (B) → fret 3 (C).
+
+## Octave shapes
+
+Once you know one note, find the others with the same name using **octave shapes**:
+
+- From string 6 or 5: **two strings over, two frets up**.
+- From string 4 or 3: **two strings over, three frets up** (because the B string is tuned one fret "off").
+
+<Show notes="G" positions="6:3 4:5 2:8 1:3" play="none" caption="G in several places: string 6 fret 3 → string 4 fret 5 → string 2 fret 8; string 1 fret 3 is the same pitch as string 2 fret 8" />
+
+<NoteDrill id="m0-tim-not-drill-6-5" naturalsOnly strings="6 5" />
+
+<Quiz
+  id="m0-tim-not-q-guitar1"
+  question="What note is string 6, fret 5?"
+  options={['G', 'A', 'B', 'C']}
+  answer={1}
+  explain="E (0) → F (1) → G (3) → A (5). It is also the note of the open 5th string — that is why we tune using the 5th fret."
+/>
+
+<FindNotes id="m0-tim-not-find-d-string5" prompt="On string 5, find the note D." targets="D" string={5} />
+
+<FindNotes id="m0-tim-not-find-f-string4" prompt="On string 4, find the note F (there are two in the first 12 frets — either one is fine)." targets="F" string={4} />
+
+Once strings 6 and 5 feel solid, practise the whole neck with sharps and flats:
+
+<NoteDrill id="m0-tim-not-drill-all" />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Piano: the black keys are your map
+
+The black keys come in alternating **groups of 2** and **groups of 3**. That is the only landmark you need:
+
+- **C** is the white key just **to the left of a group of 2 black keys**.
+- **F** is the white key just **to the left of a group of 3 black keys**.
+- Going up from C: C D E (around the group of 2), then F G A B (around the group of 3).
+
+<Show notes="C D E F G A B" play="none" caption="The seven natural notes are the seven white keys — C is shown in red" />
+
+**C4** — "middle C" — is the C closest to the middle of the keyboard (usually right under the brand name). Black keys take their names from the white keys next to them: the black key between C and D is **C♯ / D♭**.
+
+<Show notes="C#4 D#4 F#4 G#4 A#4" play="none" caption="The five black keys in one octave" />
+
+<NoteDrill id="m0-tim-not-drill-piano-white" naturalsOnly />
+
+<Quiz
+  id="m0-tim-not-q-piano1"
+  question="What is the white key just to the left of a group of 3 black keys?"
+  options={['C', 'E', 'F', 'B']}
+  answer={2}
+  explain="Left of the group of 2 black keys is C; left of the group of 3 is F."
+/>
+
+<FindNotes id="m0-tim-not-find-fsharp" prompt="Click any F♯." targets="F#" />
+
+Once the white keys feel solid, practise with the black keys too:
+
+<NoteDrill id="m0-tim-not-drill-piano-all" />
+
+</OnlyFor>
+
+<Callout type="practice" title="Pick up your instrument">
+Choose a note (say G) and find **every** place it appears on your real instrument within 30 seconds, naming it out loud as you play. Pick a different note each day. The goal: no counting.
+</Callout>

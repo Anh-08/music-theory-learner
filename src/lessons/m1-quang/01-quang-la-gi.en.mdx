@@ -1,0 +1,77 @@
+export const meta = {
+  title: 'What is an interval?',
+  description: 'The distance between two notes has a name. We start with 2nds and 3rds.',
+  minutes: 12,
+}
+
+An **interval** is the distance between two notes. Chords are intervals stacked on top of each other, melodies are intervals one after another — so understanding intervals means understanding the raw material of music.
+
+Two notes can sound **one after the other** (a melodic interval) or **together** (a harmonic interval): <Play notes="C4 E4" as="both">C and E</Play>
+
+## An interval name has two parts
+
+An interval such as a "**major 3rd**" has:
+
+1. **A number** — count the *letter names*, including the first and last. C → E: C, D, E = **3** letters → a 3rd.
+2. **A quality** — count the *half steps* to tell whether it is major, minor, perfect, augmented or diminished.
+
+For 2nds and 3rds:
+
+| Interval | Half steps | From C | Listen |
+|---|---|---|---|
+| Minor 2nd (♭2) | 1 | C – D♭ | <Play notes="C4 Db4" /> |
+| Major 2nd (2) | 2 | C – D | <Play notes="C4 D4" /> |
+| Minor 3rd (♭3) | 3 | C – E♭ | <Play notes="C4 Eb4" /> |
+| Major 3rd (3) | 4 | C – E | <Play notes="C4 E4" /> |
+
+A minor 3rd sounds "sad", a major 3rd sounds "bright" — these two intervals decide whether a chord is major or minor (Module 3).
+
+<Callout type="note" title="Why count letters?">
+C – D♯ and C – E♭ are both 3 half steps, the same sound. But C → D♯ spans only 2 letters (C, D), so it is an **augmented 2nd**, while C → E♭ spans 3 letters and is a **minor 3rd**. The correct name tells you what role the note plays — that matters when reading chords and scales. In practice you will meet the minor 3rd far more often.
+</Callout>
+
+## Seeing intervals on your instrument
+
+<OnlyFor instrument="guitar">
+
+On guitar, each interval has a fixed **shape** — move it anywhere and it stays the same:
+
+- **Major 2nd:** same string, up 2 frets. **Minor 2nd:** same string, up 1 fret.
+- **Major 3rd:** next string up, **back 1 fret**.
+- **Minor 3rd:** next string up, **back 2 frets**.
+
+<Show notes="C E" positions="5:3 4:2" labels="interval" caption="Major 3rd: C (string 5 fret 3) → E (string 4 fret 2)" />
+
+<Show notes="C Eb" positions="5:3 4:1" labels="interval" caption="Minor 3rd: C (string 5 fret 3) → E♭ (string 4 fret 1)" />
+
+The one exception is going from **string 3 (G) to string 2 (B)**: every shape **moves up 1 fret** (a major 3rd is the same fret, a minor 3rd is back 1 fret). You will meet this rule again and again.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+On piano, just count keys (white and black): a major 3rd is the 4th key above the starting note, a minor 3rd is the 3rd.
+
+<Show notes="C4 E4" labels="interval" play="chord" caption="Major 3rd: C – E (4 half steps)" />
+
+<Show notes="D4 F4" labels="interval" play="chord" caption="Minor 3rd: D – F (3 half steps) — both white keys, but a different quality" />
+
+Don't just look for "skip one white key": C–E and D–F both skip one white key, but C–E is a major 3rd and D–F is a minor 3rd.
+
+</OnlyFor>
+
+<Quiz id="m1-quang-q1" question="What interval is C → E♭?" options={['Major 2nd', 'Minor 3rd', 'Major 3rd', 'Augmented 2nd']} answer={1} explain="C, D, E = a 3rd; 3 half steps → minor." />
+
+<Quiz id="m1-quang-q2" question="What interval is D → F♯?" options={['Minor 3rd', 'Major 3rd', 'Perfect 4th', 'Major 2nd']} answer={1} explain="D, E, F = a 3rd; D → F♯ is 4 half steps → major." />
+
+<Quiz id="m1-quang-q3" question="What interval is E → F?" options={['Minor 2nd', 'Major 2nd', 'Unison', 'Minor 3rd']} answer={0} explain="Two neighbouring letters → a 2nd; only 1 half step → minor." />
+
+<Quiz id="m1-quang-q4" question="What interval is A → C?" options={['Major 3rd', 'Major 2nd', 'Minor 3rd', 'Perfect 4th']} answer={2} explain="A, B, C = a 3rd; A → B (2) + B → C (1) = 3 half steps → minor." />
+
+<FindNotes id="m1-quang-find-m3-a" prompt="Click the note a major 3rd above A." targets="C#" />
+
+<FindNotes id="m1-quang-find-m3-g" prompt="Click the note a minor 3rd above G." targets="Bb" />
+
+<Callout type="practice" title="Pick up your instrument">
+Pick 5 random notes. For each, play the major 3rd and then the minor 3rd above it, singing along. Notice how different the bright and sad feelings are.
+</Callout>

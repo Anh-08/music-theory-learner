@@ -1,4 +1,5 @@
 import { Note } from 'tonal'
+import type { Locale } from '../i18n/locale'
 
 /** Số nửa cung tính từ C (0–11), không phụ thuộc quãng tám. */
 export type Chroma = number
@@ -7,7 +8,10 @@ export type Chroma = number
 const SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
 
-const SOLFEGE = ['Đô', 'Đô♯', 'Rê', 'Rê♯', 'Mi', 'Fa', 'Fa♯', 'Son', 'Son♯', 'La', 'La♯', 'Si']
+const SOLFEGE: Record<Locale, string[]> = {
+  vi: ['Đô', 'Đô♯', 'Rê', 'Rê♯', 'Mi', 'Fa', 'Fa♯', 'Son', 'Son♯', 'La', 'La♯', 'Si'],
+  en: ['Do', 'Do♯', 'Re', 'Re♯', 'Mi', 'Fa', 'Fa♯', 'Sol', 'Sol♯', 'La', 'La♯', 'Ti'],
+}
 
 export const CHROMAS: Chroma[] = Array.from({ length: 12 }, (_, i) => i)
 
@@ -54,8 +58,8 @@ export function rootLabel(c: Chroma): string {
   return spellingsOf(c).map(displayNote).join(' / ')
 }
 
-export function solfege(c: Chroma): string {
-  return SOLFEGE[c]
+export function solfege(c: Chroma, locale: Locale = 'vi'): string {
+  return SOLFEGE[locale][c]
 }
 
 /**

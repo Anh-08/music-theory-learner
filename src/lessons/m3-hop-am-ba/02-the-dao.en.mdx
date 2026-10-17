@@ -1,0 +1,83 @@
+export const meta = {
+  title: 'Chord inversions',
+  description: 'Same three notes in a different order — a different colour, and smoother chord changes.',
+  minutes: 15,
+}
+
+A C chord is C – E – G, but those three notes don't have to be stacked in that order. **Which note is lowest** (the bass note) decides the chord's **inversion**:
+
+| Inversion | Lowest note | Order (low → high) | Symbol |
+|---|---|---|---|
+| Root position | Root (1) | C – E – G | C |
+| 1st inversion | The 3rd | E – G – C | C/E |
+| 2nd inversion | The 5th | G – C – E | C/G |
+
+**C/E** reads "C over E": a C chord with E as the lowest note. You will see this kind of symbol all the time on chord sheets.
+
+<OnlyFor instrument="piano">
+
+<Show notes="C4 E4 G4" labels="interval" play="chord" caption="Root position: C – E – G" />
+
+<Show notes="E4 G4 C5" labels="interval" play="chord" caption="1st inversion: E – G – C" />
+
+<Show notes="G4 C5 E5" labels="interval" play="chord" caption="2nd inversion: G – C – E" />
+
+</OnlyFor>
+
+<OnlyFor instrument="guitar">
+
+On guitar, triads on the **top three strings** (strings 3, 2, 1) are a great way to see inversions — and a secret weapon when playing in a band:
+
+<Show root="C" chord="M" shape="x,x,x,5,5,3" frets={15} labels="interval" caption="Root position (strings 3–2–1: frets 5 – 5 – 3): C – E – G" />
+
+<Show root="C" chord="M" shape="x,x,x,9,8,8" frets={15} labels="interval" caption="1st inversion (frets 9 – 8 – 8): E – G – C" />
+
+<Show root="C" chord="M" shape="x,x,x,12,13,12" frets={15} labels="interval" caption="2nd inversion (frets 12 – 13 – 12): G – C – E" />
+
+The three shapes connect up the neck: after the 2nd inversion you reach root position again an octave higher.
+
+</OnlyFor>
+
+## Why inversions? Smooth chord changes
+
+Play C → F → G → C in root position: your hand jumps around quite a bit. With inversions, each note moves **as little as possible** — this is called **voice leading**:
+
+<OnlyFor instrument="piano">
+
+<Show notes="C4 E4 G4" labels="note" play="chord" caption="C (root position)" />
+
+<Show notes="C4 F4 A4" labels="note" play="chord" caption="F/C (2nd inversion): C stays, E goes up to F, G up to A" />
+
+<Show notes="B3 D4 G4" labels="note" play="chord" caption="G/B (1st inversion): C goes down to B, F down to D, A down to G" />
+
+Your hand hardly moves yet the chords change — it sounds as smooth as a choir.
+
+</OnlyFor>
+
+<OnlyFor instrument="guitar">
+
+<Show root="C" chord="M" shape="x,x,x,5,5,3" frets={15} labels="note" caption="C (root position): frets 5 – 5 – 3" />
+
+<Show root="F" chord="M" shape="x,x,x,5,6,5" frets={15} labels="note" caption="F/C (2nd inversion): frets 5 – 6 – 5" />
+
+<Show root="G" chord="M" shape="x,x,x,4,3,3" frets={15} labels="note" caption="G/B (1st inversion): frets 4 – 3 – 3" />
+
+All three shapes sit between frets 3 and 6. Loop C → F → G → C: it sounds far more "pro" than three open chords.
+
+</OnlyFor>
+
+## A descending bass line
+
+Inversions also let the bass note form a melodic line. A very common ballad progression: **C → G/B → Am** — the bass steps down C → B → A: <Play notes="C3 B2 A2">bass C – B – A</Play>
+
+<Quiz id="m3-dao-q1" question="E – G – C is which inversion of a C chord?" options={['Root position', '1st inversion', '2nd inversion', 'It is not a C chord']} answer={1} explain="The lowest note is E — the 3rd of C → 1st inversion (C/E)." />
+
+<Quiz id="m3-dao-q2" question="What does the symbol C/G mean?" options={['Play C, then G', 'A C chord with G in the bass', 'Either C or G is fine', 'A C chord with an added G']} answer={1} explain="C/G: a C chord with G as the lowest note — the 2nd inversion of C." />
+
+<Quiz id="m3-dao-q3" question="A – C – F is which inversion of an F chord?" options={['Root position', '1st inversion', '2nd inversion', 'It is not an F chord']} answer={1} explain="F major = F A C. A is at the bottom — A is the 3rd → 1st inversion (F/A)." />
+
+<Quiz id="m3-dao-q4" question="A chord with its 5th in the bass is in…" options={['Root position', '1st inversion', '2nd inversion', 'A suspended chord']} answer={2} explain="2nd inversion: the 5th is in the bass." />
+
+<Callout type="practice" title="Pick up your instrument">
+Play C → Am → F → G with the smoothest voice leading you can find (each note moving as little as possible). Hint: C and Am share C and E; F and Am share A and C.
+</Callout>

@@ -10,6 +10,7 @@ import {
   type HighlightMap,
   type Tuning,
 } from '../../theory'
+import { useT } from '../../i18n/useT'
 import { markerFill } from '../markerColors'
 
 export interface FretboardProps {
@@ -31,6 +32,7 @@ const STRING_GAP = 30
 const MARKER_R = 12
 
 export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteClick, only }: FretboardProps) {
+  const { t, locale } = useT()
   const stringCount = tuning.strings.length
   const boardHeight = (stringCount - 1) * STRING_GAP
   const height = TOP + boardHeight + 44
@@ -49,7 +51,7 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
       viewBox={`0 0 ${WIDTH} ${height}`}
       className="w-full min-w-[720px] select-none"
       role="group"
-      aria-label={`Cần đàn guitar, ${fretCount} phím, tuning ${tuning.name}`}
+      aria-label={t('fretboard.aria', { frets: fretCount, tuning: tuning.name[locale] })}
     >
       <rect x={NUT_X} y={TOP - 8} width={boardWidth} height={boardHeight + 16} rx={3} className="fill-amber-100 dark:fill-stone-800" />
 
@@ -112,7 +114,7 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
             key={`${p.string}-${p.fret}`}
             role="button"
             tabIndex={h ? 0 : -1}
-            aria-label={`Dây ${p.string}, ${p.fret === 0 ? 'buông' : `phím ${p.fret}`}: ${name}`}
+            aria-label={t('fretboard.position', { string: p.string, where: p.fret === 0 ? t('fretboard.open') : t('fretboard.fret', { n: p.fret }), note: name })}
             data-highlighted={h ? (h.isRoot ? 'root' : 'tone') : undefined}
             onClick={activate}
             onKeyDown={onKeyDown}

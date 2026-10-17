@@ -1,0 +1,76 @@
+export const meta = {
+  title: 'The circle of fifths and key signatures',
+  description: 'The most important diagram in music theory: how many sharps or flats each key has, and which keys are close to each other.',
+  minutes: 15,
+}
+
+Every major scale has a fixed number of sharps or flats — called the **key signature** of that key. Instead of memorising 12 unrelated keys, there is a beautiful pattern that makes them easy to remember.
+
+## Up a fifth: one more sharp
+
+Starting from C major (no sharps or flats), each time you go up a **perfect 5th**, the new key has **one more sharp**:
+
+| Key | ♯ | Sharp notes |
+|---|---|---|
+| C | 0 | — |
+| G | 1 | F♯ |
+| D | 2 | F♯ C♯ |
+| A | 3 | F♯ C♯ G♯ |
+| E | 4 | F♯ C♯ G♯ D♯ |
+| B | 5 | F♯ C♯ G♯ D♯ A♯ |
+| F♯ | 6 | F♯ C♯ G♯ D♯ A♯ E♯ |
+
+Two interesting things:
+
+- The new sharp is always **degree 7 (the leading tone)** of the new key: G major adds F♯, D major adds C♯.
+- The order of sharps — **F C G D A E B** — is itself a chain of 5ths!
+
+## Up a fourth: one more flat
+
+Going the other way (up a **perfect 4th**, i.e. down a 5th), each key gains **one more flat**:
+
+| Key | ♭ | Flat notes |
+|---|---|---|
+| F | 1 | B♭ |
+| B♭ | 2 | B♭ E♭ |
+| E♭ | 3 | B♭ E♭ A♭ |
+| A♭ | 4 | B♭ E♭ A♭ D♭ |
+| D♭ | 5 | B♭ E♭ A♭ D♭ G♭ |
+| G♭ | 6 | B♭ E♭ A♭ D♭ G♭ C♭ |
+
+The order of flats — **B E A D G C F** — is exactly the order of sharps backwards. A handy trick: the name of a flat key is the **second-to-last flat** (a key with B♭ E♭ A♭ → E♭ major).
+
+## The circle of fifths
+
+Join both directions and you get a closed loop — the **circle of fifths**. At the bottom, F♯ major (6♯) and G♭ major (6♭) are the same sound, just spelled differently.
+
+<CircleOfFifths />
+
+## Relative minor keys
+
+The inner ring shows the **relative minor keys**. Every major key has a minor key that **uses exactly the same notes**, starting on **degree 6**:
+
+- C major: C D E F G A B → A minor: A B C D E F G (same notes, different "home").
+- G major ↔ E minor, F major ↔ D minor…
+
+How do they differ? <Play notes="C4 D4 E4 F4 G4 A4 B4 C5">C major</Play> <Play notes="A3 B3 C4 D4 E4 F4 G4 A4">A minor</Play>
+
+<Callout type="tip" title="What is the circle of fifths for?">
+- **Guessing a song's key**: a chord sheet full of F♯ and C♯ → most likely D major or B minor.
+- **Neighbouring keys are "relatives"**: they share 6 of 7 notes and move into each other smoothly.
+- **Chord progressions**: chords moving anticlockwise (like D → G → C) are the strongest motion in harmony — you will see this again in Module 4.
+</Callout>
+
+<Quiz id="m2-vong-q1" question="Which major key has 3 sharps?" options={['D major', 'A major', 'E major', 'E♭ major']} answer={1} explain="C (0) → G (1) → D (2) → A (3)." />
+
+<Quiz id="m2-vong-q2" question="Which flats are in E♭ major?" options={['B♭', 'B♭ E♭', 'B♭ E♭ A♭', 'E♭ A♭ D♭']} answer={2} explain="E♭ is the second-to-last flat in B♭ E♭ A♭." />
+
+<Quiz id="m2-vong-q3" question="What is the relative minor of G major?" options={['A minor', 'D minor', 'E minor', 'B minor']} answer={2} explain="Degree 6 of G major is E → E minor, which also has one sharp (F♯)." />
+
+<Quiz id="m2-vong-q4" question="Which major key has 2 flats?" options={['F major', 'B♭ major', 'E♭ major', 'D major']} answer={1} explain="F (1♭) → B♭ (2♭: B♭, E♭)." />
+
+<Quiz id="m2-vong-q5" question="A chord sheet uses only G, D, Em, C and Am. The key is most likely…" options={['C major', 'G major', 'D major', 'A minor']} answer={1} explain="All these chords belong to G major (1♯). G is also usually the first / last chord. You will learn to tell for sure in Modules 3 and 4." />
+
+<Callout type="practice" title="Pick up your instrument">
+Play major scales around the circle of fifths: C → G → D → A → E, up and down once each, saying the sharp notes out loud as you meet them. The next day do the flat side: F → B♭ → E♭ → A♭.
+</Callout>

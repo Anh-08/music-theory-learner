@@ -3,6 +3,7 @@ import { chordEvents, sequenceEvents } from '../../audio/events'
 import { usePlayer } from '../../audio/usePlayer'
 import { useProgress } from '../../store/progressContext'
 import { useSettings } from '../../store/settingsContext'
+import { useT } from '../../i18n/useT'
 import { midi } from '../../theory'
 import { ExerciseCard, Feedback } from './ExerciseCard'
 import { buttonClass } from './styles'
@@ -22,6 +23,7 @@ interface QuizProps {
 /** Câu hỏi trắc nghiệm. Chọn sai thì được chọn lại; chọn đúng thì hiện giải thích. */
 export function Quiz({ id, question, options, answer, explain, play: playNotes, playAs = 'sequence' }: QuizProps) {
   const { progress, recordQuiz } = useProgress()
+  const { t } = useT()
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)
   const [wrong, setWrong] = useState<ReadonlySet<number>>(new Set())
@@ -42,11 +44,11 @@ export function Quiz({ id, question, options, answer, explain, play: playNotes, 
   }
 
   return (
-    <ExerciseCard id={id} kind="Câu hỏi" done={progress.quizzes[id]?.correct}>
+    <ExerciseCard id={id} kind={t('ex.quiz')} done={progress.quizzes[id]?.correct}>
       <p className="font-medium">{question}</p>
       {playNotes && (
         <button type="button" onClick={playPrompt} className={`${buttonClass.secondary} mt-2`}>
-          ▶ Nghe
+          {t('common.play')}
         </button>
       )}
       <div className="mt-3 grid gap-2 sm:grid-cols-2">
@@ -72,8 +74,12 @@ export function Quiz({ id, question, options, answer, explain, play: playNotes, 
           )
         })}
       </div>
-      {solved && <Feedback correct>Chính xác! {explain}</Feedback>}
-      {!solved && wrong.size > 0 && <Feedback correct={false}>Chưa đúng — thử lại nhé.</Feedback>}
+      {solved && (
+        <Feedback correct>
+          {t('ex.correct')} {explain}
+        </Feedback>
+      )}
+      {!solved && wrong.size > 0 && <Feedback correct={false}>{t('ex.tryAgain')}</Feedback>}
     </ExerciseCard>
   )
 }

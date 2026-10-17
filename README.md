@@ -2,6 +2,8 @@
 
 Ứng dụng web giúp người **đã biết chơi** guitar hoặc piano học nhạc lý một cách thực hành: quãng, scale, hợp âm, tiến trình, điệu thức — và đệm theo điệu cho guitar — để hiểu bài nhạc được tạo ra như thế nào và tự improvise.
 
+Có hai ngôn ngữ, tiếng Việt và tiếng Anh (nút VI / EN ở thanh trên). / Available in Vietnamese and English.
+
 Kế hoạch chi tiết: [PLAN.md](PLAN.md)
 
 ## Chạy trên máy
@@ -17,7 +19,7 @@ npm run dev
 |---|---|
 | `npm run dev` | Chạy dev server |
 | `npm run build` | Kiểm tra type và build ra `dist/` |
-| `npm test` | Chạy test một lần |
+| `npm test` | Chạy test một lần (thêm/đổi tên file bài học mà test chưa thấy? xóa `node_modules/.vitest-cache`) |
 | `npm run test:watch` | Chạy test ở chế độ theo dõi |
 | `npm run lint` | Lint bằng oxlint |
 

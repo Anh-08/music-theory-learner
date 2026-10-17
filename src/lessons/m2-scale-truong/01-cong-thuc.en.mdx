@@ -1,0 +1,81 @@
+export const meta = {
+  title: 'The major scale formula',
+  description: 'One whole-step / half-step formula builds a major scale from any note.',
+  minutes: 12,
+}
+
+A **scale** is a set of notes in order of pitch, starting from a note called the **tonic**. A scale tells you *which notes "belong" to the music*. When you improvise, the scale is your set of safe notes.
+
+The most important scale is the **major scale** — the foundation of almost every idea that follows.
+
+## The formula
+
+Go up from C using only the natural notes and you get the C major scale: <Play notes="C4 D4 E4 F4 G4 A4 B4 C5" />
+
+The distances between neighbouring notes are **not all the same**:
+
+| C → D | D → E | E → F | F → G | G → A | A → B | B → C |
+|---|---|---|---|---|---|---|
+| 1 | 1 | ½ | 1 | 1 | 1 | ½ |
+
+The major scale formula: **1 – 1 – ½ – 1 – 1 – 1 – ½** (whole – whole – half – whole – whole – whole – half, often written W W H W W W H).
+
+<OnlyFor instrument="guitar">
+
+On a single string the formula is easy to see — jump 2 frets, 2 frets, 1 fret…
+
+<Show root="C" scale="major" positions="5:3 5:5 5:7 5:8 5:10 5:12 5:14 5:15" frets={15} labels="interval" caption="C major on string 5: frets 3 – 5 – 7 – 8 – 10 – 12 – 14 – 15" />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+<Show root="C" scale="major" labels="interval" caption="C major: all white keys. The two half steps are E–F and B–C" />
+
+</OnlyFor>
+
+## Building scales from other notes
+
+Apply the formula to **G**: G → A (1) → B (1) → C (½) → D (1) → E (1) → **F♯** (1) → G (½).
+
+E → F is only a half step, but the formula needs a whole step — so F has to be raised to **F♯**.
+
+<Show root="G" scale="major" labels="note" />
+
+Apply it to **F**: F → G → A → **B♭** → C → D → E → F. A → B is a whole step, but the formula needs a half step — so B has to be lowered to **B♭**.
+
+<Show root="F" scale="major" labels="note" />
+
+<Callout type="note" title="Every letter appears exactly once">
+Why B♭ and not A♯? Because a 7-note scale must use all 7 letters A–G, **each exactly once**. F G A **A♯** C D E would have two A's and no B. This rule keeps note names in step with degree numbers — very handy when working out intervals and chords.
+</Callout>
+
+<Quiz
+  id="m2-cong-thuc-q1"
+  question="Which notes are in the D major scale?"
+  options={['D E F G A B C', 'D E F♯ G A B C♯', 'D E F♯ G A B C', 'D E F♯ G♯ A B C♯']}
+  answer={1}
+  explain="D→E (1), E→F♯ (1), F♯→G (½), G→A (1), A→B (1), B→C♯ (1), C♯→D (½)."
+/>
+
+<Quiz
+  id="m2-cong-thuc-q2"
+  question="How many flats are in the E♭ major scale?"
+  options={['1', '2', '3', '4']}
+  answer={2}
+  explain="E♭ F G A♭ B♭ C D — three flats: E♭, A♭, B♭."
+/>
+
+<Quiz
+  id="m2-cong-thuc-q3"
+  question="Where are the two half steps in the major scale formula?"
+  options={['Between degrees 2–3 and 6–7', 'Between degrees 3–4 and 7–8', 'Between degrees 1–2 and 4–5', 'Between degrees 4–5 and 7–8']}
+  answer={1}
+  explain="1 – 1 – ½ – 1 – 1 – 1 – ½: half steps from degree 3 to 4 and from degree 7 to 8 (the tonic)."
+/>
+
+<FindNotes id="m2-cong-thuc-find-d" prompt="Click all 7 notes of the D major scale (once each is enough)." targets="D E F# G A B C#" />
+
+<Callout type="practice" title="Pick up your instrument">
+Work out the major scales starting on A and on B♭ on paper using the formula, then play them. Do they sound like "Do Re Mi Fa Sol La Ti Do"? If so — you built them correctly.
+</Callout>

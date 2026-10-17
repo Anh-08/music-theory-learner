@@ -1,4 +1,5 @@
 import { Chord } from 'tonal'
+import type { Locale } from '../i18n/locale'
 import { bestRootSpelling, displayNote, type Chroma } from './notes'
 import { intervalLabel } from './intervals'
 
@@ -8,28 +9,29 @@ export interface ChordType {
   /** Hậu tố hiển thị sau tên chủ âm: "" (trưởng), "m", "maj7"… */
   suffix: string
   nameVi: string
-  group: 'Hợp âm ba' | 'Hợp âm 7' | 'Hợp âm mở rộng'
+  nameEn: string
+  group: 'triad' | 'seventh' | 'extended'
 }
 
 export const CHORD_TYPES: ChordType[] = [
-  { id: 'M', suffix: '', nameVi: 'Trưởng', group: 'Hợp âm ba' },
-  { id: 'm', suffix: 'm', nameVi: 'Thứ', group: 'Hợp âm ba' },
-  { id: 'dim', suffix: 'dim', nameVi: 'Giảm', group: 'Hợp âm ba' },
-  { id: 'aug', suffix: 'aug', nameVi: 'Tăng', group: 'Hợp âm ba' },
-  { id: 'sus2', suffix: 'sus2', nameVi: 'Treo bậc 2', group: 'Hợp âm ba' },
-  { id: 'sus4', suffix: 'sus4', nameVi: 'Treo bậc 4', group: 'Hợp âm ba' },
-  { id: 'maj7', suffix: 'maj7', nameVi: 'Bảy trưởng', group: 'Hợp âm 7' },
-  { id: '7', suffix: '7', nameVi: 'Bảy (át)', group: 'Hợp âm 7' },
-  { id: 'm7', suffix: 'm7', nameVi: 'Thứ bảy', group: 'Hợp âm 7' },
-  { id: 'm7b5', suffix: 'm7♭5', nameVi: 'Nửa giảm', group: 'Hợp âm 7' },
-  { id: 'dim7', suffix: 'dim7', nameVi: 'Bảy giảm', group: 'Hợp âm 7' },
-  { id: '7sus4', suffix: '7sus4', nameVi: 'Bảy treo 4', group: 'Hợp âm 7' },
-  { id: '6', suffix: '6', nameVi: 'Sáu', group: 'Hợp âm mở rộng' },
-  { id: 'm6', suffix: 'm6', nameVi: 'Thứ sáu', group: 'Hợp âm mở rộng' },
-  { id: 'add9', suffix: 'add9', nameVi: 'Thêm 9', group: 'Hợp âm mở rộng' },
-  { id: '9', suffix: '9', nameVi: 'Chín (át)', group: 'Hợp âm mở rộng' },
-  { id: 'maj9', suffix: 'maj9', nameVi: 'Chín trưởng', group: 'Hợp âm mở rộng' },
-  { id: 'm9', suffix: 'm9', nameVi: 'Thứ chín', group: 'Hợp âm mở rộng' },
+  { id: 'M', suffix: '', nameVi: 'Trưởng', nameEn: 'Major', group: 'triad' },
+  { id: 'm', suffix: 'm', nameVi: 'Thứ', nameEn: 'Minor', group: 'triad' },
+  { id: 'dim', suffix: 'dim', nameVi: 'Giảm', nameEn: 'Diminished', group: 'triad' },
+  { id: 'aug', suffix: 'aug', nameVi: 'Tăng', nameEn: 'Augmented', group: 'triad' },
+  { id: 'sus2', suffix: 'sus2', nameVi: 'Treo bậc 2', nameEn: 'Suspended 2nd', group: 'triad' },
+  { id: 'sus4', suffix: 'sus4', nameVi: 'Treo bậc 4', nameEn: 'Suspended 4th', group: 'triad' },
+  { id: 'maj7', suffix: 'maj7', nameVi: 'Bảy trưởng', nameEn: 'Major 7th', group: 'seventh' },
+  { id: '7', suffix: '7', nameVi: 'Bảy (át)', nameEn: 'Dominant 7th', group: 'seventh' },
+  { id: 'm7', suffix: 'm7', nameVi: 'Thứ bảy', nameEn: 'Minor 7th', group: 'seventh' },
+  { id: 'm7b5', suffix: 'm7♭5', nameVi: 'Nửa giảm', nameEn: 'Half-diminished', group: 'seventh' },
+  { id: 'dim7', suffix: 'dim7', nameVi: 'Bảy giảm', nameEn: 'Diminished 7th', group: 'seventh' },
+  { id: '7sus4', suffix: '7sus4', nameVi: 'Bảy treo 4', nameEn: 'Dominant 7th sus4', group: 'seventh' },
+  { id: '6', suffix: '6', nameVi: 'Sáu', nameEn: 'Major 6th', group: 'extended' },
+  { id: 'm6', suffix: 'm6', nameVi: 'Thứ sáu', nameEn: 'Minor 6th', group: 'extended' },
+  { id: 'add9', suffix: 'add9', nameVi: 'Thêm 9', nameEn: 'Add 9', group: 'extended' },
+  { id: '9', suffix: '9', nameVi: 'Chín (át)', nameEn: 'Dominant 9th', group: 'extended' },
+  { id: 'maj9', suffix: 'maj9', nameVi: 'Chín trưởng', nameEn: 'Major 9th', group: 'extended' },
+  { id: 'm9', suffix: 'm9', nameVi: 'Thứ chín', nameEn: 'Minor 9th', group: 'extended' },
 ]
 
 export interface ChordInfo {
@@ -39,6 +41,10 @@ export interface ChordInfo {
   intervals: string[]
   /** Công thức: "1", "3", "5", "♭7"… */
   labels: string[]
+}
+
+export function chordTypeName(t: ChordType, locale: Locale): string {
+  return locale === 'vi' ? t.nameVi : t.nameEn
 }
 
 export function chordType(id: string): ChordType {

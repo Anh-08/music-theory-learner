@@ -1,10 +1,10 @@
 /** Nốt bass tính theo hợp âm hiện tại: các bậc của hợp âm, hoặc một quãng cụ thể từ nốt gốc ("6M"). */
 export type BassNote = 'root' | 'third' | 'fifth' | 'seventh' | 'octave' | string
 
+/** Mô tả từng nhịp nằm trong bản dịch giao diện, khóa "groove.<id>". */
 export interface Groove {
-  id: string
+  id: 'pop' | 'ballad' | 'rock' | 'blues' | 'bossa'
   name: string
-  description: string
   /** Số bước trong một ô nhịp 4/4: 16 (móc kép) hoặc 12 (chùm ba, cho shuffle). */
   stepsPerBar: 16 | 12
   defaultTempo: number
@@ -22,7 +22,6 @@ export const GROOVES: Groove[] = [
   {
     id: 'pop',
     name: 'Pop',
-    description: 'Nhịp 4/4 đều, phổ biến nhất.',
     stepsPerBar: 16,
     defaultTempo: 100,
     kick: [0, 8, 10],
@@ -43,7 +42,6 @@ export const GROOVES: Groove[] = [
   {
     id: 'ballad',
     name: 'Ballad',
-    description: 'Chậm, nhẹ, hợp âm rải.',
     stepsPerBar: 16,
     defaultTempo: 72,
     kick: [0, 10],
@@ -58,7 +56,6 @@ export const GROOVES: Groove[] = [
   {
     id: 'rock',
     name: 'Rock',
-    description: 'Bass móc đơn dồn dập, trống chắc.',
     stepsPerBar: 16,
     defaultTempo: 112,
     kick: [0, 6, 8],
@@ -70,7 +67,6 @@ export const GROOVES: Groove[] = [
   {
     id: 'blues',
     name: 'Blues shuffle',
-    description: 'Cảm giác chùm ba "lắc lư", bass boogie.',
     stepsPerBar: 12,
     defaultTempo: 90,
     kick: [0, 6],
@@ -96,7 +92,6 @@ export const GROOVES: Groove[] = [
   {
     id: 'bossa',
     name: 'Bossa nova',
-    description: 'Nhẹ nhàng, nhịp đệm so le kiểu Brazil.',
     stepsPerBar: 16,
     defaultTempo: 120,
     kick: [0, 6, 8, 14],

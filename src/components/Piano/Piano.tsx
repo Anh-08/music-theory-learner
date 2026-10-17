@@ -1,5 +1,6 @@
 import type { KeyboardEvent } from 'react'
 import { noteFromMidi, pianoKeys, rootLabel, type HighlightMap, type PianoKey } from '../../theory'
+import { useT } from '../../i18n/useT'
 import { markerFill } from '../markerColors'
 
 export interface PianoProps {
@@ -20,6 +21,7 @@ const BLACK_H = 95
 const PAD = 2
 
 export function Piano({ startMidi, endMidi, highlights, activeMidis, onKeyClick, onlyMidis }: PianoProps) {
+  const { t } = useT()
   const keys = pianoKeys(startMidi, endMidi)
   const whiteCount = keys.filter((k) => !k.black).length
   const width = whiteCount * WHITE_W + PAD * 2
@@ -55,7 +57,7 @@ export function Piano({ startMidi, endMidi, highlights, activeMidis, onKeyClick,
         key={k.midi}
         role="button"
         tabIndex={h ? 0 : -1}
-        aria-label={`Phím ${rootLabel(k.chroma)} quãng tám ${Math.floor(k.midi / 12) - 1}`}
+        aria-label={t('piano.key', { note: rootLabel(k.chroma), octave: Math.floor(k.midi / 12) - 1 })}
         data-highlighted={h ? (h.isRoot ? 'root' : 'tone') : undefined}
         onClick={activate}
         onKeyDown={onKeyDown}
@@ -80,7 +82,7 @@ export function Piano({ startMidi, endMidi, highlights, activeMidis, onKeyClick,
       className="w-full select-none"
       style={{ minWidth: whiteCount * 26 }}
       role="group"
-      aria-label={`Bàn phím piano từ ${noteFromMidi(startMidi)} đến ${noteFromMidi(endMidi)}`}
+      aria-label={t('piano.aria', { from: noteFromMidi(startMidi), to: noteFromMidi(endMidi) })}
     >
       {keys.filter((k) => !k.black).map(renderKey)}
       {keys.filter((k) => k.black).map(renderKey)}

@@ -25,3 +25,13 @@ describe('intervals', () => {
     expect(intervalName('8P')).toBe('Quãng 8 đúng (octave)')
   })
 })
+
+describe('tên quãng tiếng Anh', async () => {
+  const { intervalName, intervalShortName } = await import('../intervals')
+  it('đặt tên theo ngôn ngữ', () => {
+    expect(intervalName('3m', 'en')).toBe('Minor 3rd')
+    expect(intervalName('8P', 'en')).toBe('Octave')
+    expect(intervalShortName('4A', 'vi')).toBe('Quãng 4 tăng')
+    expect(intervalShortName('5P', 'en')).toBe('Perfect 5th')
+  })
+})

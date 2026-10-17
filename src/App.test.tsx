@@ -1,7 +1,10 @@
-import { fireEvent, screen } from '@testing-library/react'
+import { fireEvent, render, screen } from '@testing-library/react'
+import { MemoryRouter } from 'react-router'
+import { ProgressProvider } from './store/ProgressProvider'
+import { SettingsProvider } from './store/SettingsProvider'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { AppRoutes } from './App'
-import { LESSONS } from './lessons/registry'
+import { LESSONS, lessonMeta } from './lessons/registry'
 import { renderWithProviders } from './test/renderWithProviders'
 
 describe('App', () => {
@@ -10,7 +13,7 @@ describe('App', () => {
   it('trang chủ hiển thị lộ trình và nút bắt đầu', () => {
     renderWithProviders(<AppRoutes />)
     expect(screen.getByRole('link', { name: 'Music Theory Learner' })).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: new RegExp(`Bắt đầu học: ${LESSONS[0].meta.title}`) })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: new RegExp(`Bắt đầu học: ${lessonMeta(LESSONS[0], 'vi').title}`) })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /Module 0/ })).toBeInTheDocument()
     expect(screen.getAllByText('Sắp có').length).toBeGreaterThan(0)
   })
@@ -21,7 +24,7 @@ describe('App', () => {
     expect(screen.getByRole('button', { name: '✓ Đã hoàn thành' })).toBeInTheDocument()
     fireEvent.click(screen.getByRole('link', { name: '← Lộ trình' }))
     expect(screen.getByText(`Đã học 1/${LESSONS.length} bài`)).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: new RegExp(`Học tiếp: ${LESSONS[1].meta.title}`) })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: new RegExp(`Học tiếp: ${lessonMeta(LESSONS[1], 'vi').title}`) })).toBeInTheDocument()
   })
 
   it('đổi nhạc cụ ở thanh trên thì bài học đổi theo', () => {
@@ -30,6 +33,27 @@ describe('App', () => {
     fireEvent.click(screen.getByRole('radio', { name: 'Piano' }))
     expect(screen.queryByRole('group', { name: /Cần đàn guitar/ })).not.toBeInTheDocument()
     expect(screen.getAllByRole('group', { name: /Bàn phím piano/ }).length).toBeGreaterThan(0)
+  })
+
+  it('chuyển ngôn ngữ đổi cả giao diện lẫn bài học, và được ghi nhớ', () => {
+    const { unmount } = renderWithProviders(<AppRoutes />, { route: `/learn/${LESSONS[0].id}` })
+    expect(screen.getByRole('heading', { level: 1, name: lessonMeta(LESSONS[0], 'vi').title })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('radio', { name: 'EN' }))
+    expect(screen.getByRole('heading', { level: 1, name: lessonMeta(LESSONS[0], 'en').title })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Mark as complete' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: 'Curriculum' })).toBeInTheDocument()
+    expect(document.documentElement.lang).toBe('en')
+    unmount()
+    render(
+      <MemoryRouter>
+        <SettingsProvider>
+          <ProgressProvider>
+            <AppRoutes />
+          </ProgressProvider>
+        </SettingsProvider>
+      </MemoryRouter>,
+    )
+    expect(screen.getByRole('heading', { level: 1, name: 'Learn music theory on your own instrument' })).toBeInTheDocument()
   })
 
   it('đường dẫn lạ hiện thông báo', () => {

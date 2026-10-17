@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Note } from 'tonal'
 import { chordEvents, sequenceEvents } from '../../audio/events'
 import { usePlayer } from '../../audio/usePlayer'
+import { useT } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
 import { midi } from '../../theory'
 
@@ -17,6 +18,7 @@ interface PlayProps {
 export function Play({ notes, as = 'sequence', children }: PlayProps) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)
+  const { t } = useT()
   const midis = notes.trim().split(/\s+/).map(midi)
 
   const onClick = () => {
@@ -32,7 +34,7 @@ export function Play({ notes, as = 'sequence', children }: PlayProps) {
       type="button"
       onClick={onClick}
       className="not-prose mx-0.5 inline-flex items-center gap-1 rounded-md border border-rose-300 bg-rose-50 px-2 py-0.5 align-baseline text-sm text-rose-700 hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-950 dark:text-rose-300 dark:hover:bg-rose-900"
-      aria-label={`Nghe ${notes}`}
+      aria-label={t('play.aria', { notes })}
     >
       ▶ {children ?? notes.split(/\s+/).map((n) => Note.pitchClass(n)).join(' ')}
     </button>

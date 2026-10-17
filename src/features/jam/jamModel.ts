@@ -1,3 +1,4 @@
+import type { Locale } from '../../i18n/locale'
 import { Interval } from 'tonal'
 import {
   chroma,
@@ -10,6 +11,7 @@ import {
   romanNumeral,
   scaleFromRoot,
   scaleType,
+  scaleTypeName,
   suggestScales,
   type HighlightMap,
   type KeyRef,
@@ -47,8 +49,8 @@ export function chordLabel(c: ProgressionChord): string {
   return displayNote(c.root) + suffix + (c.bass ? `/${displayNote(c.bass)}` : '')
 }
 
-export function scaleLabel(s: { root: string; typeId: string }): string {
-  return `${displayNote(s.root)} ${scaleType(s.typeId).nameVi}`
+export function scaleLabel(s: { root: string; typeId: string }, locale: Locale = 'vi'): string {
+  return `${displayNote(s.root)} ${scaleTypeName(scaleType(s.typeId), locale)}`
 }
 
 /** Chỉ số hợp âm đang vang ở ô nhịp `bar`. */

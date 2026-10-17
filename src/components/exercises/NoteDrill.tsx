@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSettings } from '../../store/settingsContext'
 import { CHROMAS, fretboardPositions, isBlackKey, rootLabel, tuning, type HighlightMap, type StringFret } from '../../theory'
+import { useT } from '../../i18n/useT'
 import { InstrumentView } from '../lesson/InstrumentView'
 import { ExerciseCard, Feedback } from './ExerciseCard'
 import { buttonClass } from './styles'
@@ -29,6 +30,7 @@ interface Question {
 export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: NoteDrillProps) {
   const { instrument } = useSettings()
   const { streak, best, answer } = useDrill(id)
+  const { t } = useT()
   const [question, setQuestion] = useState<Question | null>(null)
   const [picked, setPicked] = useState<number | null>(null)
 
@@ -68,8 +70,8 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
   const options = naturalsOnly ? NATURALS : CHROMAS
 
   return (
-    <ExerciseCard id={id} kind="Luyện tên nốt" done={best >= 10} doneLabel={`Kỷ lục ${best} câu liên tiếp`}>
-      <p className="mb-3 text-sm text-stone-600 dark:text-stone-400">Nốt được đánh dấu tên là gì? Cố gắng đúng 10 câu liên tiếp.</p>
+    <ExerciseCard id={id} kind={t('ex.drill')} done={best >= 10} doneLabel={t('ex.record', { n: best })}>
+      <p className="mb-3 text-sm text-stone-600 dark:text-stone-400">{t('ex.drillIntro')}</p>
       {question ? (
         <InstrumentView
           highlights={highlights}
@@ -80,7 +82,7 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
         />
       ) : (
         <button type="button" onClick={next} className={buttonClass.primary}>
-          Bắt đầu
+          {t('ex.startPlain')}
         </button>
       )}
       {question && (
@@ -107,14 +109,14 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
           <div className="mt-3 flex items-center gap-3">
             {picked !== null && (
               <button type="button" onClick={next} className={buttonClass.primary}>
-                Câu tiếp →
+                {t('ex.next')}
               </button>
             )}
             <span className="ml-auto text-sm text-stone-500">
-              Chuỗi đúng: <strong>{streak}</strong> · Kỷ lục: {best}
+              {t('ex.streak')} <strong>{streak}</strong> · {t('ex.best')} {best}
             </span>
           </div>
-          {picked !== null && <Feedback correct={picked === question.midi % 12}>{picked === question.midi % 12 ? 'Đúng rồi!' : `Chưa đúng — đó là ${rootLabel(question.midi % 12)}.`}</Feedback>}
+          {picked !== null && <Feedback correct={picked === question.midi % 12}>{picked === question.midi % 12 ? t('ex.right') : t('ex.wasActually', { answer: rootLabel(question.midi % 12) })}</Feedback>}
         </>
       )}
     </ExerciseCard>
