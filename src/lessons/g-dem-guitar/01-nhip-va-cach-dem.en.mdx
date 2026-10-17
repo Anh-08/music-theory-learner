@@ -1,0 +1,67 @@
+export const meta = {
+  title: 'Beats and counting',
+  description: 'Beats, bars, time signatures and subdividing the beat — the foundation for playing any rhythm correctly.',
+  minutes: 12,
+}
+
+Before learning rhythms, there is something more important than any strumming pattern: **feeling and counting the beat**. A good accompanist is not someone who strums fast, but someone who **never drifts off the beat**.
+
+## Beats and bars
+
+- The **beat** is the steady pulse of a song — where you naturally tap your foot.
+- Beats are grouped into **bars** (measures). The first beat of a bar is the **downbeat**, and it usually coincides with a chord change.
+
+The **time signature** tells you how many beats are in a bar:
+
+| Time | Count | Feel | Common in |
+|---|---|---|---|
+| 4/4 | **1** 2 3 4 | Steady, the most common | Pop, ballads, rock, disco, bolero |
+| 3/4 | **1** 2 3 | Swaying "strong – weak – weak" | Waltz, Boston |
+| 2/4 | **1** 2 | Driving, like footsteps | Marches, some tangos |
+| 12/8 | **1** 2 3 **2** 2 3 **3** 2 3 **4** 2 3 | 4 beats, each split in three | Slow rock, slow blues |
+
+## Subdividing the beat
+
+A strum can land on a beat or **between beats**. We count subdivisions out loud:
+
+- **Eighth notes** — the beat split in two: "**1** & **2** & **3** & **4** &".
+- **Sixteenth notes** — split in four: "**1** e & a **2** e & a…".
+- **Triplets** — split in three: "**1** · · **2** · · …" (say "1 – trip – let").
+
+<PatternView pattern="D - D - D - D -" caption="Four downstrokes, one on each beat" />
+
+<PatternView pattern="D U D U D U D U" caption="Eighth notes: down on the beat, up on the &" />
+
+<PatternView pattern="D - D - D -" beats={3} caption="3/4 time: three beats per bar" />
+
+<PatternView pattern="D d d D d d D d d D d d" sub={3} caption="12/8: four beats, each split in three" />
+
+<Callout type="tip" title="Keep your strumming hand moving">
+Even when a rhythm has rests, **your strumming hand keeps moving up and down** like a pendulum: down on the beat, up on the "&". A rest is just your hand passing without touching the strings (a ghost strum). This is the secret to never losing the beat.
+</Callout>
+
+## Strong beats, weak beats and syncopation
+
+In 4/4, beat **1** is the strongest, beat **3** is medium, beats **2** and **4** are weak. Pop and rock, however, often **accent beats 2 and 4** (the snare drum) — which creates a "bouncy" feel.
+
+**Syncopation** means accenting an unexpected place — between the beats. For example the Ballad pattern "**D** – D U – U D U": the upstroke on the "& of 2" carries over a silent beat 3, creating a lovely floating feel.
+
+## Listen and count
+
+Play the Rock rhythm below, switch on the **Metronome** too, and count "1 & 2 & 3 & 4 &" out loud with the strums:
+
+<RhythmPlayer rhythm="rock" progression="C G" tempo={90} />
+
+Now try to tell them apart: which rhythm is straight 4/4, which is 3/4, and which is split in three (12/8)?
+
+<RhythmQuiz id="g-nhip-quiz" options="ballad valse slowrock" />
+
+<Quiz id="g-nhip-q1" question="How many beats are in a bar of 3/4?" options={['2', '3', '4', '6']} answer={1} explain="3/4: three beats — strong, weak, weak." />
+
+<Quiz id="g-nhip-q2" question="Counting '1 e & a' splits each beat into how many parts?" options={['2', '3', '4', '8']} answer={2} explain="Sixteenth notes: 4 parts per beat." />
+
+<Quiz id="g-nhip-q3" question="When a rhythm has a rest, what should your strumming hand do?" options={['Stop and wait', 'Keep moving, just without touching the strings', 'Strum faster to make up for it', 'Switch to picking']} answer={1} explain="Keeping the hand moving like a pendulum is the surest way to stay in time." />
+
+<Callout type="practice" title="Pick up your guitar">
+Hold any chord and set a metronome to 70 bpm. Strum 4 downstrokes per bar for a minute, then switch to "down – up" eighth notes. Count out loud the whole time.
+</Callout>

@@ -9,9 +9,10 @@ export const PLAY_RANGE: Record<InstrumentId, { scale: number; chord: number }> 
 }
 
 export interface Voice {
-  /** Phát các nốt tại `time` (giờ AudioContext) trong `duration` giây. */
-  play(midis: number[], time: number, duration: number): void
-  releaseAll(): void
+  /** Phát các nốt tại `time` (giờ AudioContext) trong `duration` giây, độ mạnh 0–1. */
+  play(midis: number[], time: number, duration: number, velocity?: number): void
+  /** Tắt mọi nốt đang vang (tại `time` nếu có — dùng cho tiếng chặn dây). */
+  releaseAll(time?: number): void
 }
 
 type Tone = typeof ToneNs
@@ -41,23 +42,24 @@ async function createPiano(T: Tone): Promise<Voice> {
       }).toDestination()
     })
     return {
-      play: (midis, time, duration) => sampler.triggerAttackRelease(midis.map(toFreq(T)), duration, time),
-      releaseAll: () => sampler.releaseAll(),
+      play: (midis, time, duration, velocity = 0.8) => sampler.triggerAttackRelease(midis.map(toFreq(T)), duration, time, velocity),
+      releaseAll: (time) => sampler.releaseAll(time),
     }
   } catch {
     // Không tải được sample (mất mạng…): dùng synth thay thế để vẫn nghe được.
     const synth = new T.PolySynth(T.Synth, { envelope: { attack: 0.005, decay: 0.3, sustain: 0.3, release: 1 } }).toDestination()
     synth.volume.value = -8
     return {
-      play: (midis, time, duration) => synth.triggerAttackRelease(midis.map(toFreq(T)), duration, time),
-      releaseAll: () => synth.releaseAll(),
+      play: (midis, time, duration, velocity = 0.8) => synth.triggerAttackRelease(midis.map(toFreq(T)), duration, time, velocity),
+      releaseAll: (time) => synth.releaseAll(time),
     }
   }
 }
 
 /** Guitar mô phỏng bằng thuật toán Karplus-Strong (PluckSynth) — không cần sample. */
 function createGuitar(T: Tone): Voice {
-  const POLYPHONY = 8
+  // Đủ cho một tiếng quạt 6 dây chồng lên phần ngân của tiếng trước.
+  const POLYPHONY = 12
   const filter = new T.Filter(3500, 'lowpass').toDestination()
   const voices = Array.from({ length: POLYPHONY }, () => {
     const p = new T.PluckSynth({ attackNoise: 1.2, dampening: 3800, resonance: 0.97, release: 0.8 }).connect(filter)
@@ -66,15 +68,17 @@ function createGuitar(T: Tone): Voice {
   })
   let next = 0
   return {
-    play: (midis, time, duration) => {
+    play: (midis, time, duration, velocity = 0.8) => {
       for (const m of midis) {
         const v = voices[next]
         next = (next + 1) % POLYPHONY
+        // PluckSynth không nhận velocity: đổi âm lượng của giọng này ngay trước khi gảy.
+        v.volume.setValueAtTime(2 + 20 * Math.log10(Math.max(0.05, velocity)), time)
         v.triggerAttack(toFreq(T)(m), time)
         v.triggerRelease(time + duration)
       }
     },
-    releaseAll: () => voices.forEach((v) => v.triggerRelease()),
+    releaseAll: (time) => voices.forEach((v) => v.triggerRelease(time)),
   }
 }
 

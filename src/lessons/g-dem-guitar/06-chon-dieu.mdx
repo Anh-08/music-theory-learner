@@ -1,0 +1,49 @@
+export const meta = {
+  title: 'Chọn điệu cho bài hát',
+  description: 'Nghe ra nhịp và tempo, chọn điệu hợp với bài, và thử một tiến trình với nhiều điệu khác nhau.',
+  minutes: 15,
+}
+
+Bạn đã có cả "tủ" điệu. Câu hỏi cuối cùng: **bài này nên đệm điệu gì?**
+
+## Ba câu hỏi khi nghe một bài
+
+1. **Nhịp 3 hay nhịp 4?** Gõ chân và đếm: nếu "1 2 3 – 1 2 3" tự nhiên → nhịp 3/4 (Valse, Boston). Nếu "1 2 3 4" → nhịp 4/4.
+2. **Mỗi phách chia đôi hay chia ba?** Nếu nghe "1 & 2 &" đều → nhịp thẳng (Ballad, Pop, Disco…). Nếu nghe "1 trip-let" hoặc "dài – ngắn" → chia ba (Slow Rock, Blues).
+3. **Nhanh hay chậm? Vui hay buồn?** Chậm và tình cảm → Ballad, Slow, Slow Rock, Bolero, hoặc móc. Nhanh và vui → Disco, Rock, Surf, Chachacha.
+
+| Bài hát… | Thử điệu |
+|---|---|
+| Chậm, tình cảm, nhịp 4 | Ballad, Slow, móc Ballad |
+| Chậm, mỗi phách chia ba | Slow Rock (quạt hoặc móc) |
+| Nhịp 3, đung đưa | Valse, Boston |
+| Trữ tình, nhịp 4 vừa phải | Bolero |
+| Vui, nhảy được | Disco, Chachacha, Rumba |
+| Mạnh, có năng lượng | Rock, Surf |
+| Có màu blues | Shuffle |
+
+## Một tiến trình, nhiều điệu
+
+Cùng tiến trình C – Am – F – G, nghe ba điệu khác nhau — bài hát "đổi tính cách" hoàn toàn:
+
+<RhythmPlayer rhythm="ballad" progression="C Am F G" />
+
+<RhythmPlayer rhythm="bolero" progression="C Am F G" />
+
+<RhythmPlayer rhythm="disco" progression="C Am F G" />
+
+<Callout type="tip">
+Không có điệu nào "đúng" duy nhất. Một bài có thể đệm bằng nhiều điệu — người chơi chọn điệu để thể hiện cách hiểu của mình. Khi không chắc, bắt đầu bằng **Ballad** (nhịp 4) hoặc **Valse** (nhịp 3), rồi thử dần.
+</Callout>
+
+## Thử thách cuối: nhận ra điệu
+
+<RhythmQuiz id="g-chon-dieu-quiz" options="ballad slowrock disco valse bolero shuffle" />
+
+<Quiz id="g-chon-dieu-q1" question="Bạn gõ chân và đếm tự nhiên '1 2 3 – 1 2 3'. Nên thử điệu nào?" options={['Disco', 'Valse', 'Rock', 'Bolero']} answer={1} />
+
+<Quiz id="g-chon-dieu-q2" question="Bài chậm, mỗi phách nghe chia ba ('1 trip-let'). Điệu nào hợp?" options={['Slow Rock', 'Disco', 'Tango', 'Surf']} answer={0} />
+
+<Callout type="practice" title="Cầm đàn lên — thử thách cuối nhánh">
+Chọn 3 bài hát bạn thích với nhịp điệu khác nhau. Với mỗi bài: xác định nhịp (3 hay 4, thẳng hay chia ba), chọn điệu, gõ tiến trình vào trang **Đệm guitar** để tập cùng trống – bass, rồi đệm hát trọn bài.
+</Callout>

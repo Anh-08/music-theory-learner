@@ -5,9 +5,13 @@ export interface JamState {
   ownerId: string | null
   /** Ô nhịp đang phát (tính từ 0 trong vòng lặp). */
   bar: number
+  /** Bước đang phát trong điệu guitar (nếu có). */
+  step: number
+  /** Tempo hiện tại (thay đổi khi bật "tăng tempo dần"). */
+  tempo: number
 }
 
-let state: JamState = { ownerId: null, bar: 0 }
+let state: JamState = { ownerId: null, bar: 0, step: -1, tempo: 0 }
 const listeners = new Set<() => void>()
 
 export const jamStore = {

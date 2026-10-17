@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router'
 import { useT } from '../../i18n/useT'
 import { findLesson, lessonMeta, lessonPath, lessonsOf, localizedLesson, neighbors } from '../../lessons/registry'
 import { mdxComponents } from '../../lessons/mdxComponents'
+import { moduleLabel } from '../../lessons/moduleLabel'
 import { MODULES } from '../../lessons/modules'
 import { useProgress } from '../../store/progressContext'
 
@@ -35,11 +36,11 @@ export function LessonPage() {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[220px_minmax(0,1fr)]">
-      <nav aria-label={t('lesson.moduleNav', { n: mod.number })} className="text-sm lg:sticky lg:top-6 lg:self-start">
+      <nav aria-label={t('lesson.moduleNav', { label: moduleLabel(mod, locale, t) })} className="text-sm lg:sticky lg:top-6 lg:self-start">
         <Link to="/" className="text-xs text-stone-500 hover:underline">
           {t('lesson.back')}
         </Link>
-        <p className="mt-2 font-semibold">{t('lesson.moduleHeading', { n: mod.number, title: mod.title[locale] })}</p>
+        <p className="mt-2 font-semibold">{t('lesson.moduleHeading', { label: moduleLabel(mod, locale, t), title: mod.title[locale] })}</p>
         <ol className="mt-2 space-y-1">
           {siblings.map((l, i) => (
             <li key={l.id}>
@@ -57,7 +58,7 @@ export function LessonPage() {
       </nav>
 
       <div className="min-w-0">
-        <p className="text-xs text-stone-500">{t('lesson.meta', { n: mod.number, minutes: meta.minutes })}</p>
+        <p className="text-xs text-stone-500">{t('lesson.meta', { label: moduleLabel(mod, locale, t), minutes: meta.minutes })}</p>
         <h1 className="mt-1 text-3xl font-bold tracking-tight">{meta.title}</h1>
         <p className="mt-2 text-stone-600 dark:text-stone-400">{meta.description}</p>
         {fallback && (

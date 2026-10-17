@@ -1,0 +1,61 @@
+export const meta = {
+  title: 'Fingerpicking patterns',
+  description: 'Ballad, slow and waltz picking, Travis picking and arpeggios — a soft accompaniment for slow songs.',
+  minutes: 22,
+}
+
+Fingerpicking gives a soft, clear accompaniment — perfect for verses, slow songs, or singing on your own.
+
+<Callout type="note" title="Reminder: one finger per string">
+The thumb (p) takes the bass B / B′ on strings 6 – 5 – 4; the index (i) string 3; the middle (m) string 2; the ring finger (a) string 1. Keep your wrist relaxed and **pull** the strings towards your palm rather than flicking outwards.
+</Callout>
+
+## Ballad picking (4/4)
+
+**B – 3 – 2 – 3 – 1 – 3 – 2 – 3**. The most common picking pattern — get this one solid first.
+
+<RhythmPlayer rhythm="ballad-pick" progression="C G Am Em F C F G" />
+
+## Slow picking (4/4)
+
+Even upward arpeggios with the alternate bass on beat 3: **B – 3 – 2 – 1 – B′ – 3 – 2 – 1**.
+
+<RhythmPlayer rhythm="slow-pick" progression="Am F C G" />
+
+## Waltz picking (3/4)
+
+**B – 3 – 2 – 1 – 2 – 3**: one bass note, then up and back down — exactly 6 notes for 3 beats.
+
+<RhythmPlayer rhythm="valse-pick" progression="C Am Dm G" />
+
+## Slow rock picking (12/8)
+
+Triplets: **B 3 2 – 1 2 3 – B′ 3 2 – 1 2 3**.
+
+<RhythmPlayer rhythm="slowrock-pick" progression="C Em Am G" />
+
+## Travis picking
+
+The folk and country technique: **the thumb plays a steady alternating bass on every beat** (B – B′ – B – B′) like a drum, while the other fingers pick in between. A bit harder — practise the thumb part alone until it is perfectly steady.
+
+<RhythmPlayer rhythm="travis" progression="C Am F G" tempo={80} />
+
+## Arpeggios
+
+Up and back down: **B – 4 – 3 – 2 – 1 – 2 – 3 – 4**. Great for intros and outros.
+
+<RhythmPlayer rhythm="arpeggio" progression="Em C G D" />
+
+## Ear training
+
+<RhythmQuiz id="g-moc-quiz" options="ballad-pick valse-pick slowrock-pick travis" />
+
+<Quiz id="g-moc-q1" question="In ballad picking 'B 3 2 3 1 3 2 3', which finger plays the '1'?" options={['Thumb', 'Index', 'Middle', 'Ring']} answer={3} explain="One finger per string: the ring finger takes string 1." />
+
+<Quiz id="g-moc-q2" question="What defines Travis picking?" options={['Picking only the high strings', 'The thumb keeps a steady alternating bass on every beat', 'Mixing strumming and picking', '3/4 time']} answer={1} />
+
+<Quiz id="g-moc-q3" question="How many notes are in one bar of waltz picking 'B 3 2 1 2 3'?" options={['3', '4', '6', '8']} answer={2} explain="6 eighth notes = 3 beats." />
+
+<Callout type="practice" title="Pick up your guitar">
+Choose ballad picking, lower the tempo to 60, mute Guitar and pick along with the drums. Once it is steady, switch on "speed up gradually". Make sure the bass moves to the right string when the chord changes (see the bass table in Reading rhythm notation).
+</Callout>

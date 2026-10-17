@@ -1,0 +1,67 @@
+export const meta = {
+  title: 'Nhịp và cách đếm',
+  description: 'Phách, ô nhịp, số chỉ nhịp và cách chia phách — nền tảng để đệm đúng mọi điệu.',
+  minutes: 12,
+}
+
+Trước khi học điệu, cần một thứ quan trọng hơn mọi kiểu quạt: **cảm nhận và đếm được nhịp**. Người đệm hay không phải là người quạt nhanh, mà là người **không bao giờ lệch nhịp**.
+
+## Phách và ô nhịp
+
+- **Phách** (beat) là nhịp đập đều đặn của bài — chỗ bạn tự nhiên gõ chân theo.
+- Các phách được gom thành **ô nhịp** (bar). Phách đầu ô nhịp là **phách mạnh**, thường trùng với lúc đổi hợp âm.
+
+**Số chỉ nhịp** cho biết một ô nhịp có mấy phách:
+
+| Nhịp | Đếm | Cảm giác | Hay gặp ở |
+|---|---|---|---|
+| 4/4 | **1** 2 3 4 | Đều, phổ biến nhất | Pop, ballad, rock, disco, bolero |
+| 3/4 | **1** 2 3 | Đung đưa "mạnh – nhẹ – nhẹ" | Valse, Boston |
+| 2/4 | **1** 2 | Dồn dập, như bước chân | Hành khúc, một số bài tango |
+| 12/8 | **1** 2 3 **2** 2 3 **3** 2 3 **4** 2 3 | 4 phách, mỗi phách chia ba | Slow rock, blues chậm |
+
+## Chia nhỏ phách
+
+Một tiếng quạt có thể rơi đúng phách hoặc **giữa các phách**. Ta đếm phần chia nhỏ bằng tiếng:
+
+- **Móc đơn** — chia đôi phách: "**1** & **2** & **3** & **4** &".
+- **Móc kép** — chia bốn: "**1** e & a **2** e & a…".
+- **Chùm ba** — chia ba: "**1** · · **2** · · …" (đọc "1 – trip – let").
+
+<PatternView pattern="D - D - D - D -" caption="Bốn tiếng quạt xuống, mỗi tiếng đúng một phách" />
+
+<PatternView pattern="D U D U D U D U" caption="Móc đơn: quạt xuống ở phách, quạt lên ở chữ &" />
+
+<PatternView pattern="D - D - D -" beats={3} caption="Nhịp 3/4: ba phách mỗi ô" />
+
+<PatternView pattern="D d d D d d D d d D d d" sub={3} caption="12/8: bốn phách, mỗi phách chia ba" />
+
+<Callout type="tip" title="Tay phải luôn đưa đều">
+Dù điệu có những chỗ nghỉ, **tay phải vẫn đưa lên – xuống đều** như con lắc: xuống ở phách, lên ở chữ "&". Chỗ nghỉ chỉ là tay đi qua mà không chạm dây (quạt câm). Đây là bí quyết để không bao giờ lệch nhịp.
+</Callout>
+
+## Phách mạnh, phách yếu và đảo phách
+
+Trong 4/4, phách **1** mạnh nhất, phách **3** mạnh vừa, phách **2** và **4** yếu. Nhạc pop, rock lại hay **nhấn vào phách 2 và 4** (tiếng trống snare) — tạo cảm giác "nảy".
+
+**Đảo phách** (syncopation) là khi nhấn vào chỗ không mong đợi — giữa các phách. Ví dụ điệu Ballad "**D** – D U – U D U": tiếng quạt lên ở "& của 2" nối sang không quạt ở phách 3, tạo cảm giác lơ lửng rất hay.
+
+## Nghe và đếm
+
+Bật điệu Rock dưới đây, bật cả **Metronome** và đếm to "1 & 2 & 3 & 4 &" theo tiếng quạt:
+
+<RhythmPlayer rhythm="rock" progression="C G" tempo={90} />
+
+Giờ thử phân biệt: điệu nào 4/4 thẳng, điệu nào 3/4, điệu nào chia ba (12/8)?
+
+<RhythmQuiz id="g-nhip-quiz" options="ballad valse slowrock" />
+
+<Quiz id="g-nhip-q1" question="Nhịp 3/4 có mấy phách trong một ô nhịp?" options={['2', '3', '4', '6']} answer={1} explain="3/4: ba phách — mạnh, nhẹ, nhẹ." />
+
+<Quiz id="g-nhip-q2" question="Đếm '1 e & a' là chia mỗi phách thành mấy phần?" options={['2', '3', '4', '8']} answer={2} explain="Móc kép: 4 phần mỗi phách." />
+
+<Quiz id="g-nhip-q3" question="Khi điệu có chỗ nghỉ, tay phải nên làm gì?" options={['Dừng lại chờ', 'Vẫn đưa đều, chỉ không chạm dây', 'Quạt nhanh hơn để bù', 'Chuyển sang móc']} answer={1} explain="Giữ tay đưa đều như con lắc là cách giữ nhịp chắc nhất." />
+
+<Callout type="practice" title="Cầm đàn lên">
+Bấm một hợp âm bất kỳ, bật metronome 70 bpm. Quạt xuống 4 tiếng mỗi ô nhịp trong 1 phút, rồi chuyển sang "xuống – lên" móc đơn. Đếm thành tiếng suốt bài tập.
+</Callout>

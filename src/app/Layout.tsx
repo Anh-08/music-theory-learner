@@ -26,6 +26,9 @@ export function Layout() {
             <NavLink to="/jam" className={navClass}>
               {t('nav.jam')}
             </NavLink>
+            <NavLink to="/rhythm" className={navClass}>
+              {t('nav.rhythm')}
+            </NavLink>
           </nav>
           <div className="ml-auto flex gap-4">
             <Segmented

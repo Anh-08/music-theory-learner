@@ -3,10 +3,12 @@ export type BassNote = 'root' | 'third' | 'fifth' | 'seventh' | 'octave' | strin
 
 /** Mô tả từng nhịp nằm trong bản dịch giao diện, khóa "groove.<id>". */
 export interface Groove {
-  id: 'pop' | 'ballad' | 'rock' | 'blues' | 'bossa'
+  id: 'pop' | 'ballad' | 'rock' | 'blues' | 'bossa' | 'slowrock' | 'waltz'
   name: string
-  /** Số bước trong một ô nhịp 4/4: 16 (móc kép) hoặc 12 (chùm ba, cho shuffle). */
-  stepsPerBar: 16 | 12
+  /** Số phách trong ô nhịp. */
+  beatsPerBar: 3 | 4
+  /** Số bước trong một ô nhịp: 16 (4/4, móc kép), 12 (4/4 chùm ba), 6 (3/4, móc đơn). */
+  stepsPerBar: 16 | 12 | 6
   defaultTempo: number
   kick: number[]
   snare: number[]
@@ -22,6 +24,7 @@ export const GROOVES: Groove[] = [
   {
     id: 'pop',
     name: 'Pop',
+    beatsPerBar: 4,
     stepsPerBar: 16,
     defaultTempo: 100,
     kick: [0, 8, 10],
@@ -42,6 +45,7 @@ export const GROOVES: Groove[] = [
   {
     id: 'ballad',
     name: 'Ballad',
+    beatsPerBar: 4,
     stepsPerBar: 16,
     defaultTempo: 72,
     kick: [0, 10],
@@ -56,6 +60,7 @@ export const GROOVES: Groove[] = [
   {
     id: 'rock',
     name: 'Rock',
+    beatsPerBar: 4,
     stepsPerBar: 16,
     defaultTempo: 112,
     kick: [0, 6, 8],
@@ -67,6 +72,7 @@ export const GROOVES: Groove[] = [
   {
     id: 'blues',
     name: 'Blues shuffle',
+    beatsPerBar: 4,
     stepsPerBar: 12,
     defaultTempo: 90,
     kick: [0, 6],
@@ -92,6 +98,7 @@ export const GROOVES: Groove[] = [
   {
     id: 'bossa',
     name: 'Bossa nova',
+    beatsPerBar: 4,
     stepsPerBar: 16,
     defaultTempo: 120,
     kick: [0, 6, 8, 14],
@@ -109,6 +116,38 @@ export const GROOVES: Groove[] = [
       { step: 6, len: 4 },
       { step: 10, len: 3 },
       { step: 13, len: 3 },
+    ],
+  },
+  {
+    id: 'slowrock',
+    name: 'Slow rock',
+    beatsPerBar: 4,
+    stepsPerBar: 12,
+    defaultTempo: 60,
+    kick: [0, 6],
+    snare: [3, 9],
+    hat: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    bass: [
+      { step: 0, note: 'root', len: 3 },
+      { step: 3, note: 'fifth', len: 3 },
+      { step: 6, note: 'root', len: 3 },
+      { step: 9, note: 'fifth', len: 3 },
+    ],
+    comp: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((step) => ({ step, len: 1, tones: [[0, 1, 2][step % 3]] })),
+  },
+  {
+    id: 'waltz',
+    name: 'Valse / Waltz (3/4)',
+    beatsPerBar: 3,
+    stepsPerBar: 6,
+    defaultTempo: 120,
+    kick: [0],
+    snare: [2, 4],
+    hat: [0, 2, 4],
+    bass: [{ step: 0, note: 'root', len: 2 }],
+    comp: [
+      { step: 2, len: 2 },
+      { step: 4, len: 2 },
     ],
   },
 ]

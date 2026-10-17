@@ -310,14 +310,16 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 ✅ *Kết quả: người dùng có thể bắt đầu improvise thật sự.*
 
 ### Giai đoạn 4 — Đệm guitar theo điệu
-- [ ] Định dạng dữ liệu cho điệu: mỗi bước trên lưới phách là quạt xuống/lên, chặn tiếng, nghỉ, hoặc danh sách dây cần móc (B, B', 1, 2, 3…).
-- [ ] Dữ liệu thế bấm hợp âm guitar → suy ra dây bass và bass luân phiên cho từng hợp âm.
-- [ ] Mô phỏng âm thanh quạt (lệch thời gian giữa các dây, lực nhấn) và móc; tiếng chặn dây.
-- [ ] Component `<RhythmGrid />` có playhead chạy theo Tone.Transport.
-- [ ] Trang **Rhythm Trainer**: chọn điệu, tiến trình, tempo, metronome, tăng tempo dần, tự tạo điệu.
-- [ ] Nhập khoảng 15 điệu quạt + 8 điệu móc ở mục 4.
-- [ ] Gắn điệu vào phần guitar đệm của Jam Room.
-- [ ] Viết nội dung nhánh **Đ1 → Đ6**.
+- [x] Định dạng dữ liệu cho điệu: mỗi bước trên lưới phách là quạt xuống/lên, chặn tiếng, nghỉ, hoặc danh sách dây cần móc (B, B', 1, 2, 3…).
+- [x] Dữ liệu thế bấm hợp âm guitar → suy ra dây bass và bass luân phiên cho từng hợp âm.
+- [x] Mô phỏng âm thanh quạt (lệch thời gian giữa các dây, lực nhấn) và móc; tiếng chặn dây.
+- [x] Component `<RhythmGrid />` có playhead chạy theo Tone.Transport.
+- [x] Trang **Rhythm Trainer**: chọn điệu, tiến trình, tempo, metronome, tăng tempo dần, tự tạo điệu.
+- [x] Nhập khoảng 15 điệu quạt + 8 điệu móc ở mục 4.
+- [x] Gắn điệu vào phần guitar đệm của Jam Room.
+- [x] Viết nội dung nhánh **Đ1 → Đ6**.
+
+> Ghi chú: điệu nằm ở `src/audio/rhythms.ts` (15 điệu quạt + 9 điệu móc, có cả nhịp 3/4 và 12/8), thế bấm ở `src/theory/guitarVoicing.ts`. Trang `#/rhythm?r=<id điệu>&p=<tiến trình>`. Trong bài học: `<RhythmPlayer rhythm="..." progression="..." />`, `<RhythmQuiz options="..." />`, `<PatternView pattern="..." />`. Nhánh guitar nằm sau Module 5 trong lộ trình. Âm thanh guitar vẫn là PluckSynth.
 
 ✅ *Kết quả: cầm tờ hợp âm là đệm hát được với nhiều điệu.*
 

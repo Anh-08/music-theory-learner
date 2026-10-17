@@ -1,0 +1,69 @@
+export const meta = {
+  title: 'Đọc ký hiệu điệu',
+  description: 'Mũi tên quạt, tiếng chặn, ký hiệu móc B – B′ – 1 2 3, và nốt bass của từng hợp âm.',
+  minutes: 15,
+}
+
+Mỗi điệu trong ứng dụng được ghi trên một **lưới phách**: mỗi cột là một bước (theo cách đếm ở bài trước), mỗi hàng là một việc tay phải làm.
+
+## Ký hiệu quạt
+
+| Ký hiệu | Nghĩa | Cách làm |
+|---|---|---|
+| ↓ | Quạt xuống | Quét từ dây trầm (dây 6) xuống dây cao |
+| ↑ | Quạt lên | Quét từ dây 1 lên, thường chỉ 3 – 4 dây cao |
+| ↓ / ↑ nhỏ | Quạt nhẹ | Chỉ lướt qua vài dây cao, nhỏ tiếng |
+| ✕ | Chặn (chả) | Quạt xuống rồi **áp lòng bàn tay** lên dây ngay lập tức — ra tiếng "chát" tắt |
+| (trống) | Nghỉ | Tay vẫn đưa nhưng không chạm dây |
+
+<PatternView pattern="D U X U D U X U" caption="Điệu Disco: chặn ở phách 2 và 4" />
+
+## Ký hiệu móc
+
+| Ký hiệu | Nghĩa | Ngón |
+|---|---|---|
+| B | Nốt bass (nốt gốc của hợp âm) | Ngón cái |
+| B′ | Bass luân phiên (thường là quãng 5) | Ngón cái |
+| 3 / 2 / 1 | Dây 3, 2, 1 | Ngón trỏ / giữa / áp út |
+| B+1, 123 | Nhiều nốt cùng lúc | |
+
+<PatternView pattern="B 3 2 3 1 3 2 3" caption="Móc Ballad: bass rồi rải dây 3 – 2 – 3 – 1 – 3 – 2 – 3" />
+
+<Callout type="note" title="Một ngón một dây">
+Khi móc, giao cố định: **ngón cái** lo 3 dây trầm (bass), **ngón trỏ** dây 3, **ngón giữa** dây 2, **ngón áp út** dây 1. Tay không phải "tìm" dây nữa — chỉ cần nghĩ tới nhịp.
+</Callout>
+
+## Nốt bass của từng hợp âm
+
+Muốn móc hay chơi điệu có bass (Valse, Bolero, Fox…), bạn phải biết **bass nằm ở dây nào** với mỗi hợp âm. Bass là **nốt gốc** của hợp âm ở dây thấp nhất có thể; bass luân phiên thường là **quãng 5**.
+
+| Hợp âm | Bass (B) | Bass luân phiên (B′) |
+|---|---|---|
+| C | Dây 5 phím 3 (C) | Dây 4 phím 2 (E) |
+| Am | Dây 5 buông (A) | Dây 4 phím 2 (E) |
+| G | Dây 6 phím 3 (G) | Dây 4 buông (D) |
+| Em | Dây 6 buông (E) | Dây 5 phím 2 (B) |
+| D, Dm | Dây 4 buông (D) | Dây 5 buông (A) |
+| F | Dây 6 phím 1 (F) | Dây 5 phím 3 (C) |
+| E | Dây 6 buông (E) | Dây 5 phím 2 (B) |
+| A | Dây 5 buông (A) | Dây 4 phím 2 (E) |
+
+<Show root="C" chord="M" positions="5:3 4:2" labels="interval" caption="C: B = dây 5 phím 3 (nốt gốc), B′ = dây 4 phím 2 (quãng 3 — nhiều người cũng dùng dây 6 phím 3 là quãng 5)" />
+
+<Show root="G" chord="M" positions="6:3 4:0" labels="interval" caption="G: B = dây 6 phím 3, B′ = dây 4 buông (quãng 5)" />
+
+<Callout type="tip" title="Mẹo nhớ">
+Hợp âm có nốt gốc trên dây 6 (G, E, Em, F) thì bass luân phiên ở dây 4 hoặc 5. Hợp âm gốc dây 5 (C, A, Am) thì bass luân phiên ở dây 4. Hợp âm gốc dây 4 (D, Dm) thì bass luân phiên là dây 5 buông.
+</Callout>
+
+<Quiz id="g-ky-hieu-q1" question="Ký hiệu ✕ trong điệu nghĩa là gì?" options={['Không đánh', 'Chặn tiếng: quạt rồi áp lòng bàn tay lên dây', 'Quạt thật mạnh', 'Móc dây 1']} answer={1} />
+
+<Quiz id="g-ky-hieu-q2" question="Với hợp âm G, bass luân phiên (B′) nằm ở đâu?" options={['Dây 5 phím 2', 'Dây 4 buông', 'Dây 6 phím 3', 'Dây 3 buông']} answer={1} explain="Dây 4 buông là D — quãng 5 của G." />
+
+<Quiz id="g-ky-hieu-q3" question="Ký hiệu '123' trong điệu móc nghĩa là?" options={['Móc lần lượt dây 1, 2, 3', 'Móc cùng lúc dây 1, 2 và 3', 'Quạt 3 lần', 'Đếm 1 2 3']} answer={1} explain="Các số viết liền là các dây được móc cùng lúc." />
+
+<Quiz id="g-ky-hieu-q4" question="Hợp âm D: nốt bass ở dây nào?" options={['Dây 6', 'Dây 5', 'Dây 4', 'Dây 3']} answer={2} explain="D (xx0232) có nốt gốc thấp nhất là dây 4 buông." />
+
+<Callout type="practice" title="Cầm đàn lên">
+Với từng hợp âm C, Am, G, Em, D: chỉ đánh B rồi B′ lặp lại (ngón cái), mỗi nốt một phách, cho tới khi không cần nhìn tay. Đây là "bộ khung" của mọi điệu móc và điệu có bass.
+</Callout>

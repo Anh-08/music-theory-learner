@@ -1,6 +1,7 @@
 import { useEffect, useId, useMemo, useState } from 'react'
 import { Link } from 'react-router'
 import { GROOVES, groove as getGroove } from '../../audio/grooves'
+import { RHYTHMS } from '../../audio/rhythms'
 import { startJam, stopJam, updateJam } from '../../audio/jam'
 import type { JamTrack } from '../../audio/jamEvents'
 import { useJamState } from '../../audio/jamStore'
@@ -12,7 +13,8 @@ import type { Locale } from '../../i18n/locale'
 import type { MessageKey } from '../../i18n/messages'
 import { useT, type Translate } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
-import { CHROMAS, TheoryError, keyLabel, spellingsOf, type ScaleSuggestion } from '../../theory'
+import { CHROMAS, keyLabel, spellingsOf, type ScaleSuggestion } from '../../theory'
+import { errorMessage } from '../../i18n/errors'
 import { analyze, chordIndexAtBar, chordLabel, jamHighlights, scaleLabel, type Analysis } from './jamModel'
 import { JAM_PRESETS, type JamPreset } from './presets'
 
@@ -42,15 +44,13 @@ const TRACKS: { id: JamTrack; label: MessageKey }[] = [
   { id: 'drums', label: 'jam.drums' },
   { id: 'bass', label: 'jam.bass' },
   { id: 'chords', label: 'jam.chords' },
+  { id: 'click', label: 'jam.click' },
 ]
 
 /** Lựa chọn scale: gợi ý tự động, hoặc scale riêng của bài học. */
 type ScaleOption = Omit<ScaleSuggestion, 'reason'> & { reason: ScaleSuggestion['reason'] | 'custom' }
 
-function errorMessage(error: unknown, t: Translate): string {
-  if (error instanceof TheoryError) return t(`error.${error.code}`, error.params)
-  return error instanceof Error ? error.message : String(error)
-}
+
 
 function tryAnalyze(text: string, keyChoice: string): { analysis: Analysis | null; error: unknown } {
   try {
@@ -71,8 +71,10 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
   const [text, setText] = useState(progression)
   const [keyChoice, setKeyChoice] = useState(songKey ?? 'auto')
   const [grooveId, setGrooveId] = useState(groove)
+  // Kiểu đệm: 'default' = phần đệm của groove, hoặc id một điệu guitar cùng số phách.
+  const [compId, setCompId] = useState('default')
   const [tempo, setTempo] = useState(initialTempo ?? getGroove(groove).defaultTempo)
-  const [mutes, setMutes] = useState<Record<JamTrack, boolean>>({ drums: false, bass: false, chords: false })
+  const [mutes, setMutes] = useState<Record<JamTrack, boolean>>({ drums: false, bass: false, chords: false, click: true })
   const [scaleIndex, setScaleIndex] = useState(0)
   const [showScale, setShowScale] = useState(true)
   const [labels, setLabels] = useState<'note' | 'interval'>('interval')
@@ -102,8 +104,11 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
     [currentChord, currentScale, showScale, labels],
   )
 
-  const play = (chordsToPlay: Analysis['chords'], grooveToPlay: string) =>
-    void startJam({ ownerId: id, chords: chordsToPlay, groove: getGroove(grooveToPlay), tempo, instrument, mutes })
+  const play = (chordsToPlay: Analysis['chords'], grooveToPlay: string, comp = compId) => {
+    const g = getGroove(grooveToPlay)
+    const rhythm = RHYTHMS.find((r) => r.id === comp && r.beatsPerBar === g.beatsPerBar)
+    void startJam({ ownerId: id, chords: chordsToPlay, groove: g, tempo, instrument, mutes, rhythm })
+  }
 
   const start = () => {
     if (analysis) play(analysis.chords, grooveId)
@@ -132,15 +137,33 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
   }
 
   const chooseGroove = (v: string) => {
+    const g = getGroove(v)
+    const keepComp = RHYTHMS.some((r) => r.id === compId && r.beatsPerBar === g.beatsPerBar)
     setGrooveId(v)
-    setTempo(getGroove(v).defaultTempo)
-    if (playing && analysis) play(analysis.chords, v)
+    setTempo(g.defaultTempo)
+    if (!keepComp) setCompId('default')
+    if (playing && analysis) play(analysis.chords, v, keepComp ? compId : 'default')
   }
+
+  const chooseComp = (v: string) => {
+    setCompId(v)
+    if (playing && analysis) play(analysis.chords, grooveId, v)
+  }
+
+  const compOptions = [
+    { value: 'default', label: t('jam.compDefault') },
+    ...RHYTHMS.filter((r) => r.beatsPerBar === getGroove(grooveId).beatsPerBar).map((r) => ({
+      value: r.id,
+      label: r.name[locale],
+      group: t(r.kind === 'strum' ? 'rhythm.groupStrum' : 'rhythm.groupPick'),
+    })),
+  ].map((o) => ({ group: t('jam.compStyle'), ...o }))
 
   const choosePreset = (p: JamPreset) => {
     changeText(p.progression)
     setKeyChoice(p.songKey ?? 'auto')
     setGrooveId(p.groove)
+    setCompId('default')
     setTempo(p.tempo ?? getGroove(p.groove).defaultTempo)
     setSelected(0)
     setScaleIndex(0)
@@ -177,6 +200,7 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
           <div className="grid gap-3 sm:grid-cols-3">
             <Select label={t('jam.key')} value={keyChoice} onChange={chooseKey} options={keyOptions(t, locale)} />
             <Select label={t('jam.groove')} value={grooveId} onChange={chooseGroove} options={GROOVES.map((g) => ({ value: g.id, label: `${g.name} — ${t(`groove.${g.id}`)}` }))} />
+            <Select label={t('jam.compStyle')} value={compId} onChange={chooseComp} options={compOptions} />
           </div>
         </div>
       )}

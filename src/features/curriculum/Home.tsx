@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { LESSONS, lessonMeta, lessonPath, lessonsOf } from '../../lessons/registry'
+import { moduleLabel } from '../../lessons/moduleLabel'
 import { MODULES } from '../../lessons/modules'
 import { useT } from '../../i18n/useT'
 import { useProgress } from '../../store/progressContext'
@@ -39,7 +40,7 @@ export function Home() {
             >
               <header className="flex items-baseline justify-between gap-2">
                 <h2 className="font-semibold">
-                  <span className="text-stone-400">{t('home.module', { n: m.number })} · </span>
+                  <span className="text-stone-400">{moduleLabel(m, locale, t)} · </span>
                   {m.title[locale]}
                 </h2>
                 {available ? (

@@ -3,6 +3,8 @@ import type { Localized } from '../i18n/locale'
 export interface ModuleInfo {
   id: string
   number: number
+  /** Nhãn thay cho "Module n" (ví dụ nhánh riêng cho guitar). */
+  badge?: Localized
   title: Localized
   description: Localized
 }
@@ -44,6 +46,16 @@ export const MODULES: ModuleInfo[] = [
     number: 5,
     title: { vi: 'Ngũ cung và Blues', en: 'Pentatonics and the blues' },
     description: { vi: 'Cửa vào improvise: pentatonic, blues scale, bài jam đầu tiên.', en: 'Your gateway to improvising: pentatonic scales, the blues scale and your first jam.' },
+  },
+  {
+    id: 'g-dem-guitar',
+    number: 5.5,
+    badge: { vi: 'Nhánh guitar', en: 'Guitar track' },
+    title: { vi: 'Đệm theo điệu (móc dây & quạt chả)', en: 'Accompaniment rhythms (picking & strumming)' },
+    description: {
+      vi: 'Đọc ký hiệu nhịp, các điệu quạt và móc phổ biến, chuyển hợp âm không mất nhịp, chọn điệu cho bài hát.',
+      en: 'Reading rhythm notation, common strumming and picking patterns, changing chords in time, choosing a rhythm for a song.',
+    },
   },
   {
     id: 'm6-hop-am-7',
