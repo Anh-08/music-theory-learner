@@ -1,0 +1,71 @@
+export const meta = {
+  title: 'Blues scale và buổi jam blues',
+  description: 'Thêm một "nốt xanh" vào ngũ cung, cộng vài kỹ thuật kể chuyện — và chơi trọn khung blues.',
+  minutes: 20,
+}
+
+## Nốt xanh (blue note)
+
+Thêm nốt **♭5** vào ngũ cung thứ, ta có **blues scale**:
+
+| | 1 | ♭3 | 4 | ♭5 | 5 | ♭7 |
+|---|---|---|---|---|---|---|
+| A blues | A | C | D | E♭ | E | G |
+
+<Show root="A" scale="blues" labels="interval" />
+
+Nốt ♭5 rất căng (nó là tritone với nốt gốc — Module 1!). Đừng dừng lâu trên nó: dùng nó như **nốt đi qua** giữa 4 và 5, hoặc 5 và 4: <Play notes="D4 Eb4 E4">D – E♭ – E</Play> <Play notes="E4 Eb4 D4 C4 A3">E – E♭ – D – C – A</Play>
+
+<OnlyFor instrument="guitar">
+
+Trong hộp 1, nốt ♭5 nằm ở dây 5 phím 6 và dây 3 phím 8:
+
+<Show root="A" scale="blues" positions="6:5 6:8 5:5 5:6 5:7 4:5 4:7 3:5 3:7 3:8 2:5 2:8 1:5 1:8" frets={15} labels="interval" caption="A blues, hộp 1 — thêm hai nốt ♭5" />
+
+</OnlyFor>
+
+## Kể chuyện bằng solo
+
+Biết nốt chưa đủ — solo hay là solo **có ý**. Vài kỹ thuật dùng được ngay:
+
+1. **Motif và lặp lại**: chọn một câu ngắn 3 – 5 nốt. Chơi nó, rồi chơi lại với một thay đổi nhỏ (đổi nốt cuối, đổi nhịp, dời lên cao). Người nghe thích nhận ra điều quen thuộc.
+2. **Hỏi – đáp**: câu 1 kết lửng (ở ♭7 hoặc 4), câu 2 "trả lời" và kết ở nốt gốc.
+3. **Theo khung 12 ô nhịp**: mỗi dòng 4 ô là một "câu" — dòng 1 nêu ý, dòng 2 nhắc lại (trên IV7), dòng 3 kết luận.
+4. **Ít mà chất**: một nốt ngân dài đúng chỗ hay hơn mười nốt vội vàng.
+
+<OnlyFor instrument="guitar">
+
+5. **Bend và slide**: bend nốt ♭3 lên một chút (chưa tới 3) là âm thanh blues kinh điển. Bend nốt 4 lên một cung để chạm nốt 5. Trượt (slide) vào nốt thay vì bấm thẳng.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+5. **Nốt hoa mỹ (grace note)**: gõ nhanh ♭3 rồi trượt lên 3 (C → C♯ trên A7) — piano không bend được, nhưng kỹ thuật này tạo cảm giác tương tự. Chơi nốt lặp (tremolo) giữa hai nốt cho câu dồn dập.
+
+</OnlyFor>
+
+## Buổi jam blues
+
+Khung blues 12 ô nhịp giọng A. Bắt đầu với ngũ cung thứ, rồi thêm nốt ♭5. Để ý đàn ảo: khi hợp âm đổi sang D7, nốt D thành nốt đỏ — kết câu ở đó nghe rất "đúng khung".
+
+<Jam progression="A7*4 D7*2 A7*2 E7 D7 A7 E7" songKey="A" groove="blues" tempo={88} scale="blues" />
+
+<Callout type="tip" title="Bước tiếp theo">
+Trên hợp âm A7, nốt C (♭3 của ngũ cung thứ) "chỏi" nhẹ với C♯ (nốt 3 của hợp âm) — chính sự chỏi đó là màu blues. Muốn nghe ngọt hơn? Chọn **A ngũ cung trưởng** trong danh sách scale (có C♯) và so sánh. Pha trộn hai loại ngũ cung là bí quyết của nhiều tay blues — và sẽ dễ hiểu hơn nhiều sau Module 6 – 7 về hợp âm 7 và chord tones.
+</Callout>
+
+<Quiz id="m5-blues-q1" question="Blues scale khác ngũ cung thứ ở điểm nào?" options={['Thêm nốt ♭5', 'Thêm nốt 2', 'Bỏ nốt ♭7', 'Thêm nốt 3']} answer={0} />
+
+<Quiz id="m5-blues-q2" question="E blues scale gồm những nốt nào?" options={['E G A B♭ B D', 'E G A A♯ B D♯', 'E F♯ G A B D', 'E G B♭ B D']} answer={0} explain="E (1) G (♭3) A (4) B♭ (♭5) B (5) D (♭7)." />
+
+<Quiz id="m5-blues-q3" question="Cách dùng nốt ♭5 hợp lý nhất là?" options={['Dừng lâu trên nó ở cuối câu', 'Dùng làm nốt đi qua giữa 4 và 5', 'Không bao giờ dùng', 'Chỉ dùng ở hợp âm V7']} answer={1} explain="♭5 rất căng — đi qua nó nhanh để nối 4 và 5." />
+
+<Callout type="practice" title="Cầm đàn lên — thử thách cuối module">
+Chơi trọn 3 vòng blues (36 ô nhịp) theo nhạc nền:
+1. Vòng 1: chỉ dùng 3 nốt, nhiều khoảng lặng.
+2. Vòng 2: một motif lặp lại, thay đổi nhẹ mỗi dòng.
+3. Vòng 3: dùng cả blues scale, lên cao dần và kết ở nốt A.
+
+Ghi âm lại bằng điện thoại và nghe lại — bạn sẽ ngạc nhiên vì mình đã improvise được!
+</Callout>

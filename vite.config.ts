@@ -15,6 +15,10 @@ export default defineConfig({
     react({ include: /\.(mdx|tsx?)$/ }),
     tailwindcss(),
   ],
+  build: {
+    // Nội dung bài học được đóng gói cùng ứng dụng (~150 kB gzip) — chấp nhận được với một site học tĩnh.
+    chunkSizeWarningLimit: 800,
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],

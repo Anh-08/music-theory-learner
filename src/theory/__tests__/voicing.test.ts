@@ -24,3 +24,21 @@ describe('voicing', () => {
     expect([1, 2, 3, 4].map(stepLabel)).toEqual(['½', '1', '1½', '2'])
   })
 })
+
+describe('voiceLead', async () => {
+  const { voiceLead } = await import('../voicing')
+
+  it('không có hợp âm trước thì chọn cách xếp gần giữa khoảng', () => {
+    const v = voiceLead([0, 4, 7], null, 52, 76)
+    expect(v.map((m) => m % 12).sort()).toEqual([0, 4, 7])
+    expect(Math.min(...v)).toBeGreaterThanOrEqual(52)
+    expect(Math.max(...v)).toBeLessThanOrEqual(76)
+  })
+
+  it('chuyển hợp âm với nốt di chuyển ít nhất', () => {
+    // C (C4 E4 G4) → F: cách gần nhất là C4 F4 A4.
+    expect(voiceLead([5, 9, 0], [60, 64, 67], 52, 76)).toEqual([60, 65, 69])
+    // C (C4 E4 G4) → G: B3 D4 G4.
+    expect(voiceLead([7, 11, 2], [60, 64, 67], 52, 76)).toEqual([59, 62, 67])
+  })
+})

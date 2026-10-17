@@ -1,0 +1,56 @@
+export const meta = {
+  title: 'Chức năng hợp âm: nhà, rời nhà, về nhà',
+  description: 'Vì sao G muốn về C, và ba "vai" mà mọi hợp âm thuận giọng đảm nhận.',
+  minutes: 15,
+}
+
+Ở Module 3 bạn đã có 7 hợp âm thuận giọng. Nhưng chúng không ngang hàng: mỗi hợp âm đóng một **vai** trong câu chuyện của bài nhạc. Hiểu vai của hợp âm là hiểu vì sao tiến trình nghe "hợp lý" — và đoán được hợp âm tiếp theo khi nghe một bài lạ.
+
+## Ba chức năng
+
+| Chức năng | Cảm giác | Hợp âm (giọng trưởng) | Trong C trưởng |
+|---|---|---|---|
+| **Chủ** (Tonic – T) | Nhà, yên ổn | **I**, vi, iii | **C**, Am, Em |
+| **Hạ át** (Subdominant – S) | Rời nhà, mở ra | **IV**, ii | **F**, Dm |
+| **Át** (Dominant – D) | Căng, muốn về nhà | **V**, vii° | **G**, B° |
+
+Các hợp âm cùng chức năng có chung nhiều nốt: Am (A C E) chung C và E với C (C E G) — nên Am có thể "thay" C. Dm (D F A) chung F và A với F (F A C).
+
+Hành trình cơ bản của hòa âm: **T → S → D → T** — ở nhà, ra ngoài, căng thẳng, về nhà: <PlayChords chords="C F G C" />
+
+## Vì sao át âm muốn về chủ âm?
+
+Hợp âm G (G – B – D) chứa **B — cảm âm** của C. B chỉ cách C nửa cung nên bị hút lên C rất mạnh. Thêm quãng 7 thành **G7** (G – B – D – F), ta có thêm F muốn xuống E — và B với F tạo thành một **tritone**, quãng căng nhất. Căng thẳng đó được giải quyết trọn vẹn khi về C: <PlayChords chords="G7 C" seconds={1.8} />
+
+Thêm nữa, nốt gốc đi từ G xuống C là **xuống một quãng 5** — chuyển động mạnh nhất trên vòng quãng năm.
+
+## Các kiểu kết câu (cadence)
+
+Cách một câu nhạc kết thúc tạo cảm giác khác nhau:
+
+| Kiểu kết | Tiến trình | Cảm giác | Nghe |
+|---|---|---|---|
+| Kết trọn | V → I | Dấu chấm. Hết câu. | <PlayChords chords="Dm G C" /> |
+| Kết plagal | IV → I | Nhẹ nhàng, như "A-men" | <PlayChords chords="C F C" /> |
+| Kết lửng | … → V | Dấu phẩy, câu hỏi chưa trả lời | <PlayChords chords="C Am F G" /> |
+| Kết đánh lừa | V → vi | Tưởng về nhà mà lại rẽ sang buồn | <PlayChords chords="F G Am" /> |
+
+<Callout type="tip" title="Dùng khi nghe nhạc">
+Lần tới khi nghe một bài hát, để ý **cuối mỗi câu**: câu hát kết bằng hợp âm nào? Câu giữa bài thường kết lửng ở V (để còn hát tiếp), câu cuối bài kết trọn về I. Nghe ra được điều này là bạn đã bắt đầu "nghe hòa âm".
+</Callout>
+
+## Chơi thử: T – S – D – T
+
+Bật nhạc nền và để ý cảm giác của từng hợp âm. Trên đàn ảo, nốt của hợp âm đang vang được tô màu — thử ngân nga theo nốt đỏ (nốt gốc) của từng hợp âm.
+
+<Jam progression="C Am F G" songKey="C" groove="pop" tempo={90} />
+
+<Quiz id="m4-chuc-nang-q1" question="Trong giọng C trưởng, Am có chức năng gì?" options={['Chủ (T)', 'Hạ át (S)', 'Át (D)', 'Không thuộc giọng']} answer={0} explain="Am (vi) chung hai nốt C và E với hợp âm chủ C — nên thuộc nhóm chủ." />
+
+<Quiz id="m4-chuc-nang-q2" question="Trong giọng G trưởng, hợp âm nào là át (V)?" options={['C', 'D', 'Em', 'Am']} answer={1} explain="G A B C D → bậc 5 là D." />
+
+<Quiz id="m4-chuc-nang-q3" question="Tiến trình kết thúc bằng G → Am trong giọng C là kiểu kết gì?" options={['Kết trọn', 'Kết plagal', 'Kết lửng', 'Kết đánh lừa']} answer={3} explain="V → vi: tai chờ về I (C) nhưng lại nghe Am." />
+
+<Quiz id="m4-chuc-nang-q4" question="Nốt nào trong G7 bị hút mạnh nhất về C?" options={['G', 'B', 'D', 'Cả ba như nhau']} answer={1} explain="B là cảm âm của C, chỉ cách C nửa cung." />
+
+<Quiz id="m4-chuc-nang-q5" question="Tiến trình C – F – C – G dừng ở G. Đó là kiểu kết gì?" options={['Kết trọn', 'Kết plagal', 'Kết lửng', 'Kết đánh lừa']} answer={2} explain="Dừng ở V (G) — câu nhạc như đang hỏi, chờ về C." />

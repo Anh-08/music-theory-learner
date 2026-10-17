@@ -1,0 +1,54 @@
+export const meta = {
+  title: 'Ngũ cung trưởng và bí mật "cùng nốt"',
+  description: 'Năm nốt sáng sủa cho các bài giọng trưởng — và vì sao nó dùng chung nốt với ngũ cung thứ.',
+  minutes: 15,
+}
+
+## Năm nốt sáng
+
+**Ngũ cung trưởng** (major pentatonic) là scale trưởng bỏ đi bậc **4** và **7** — đúng hai nốt "căng" nhất mà bạn đã gặp ở Module 2:
+
+| | 1 | 2 | 3 | 5 | 6 |
+|---|---|---|---|---|---|
+| C ngũ cung trưởng | C | D | E | G | A |
+
+<Show root="C" scale="major pentatonic" labels="interval" />
+
+Nghe vui, mộc, trong trẻo — rất hợp với nhạc pop, country, và nhiều giai điệu dân gian (kể cả dân ca Việt Nam vốn dựa nhiều trên ngũ cung).
+
+## Bí mật: cùng nốt với ngũ cung thứ
+
+So sánh: C ngũ cung trưởng = **C D E G A**. A ngũ cung thứ = **A C D E G**. Cùng năm nốt!
+
+Giống như C trưởng và A thứ là cặp giọng tương ứng (Module 2), **ngũ cung trưởng của X dùng chung nốt với ngũ cung thứ bắt đầu từ bậc 6 của X** (thấp hơn X ba nửa cung). Khác nhau ở chỗ **nốt nào là "nhà"**:
+
+- Trên tiến trình giọng C trưởng → nghĩ "C là nhà", kết câu ở C, E, G.
+- Trên tiến trình giọng A thứ → nghĩ "A là nhà", kết câu ở A, C, E.
+
+<OnlyFor instrument="guitar">
+
+Vì vậy hộp 1 của A ngũ cung thứ (phím 5) cũng chính là một hình của C ngũ cung trưởng — chỉ cần đổi nốt nhà. Nhìn nhãn quãng tính từ C:
+
+<Show root="C" scale="major pentatonic" positions="6:5 6:8 5:5 5:7 4:5 4:7 3:5 3:7 2:5 2:8 1:5 1:8" frets={15} labels="interval" caption="Cùng hình hộp 1 ở phím 5, nhưng giờ nốt đỏ là C" />
+
+Mẹo nhanh: muốn chơi ngũ cung trưởng của G? Lấy hình hộp 1 ngũ cung thứ và đặt ngón trỏ ở nốt **E** (thấp hơn G ba phím) — dây 6 phím 12 (hoặc phím 0).
+
+</OnlyFor>
+
+## Chơi trên tiến trình giọng trưởng
+
+Bật I – V – vi – IV ở giọng C. Improvise bằng C ngũ cung trưởng; cố gắng **kết câu ở nốt của hợp âm đang vang** (nốt xanh / đỏ trên đàn ảo).
+
+<Jam progression="C G Am F" songKey="C" groove="pop" tempo={96} scale="major pentatonic" />
+
+<Callout type="tip" title="Cùng nốt, khác cảm giác">
+Thử chơi đúng những câu bạn đã dùng trên Am – Dm ở bài trước. Trên nền giọng C trưởng, chúng tự nhiên nghe sáng hơn — vì nền hợp âm thay đổi "nhà" của các nốt. Hòa âm quyết định màu của giai điệu.
+</Callout>
+
+<Quiz id="m5-ngu-cung-truong-q1" question="G ngũ cung trưởng gồm những nốt nào?" options={['G A B D E', 'G A B C D', 'G B♭ C D F', 'G A C D E']} answer={0} explain="G (1) A (2) B (3) D (5) E (6)." />
+
+<Quiz id="m5-ngu-cung-truong-q2" question="D ngũ cung trưởng dùng chung nốt với ngũ cung thứ nào?" options={['A ngũ cung thứ', 'B ngũ cung thứ', 'E ngũ cung thứ', 'F♯ ngũ cung thứ']} answer={1} explain="Bậc 6 của D trưởng là B: D E F♯ A B = B D E F♯ A." />
+
+<Quiz id="m5-ngu-cung-truong-q3" question="Ngũ cung trưởng bỏ những bậc nào của scale trưởng?" options={['2 và 6', '4 và 7', '3 và 7', '2 và 4']} answer={1} explain="Bỏ bậc 4 và 7 — hai nốt cách nốt bên cạnh nửa cung." />
+
+<FindNotes id="m5-ngu-cung-truong-find-f" prompt="Bấm đủ 5 nốt của F ngũ cung trưởng." targets="F G A C D" />

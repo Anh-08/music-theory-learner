@@ -2,6 +2,7 @@ import { HashRouter, Link, Route, Routes } from 'react-router'
 import { Layout } from './app/Layout'
 import { Home } from './features/curriculum/Home'
 import { Explorer } from './features/explorer/Explorer'
+import { JamRoomPage } from './features/jam/JamRoomPage'
 import { LessonPage } from './features/lesson/LessonPage'
 import { ProgressProvider } from './store/ProgressProvider'
 import { SettingsProvider } from './store/SettingsProvider'
@@ -13,6 +14,7 @@ export function AppRoutes() {
         <Route index element={<Home />} />
         <Route path="learn/:moduleId/:slug" element={<LessonPage />} />
         <Route path="explorer" element={<Explorer />} />
+        <Route path="jam" element={<JamRoomPage />} />
         <Route
           path="*"
           element={

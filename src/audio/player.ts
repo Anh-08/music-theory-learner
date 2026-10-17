@@ -1,10 +1,17 @@
 import { existingVoices, getTone, getVoice, isToneLoaded, type InstrumentId } from './instruments'
 import { totalDuration, type PlayEvent } from './events'
+import { claimTransport, ownsTransport, releaseTransport } from './transportOwner'
 
 export type StepListener = (midis: number[] | null) => void
 
 let session = 0
 let stopCurrent: (() => void) | null = null
+
+/** Được gọi khi chủ khác (chuỗi nốt mới, hoặc Jam) lấy Transport: kết thúc chuỗi đang phát. */
+function release() {
+  stopCurrent?.()
+  stopCurrent = null
+}
 
 /** Phát ngay một nốt (khi bấm vào đàn ảo); không làm dừng chuỗi đang phát. */
 export async function playNote(instrument: InstrumentId, midi: number, duration = 1.2): Promise<void> {
@@ -21,9 +28,9 @@ export async function playEvents(instrument: InstrumentId, events: PlayEvent[], 
   const id = ++session
   const [T, voice] = await Promise.all([getTone(), getVoice(instrument)])
   if (id !== session) return
-  // Chuỗi trước (nếu có) bị thay thế: báo cho nó kết thúc.
-  stopCurrent?.()
-  stopCurrent = null
+  // Chuỗi trước (hoặc Jam) bị thay thế: báo cho nó kết thúc.
+  release()
+  claimTransport(release)
   const transport = T.getTransport()
   const draw = T.getDraw()
   transport.stop()
@@ -43,8 +50,10 @@ export async function playEvents(instrument: InstrumentId, events: PlayEvent[], 
       // Không dùng Draw ở đây: Draw chạy theo requestAnimationFrame, bị dừng khi tab bị ẩn.
       setTimeout(
         () => {
-          if (id === session) {
+          if (id === session && ownsTransport(release)) {
             transport.stop()
+            releaseTransport(release)
+            stopCurrent = null
             onStep?.(null)
           }
           resolve()
@@ -62,13 +71,14 @@ export async function playEvents(instrument: InstrumentId, events: PlayEvent[], 
 
 export async function stopPlayback(): Promise<void> {
   session++
-  if (!isToneLoaded()) return
+  // Không đụng tới Transport nếu nó đang thuộc về Jam.
+  if (!isToneLoaded() || !ownsTransport(release)) return
   const T = await getTone()
   const transport = T.getTransport()
   transport.stop()
   transport.cancel()
   const voices = await Promise.all(existingVoices())
   voices.forEach((v) => v.releaseAll())
-  stopCurrent?.()
-  stopCurrent = null
+  releaseTransport(release)
+  release()
 }

@@ -8,6 +8,7 @@ import { OnlyFor } from '../components/lesson/OnlyFor'
 import { Play } from '../components/lesson/Play'
 import { PlayChords } from '../components/lesson/PlayChords'
 import { Show } from '../components/lesson/Show'
+import { JamPlayer } from '../features/jam/JamPlayer'
 
 /** Các component dùng được trực tiếp trong file bài học .mdx mà không cần import. */
-export const mdxComponents = { Show, Play, PlayChords, OnlyFor, Callout, CircleOfFifths, Quiz, FindNotes, EarQuiz, NoteDrill }
+export const mdxComponents = { Show, Play, PlayChords, OnlyFor, Callout, CircleOfFifths, Quiz, FindNotes, EarQuiz, NoteDrill, Jam: JamPlayer }

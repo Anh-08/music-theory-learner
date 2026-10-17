@@ -11,3 +11,14 @@ vi.mock('../audio/player', () => ({
   playEvents: vi.fn(async () => {}),
   stopPlayback: vi.fn(async () => {}),
 }))
+
+vi.mock('../audio/jam', async () => {
+  const { jamStore } = await import('../audio/jamStore')
+  return {
+    startJam: vi.fn(async (opts: { ownerId: string }) => jamStore.set({ ownerId: opts.ownerId, bar: 0 })),
+    updateJam: vi.fn(async () => {}),
+    stopJam: vi.fn(async (ownerId?: string) => {
+      if (ownerId === undefined || jamStore.get().ownerId === ownerId) jamStore.set({ ownerId: null, bar: 0 })
+    }),
+  }
+})

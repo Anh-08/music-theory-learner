@@ -299,11 +299,13 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 ✅ *Kết quả: MVP — học được từ đầu đến hợp âm thuận giọng.*
 
 ### Giai đoạn 3 — Jam Room
-- [ ] Bộ phân tích tiến trình (nhập `ii-V-I` hoặc `Dm7 G7 Cmaj7`).
-- [ ] Sequencer bằng Tone.Transport: trống + bass + hợp âm, chỉnh tempo, lặp vòng.
-- [ ] Highlight chord tones đổi theo thời gian thực trên đàn ảo.
-- [ ] Gợi ý scale phù hợp cho tiến trình.
-- [ ] Viết nội dung **Module 4 → 5**, gắn bài tập Jam.
+- [x] Bộ phân tích tiến trình (nhập `ii-V-I` hoặc `Dm7 G7 Cmaj7`).
+- [x] Sequencer bằng Tone.Transport: trống + bass + hợp âm, chỉnh tempo, lặp vòng.
+- [x] Highlight chord tones đổi theo thời gian thực trên đàn ảo.
+- [x] Gợi ý scale phù hợp cho tiến trình.
+- [x] Viết nội dung **Module 4 → 5**, gắn bài tập Jam.
+
+> Ghi chú: trang `#/jam` nhận tham số `?p=<tiến trình>&key=<giọng>&groove=<pop|ballad|rock|blues|bossa>&tempo=<bpm>`. Trong bài học dùng `<Jam progression="..." songKey="..." groove="..." scale="..." />`. Các mẫu nhịp nằm ở `src/audio/grooves.ts` — Giai đoạn 4 (đệm guitar theo điệu) có thể mở rộng từ đây. Hiện chỉ hỗ trợ nhịp 4/4; Valse/Boston (3/4) cần bổ sung khi làm Giai đoạn 4.
 
 ✅ *Kết quả: người dùng có thể bắt đầu improvise thật sự.*
 

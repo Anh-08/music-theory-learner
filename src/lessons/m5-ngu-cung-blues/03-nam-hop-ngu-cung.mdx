@@ -1,0 +1,75 @@
+export const meta = {
+  title: 'Ngũ cung trên toàn bộ cây đàn',
+  description: 'Guitar: năm hộp nối nhau phủ kín cần đàn. Piano: ngũ cung ở mọi giọng và mẹo phím đen.',
+  minutes: 18,
+}
+
+Một hộp là đủ để bắt đầu, nhưng sớm muộn bạn sẽ muốn chơi cao hơn, thấp hơn, trượt dọc cây đàn. Bài này mở rộng ngũ cung ra toàn bộ nhạc cụ.
+
+<OnlyFor instrument="guitar">
+
+## Năm hộp
+
+Năm nốt của A ngũ cung thứ lặp lại khắp cần đàn. Chia thành 5 vùng, ta có **5 hộp**; mỗi hộp dùng chung một "cạnh" với hộp kế bên. Toàn cảnh:
+
+<Show root="A" scale="minor pentatonic" frets={15} labels="interval" play="none" caption="Toàn bộ nốt A ngũ cung thứ đến phím 15" />
+
+<Show root="A" scale="minor pentatonic" positions="6:5 6:8 5:5 5:7 4:5 4:7 3:5 3:7 2:5 2:8 1:5 1:8" frets={15} labels="interval" caption="Hộp 1 — phím 5 đến 8" />
+
+<Show root="A" scale="minor pentatonic" positions="6:8 6:10 5:7 5:10 4:7 4:10 3:7 3:9 2:8 2:10 1:8 1:10" frets={15} labels="interval" caption="Hộp 2 — phím 7 đến 10" />
+
+<Show root="A" scale="minor pentatonic" positions="6:10 6:12 5:10 5:12 4:10 4:12 3:9 3:12 2:10 2:13 1:10 1:12" frets={15} labels="interval" caption="Hộp 3 — phím 9 đến 13" />
+
+<Show root="A" scale="minor pentatonic" positions="6:12 6:15 5:12 5:15 4:12 4:14 3:12 3:14 2:13 2:15 1:12 1:15" frets={15} labels="interval" caption="Hộp 4 — phím 12 đến 15" />
+
+<Show root="A" scale="minor pentatonic" positions="6:3 6:5 5:3 5:5 4:2 4:5 3:2 3:5 2:3 2:5 1:3 1:5" frets={15} labels="interval" caption="Hộp 5 — phím 2 đến 5 (ngay trước hộp 1; cũng lặp lại ở phím 14–17)" />
+
+<Callout type="tip" title="Học hộp thế nào cho đỡ ngợp">
+Đừng học cả 5 hộp một lúc. Thứ tự gợi ý: **hộp 1** (thuộc lòng) → **hộp 2** (nối lên) → **hộp 5** (nối xuống). Ba hộp này đã phủ phím 2 – 10. Luôn để ý **vị trí nốt gốc (đỏ)** trong mỗi hộp — đó là điểm tựa để kết câu.
+</Callout>
+
+## Nối hộp: trượt dọc cần đàn
+
+Hai hộp kề nhau có chung nốt ở "cạnh". Ví dụ: chơi lên trong hộp 1, đến dây 3 phím 7 (D) thì trượt lên phím 9 (E) — bạn đã ở hộp 2. Chơi trên nhạc nền dưới đây và thử trượt qua lại giữa hai hộp.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Ngũ cung ở mọi giọng
+
+Trên piano không có "hộp", nhưng có những hình tay quen thuộc:
+
+- **Ngũ cung trên phím đen**: năm phím đen chính là **G♭ ngũ cung trưởng** (G♭ A♭ B♭ D♭ E♭) — cũng là **E♭ ngũ cung thứ**. Chạy tay trên phím đen là nghe ngay chất ngũ cung, và gần như không thể sai!
+
+<Show notes="Eb4 Gb4 Ab4 Bb4 Db5 Eb5" labels="interval" caption="E♭ ngũ cung thứ — toàn phím đen" />
+
+- **Ba giọng phím trắng**: A ngũ cung thứ (A C D E G), D ngũ cung thứ (D F G A C) và E ngũ cung thứ (E G A B D) đều chỉ dùng phím trắng.
+
+<Show notes="E4 G4 A4 B4 D5 E5" labels="interval" caption="E ngũ cung thứ" />
+
+<Show notes="D4 F4 G4 A4 C5 D5" labels="interval" caption="D ngũ cung thứ" />
+
+- **Các giọng khác**: dựng bằng công thức 1 – ♭3 – 4 – 5 – ♭7 (ngũ cung thứ) hoặc 1 – 2 – 3 – 5 – 6 (ngũ cung trưởng). Luyện mỗi tuần một giọng mới theo vòng quãng năm.
+
+</OnlyFor>
+
+## Chơi trên toàn bộ đàn
+
+<Jam progression="Am G F G" songKey="Am" groove="rock" tempo={100} scale="minor pentatonic" />
+
+<OnlyFor instrument="guitar">
+
+<Quiz id="m5-nam-hop-q-guitar1" question="Hộp 1 của E ngũ cung thứ nằm ở đâu?" options={['Phím 0 (và phím 12)', 'Phím 5', 'Phím 7', 'Phím 2']} answer={0} explain="Ngón trỏ hộp 1 đặt ở nốt gốc trên dây 6: E là dây 6 buông (phím 0) hoặc phím 12." />
+
+<Quiz id="m5-nam-hop-q-guitar2" question="Trong hộp 1 của A ngũ cung thứ, nốt gốc A nằm ở những dây nào?" options={['Dây 6, 4 và 1', 'Dây 5 và 3', 'Chỉ dây 6', 'Dây 2 và 1']} answer={0} explain="Dây 6 phím 5, dây 4 phím 7, dây 1 phím 5." />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+<Quiz id="m5-nam-hop-q-piano1" question="Năm phím đen tạo thành ngũ cung thứ nào?" options={['A ngũ cung thứ', 'E♭ ngũ cung thứ', 'C ngũ cung thứ', 'F ngũ cung thứ']} answer={1} explain="E♭ G♭ A♭ B♭ D♭ = E♭ ngũ cung thứ (cũng là G♭ ngũ cung trưởng)." />
+
+</OnlyFor>
+
+<Quiz id="m5-nam-hop-q1" question="B ngũ cung thứ gồm những nốt nào?" options={['B D E F♯ A', 'B C♯ D♯ F♯ G♯', 'B D F♯ A', 'B D E F A']} answer={0} explain="B (1) D (♭3) E (4) F♯ (5) A (♭7)." />

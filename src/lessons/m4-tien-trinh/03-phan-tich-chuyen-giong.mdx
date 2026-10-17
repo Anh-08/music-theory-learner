@@ -1,0 +1,78 @@
+export const meta = {
+  title: 'Phân tích bài và chuyển giọng',
+  description: 'Từ tờ hợp âm của một bài bất kỳ: tìm giọng, ghi số La Mã, chuyển sang giọng hợp với giọng hát.',
+  minutes: 15,
+}
+
+Đây là kỹ năng bạn sẽ dùng hằng ngày: nhận một tờ hợp âm, hiểu nó, và chơi được ở giọng mình muốn.
+
+## Bước 1 — Tìm giọng
+
+Vài dấu hiệu, xét cùng nhau:
+
+1. **Hợp âm đầu và cuối bài** thường là hợp âm chủ (I hoặc i).
+2. **Các hợp âm đều nằm trong một giọng**: ba hợp âm trưởng I, IV, V của một giọng nằm liền nhau trên vòng quãng năm, và hợp âm chủ nằm **ở giữa**. Ví dụ F, C, G → giọng C (F = IV, G = V).
+3. **Nốt thăng/giáng hay xuất hiện** cho biết hóa biểu: F♯m, Bm, D thường gặp → nhiều khả năng giọng D hoặc G.
+4. **Trưởng hay thứ?** Nếu bài mở đầu và kết thúc ở hợp âm thứ (như Am), giọng thứ tương ứng (A thứ) thường đúng hơn.
+
+<Callout type="tip">
+Jam Room có sẵn **bộ đoán giọng**: gõ tiến trình vào, nó cho biết giọng và số La Mã của từng hợp âm. Hãy dùng nó để kiểm tra phân tích của bạn — nhưng tự đoán trước!
+</Callout>
+
+## Bước 2 — Ghi số La Mã
+
+Có giọng rồi, đổi từng hợp âm sang bậc. Ví dụ tiến trình **E – B – C♯m – A** ở giọng E trưởng (E F♯ G♯ A B C♯ D♯):
+
+| Hợp âm | E | B | C♯m | A |
+|---|---|---|---|---|
+| Bậc | I | V | vi | IV |
+
+Lại là I – V – vi – IV quen thuộc!
+
+<Jam progression="E B C#m A" groove="pop" />
+
+## Bước 3 — Chuyển giọng
+
+Có số La Mã thì chuyển giọng chỉ là **thay nốt**: I – V – vi – IV ở giọng C là **C – G – Am – F**. Ở giọng G là **G – D – Em – C**.
+
+Cách khác: dịch mọi hợp âm lên/xuống cùng một số nửa cung. E → C là xuống 4 nửa cung, nên B → G, C♯m → Am, A → F.
+
+<OnlyFor instrument="guitar">
+
+## Capo: chuyển giọng không cần đổi thế bấm
+
+**Capo** kẹp ở phím *n* nâng mọi thứ lên *n* nửa cung. Bạn giữ thế bấm quen tay, còn âm thanh được nâng giọng:
+
+| Thế bấm theo giọng | Capo phím 2 | Capo phím 3 | Capo phím 4 |
+|---|---|---|---|
+| G (G C D Em) | A | B♭ | B |
+| C (C F G Am) | D | E♭ | E |
+| D (D G A Bm) | E | F | F♯ |
+
+Ví dụ bài ở giọng E trưởng mà bạn muốn bấm các thế dễ: dùng thế giọng C với capo phím 4, hoặc thế giọng D với capo phím 2.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+<Callout type="note" title="Chọn giọng dễ chơi">
+Trên piano, giọng có ít phím đen (C, G, F, Am) thường dễ đọc hơn khi mới tập, nhưng hãy luyện cả các giọng nhiều dấu giáng như E♭, A♭ — chúng rất phổ biến trong nhạc pop và jazz, và thường nằm tay khá thoải mái.
+</Callout>
+
+</OnlyFor>
+
+<Quiz id="m4-chuyen-giong-q1" question="Chuyển G – Em – C – D sang giọng D trưởng." options={['D – Bm – G – A', 'D – Em – G – A', 'G – Em – C – D', 'A – F♯m – D – E']} answer={0} explain="I – vi – IV – V ở giọng D: D – Bm – G – A." />
+
+<Quiz id="m4-chuyen-giong-q2" question="F – C – Dm – B♭ có giọng và số La Mã là?" options={['F trưởng: I – V – vi – IV', 'C trưởng: IV – I – ii – ♭VII', 'D thứ: III – VII – i – VI', 'B♭ trưởng: V – II – iii – I']} answer={0} explain="Tất cả nằm trong F trưởng (một dấu B♭), mở đầu bằng F." />
+
+<Quiz id="m4-chuyen-giong-q3" question="Tiến trình Am – F – C – G mở đầu và kết thúc ở Am. Giọng nhiều khả năng là?" options={['C trưởng', 'A thứ', 'F trưởng', 'G trưởng']} answer={1} explain="Các hợp âm thuộc C trưởng / A thứ; Am ở đầu và cuối cho thấy 'nhà' là A thứ. (Viết theo giọng C trưởng thì là vi – IV – I – V — cả hai cách nhìn đều dùng được.)" />
+
+<OnlyFor instrument="guitar">
+
+<Quiz id="m4-chuyen-giong-q-capo" question="Kẹp capo phím 3 và bấm các thế của giọng G. Bài phát ra ở giọng nào?" options={['A', 'B♭', 'B', 'C']} answer={1} explain="G nâng 3 nửa cung: G → G♯ → A → B♭." />
+
+</OnlyFor>
+
+<Callout type="practice" title="Cầm đàn lên">
+Lấy tờ hợp âm một bài bạn thích. Tìm giọng, ghi số La Mã dưới mỗi hợp âm, rồi chơi bài đó ở **một giọng khác**. Gõ tiến trình vào Jam Room để kiểm tra.
+</Callout>

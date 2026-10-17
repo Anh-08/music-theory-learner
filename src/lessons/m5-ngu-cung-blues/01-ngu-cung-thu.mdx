@@ -1,0 +1,67 @@
+export const meta = {
+  title: 'Ngũ cung thứ và lần improvise đầu tiên',
+  description: 'Năm nốt "không thể sai" và cách bắt đầu ngẫu hứng ngay hôm nay.',
+  minutes: 18,
+}
+
+Đến lúc chơi thật. **Ngũ cung thứ** (minor pentatonic) là scale được dùng nhiều nhất trong solo rock, blues, pop — và là cách dễ nhất để bắt đầu improvise.
+
+## Năm nốt
+
+Lấy scale thứ tự nhiên, bỏ đi bậc 2 và bậc 6, còn lại 5 nốt:
+
+| | 1 | ♭3 | 4 | 5 | ♭7 |
+|---|---|---|---|---|---|
+| A ngũ cung thứ | A | C | D | E | G |
+
+<Show root="A" scale="minor pentatonic" labels="interval" />
+
+**Vì sao "không thể sai"?** Scale 7 nốt có những cặp nốt cách nhau nửa cung (như E – F, B – C) — chơi vụng là nghe chỏi. Ngũ cung **không có quãng nửa cung nào**, nên gần như nốt nào cũng nghe ổn trên nền hợp âm của giọng.
+
+<OnlyFor instrument="guitar">
+
+## Hộp 1 — hình bấm quan trọng nhất trên guitar
+
+Đặt ngón trỏ ở phím 5 (A ngũ cung thứ). Mỗi dây có đúng 2 nốt; ngón trỏ lo phím 5, ngón áp út / út lo phím 7 – 8:
+
+<Show root="A" scale="minor pentatonic" positions="6:5 6:8 5:5 5:7 4:5 4:7 3:5 3:7 2:5 2:8 1:5 1:8" frets={15} labels="interval" caption="Hộp 1, A ngũ cung thứ (phím 5–8). Nốt đỏ = A, nốt 'nhà'" />
+
+Đây là hình **di động**: nốt gốc nằm ở ngón trỏ trên dây 6. Dời lên phím 7 là B ngũ cung thứ, về phím 0 / 12 là E ngũ cung thứ.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Trên bàn phím
+
+A ngũ cung thứ dùng toàn phím trắng: A – C – D – E – G. Tay phải đặt ngón cái ở A: 1 (A) – 2 (C) – 3 (D) – 4 (E) – luồn ngón cái sang G hoặc dời tay.
+
+<Show notes="A3 C4 D4 E4 G4 A4 C5 D5 E5 G5 A5" labels="interval" caption="A ngũ cung thứ, hai quãng tám" />
+
+Mẹo: tay trái giữ nốt A (hoặc hợp âm Am) làm nền, tay phải ngẫu hứng.
+
+</OnlyFor>
+
+## Lần improvise đầu tiên
+
+Bật nhạc nền dưới đây (Am – Dm). Đừng cố chơi nhiều — làm theo từng bước:
+
+1. **Chỉ dùng 3 nốt**: A, C, D. Chơi những câu ngắn 3 – 4 nốt.
+2. **Hỏi – đáp**: chơi một câu trong 2 ô nhịp, rồi **im lặng** 2 ô nhịp. Khoảng lặng cũng là âm nhạc.
+3. **Kết câu ở nốt A** (nốt đỏ). Nghe xem nó "về nhà" thế nào.
+4. **Lặp lại ý của chính mình**: chơi lại câu vừa chơi, đổi một nốt hoặc đổi nhịp.
+5. Khi đã thoải mái, mở rộng ra đủ 5 nốt.
+
+<Jam progression="Am*2 Dm*2" songKey="Am" groove="rock" tempo={88} scale="minor pentatonic" />
+
+<Callout type="tip" title="Để ý đàn ảo khi nhạc chạy">
+Nốt **xanh và đỏ** là nốt của hợp âm đang vang — chúng nghe "đúng" nhất, nhất là ở phách 1. Nốt **xám** là nốt còn lại của scale, dùng để đi qua. Khi hợp âm đổi sang Dm, nốt D thành nốt đỏ: thử kết câu ở D lúc đó.
+</Callout>
+
+<Quiz id="m5-ngu-cung-thu-q1" question="Công thức ngũ cung thứ là?" options={['1 2 3 5 6', '1 ♭3 4 5 ♭7', '1 ♭3 4 ♭5 5 ♭7', '1 2 ♭3 4 5 ♭6 ♭7']} answer={1} explain="Scale thứ tự nhiên bỏ bậc 2 và 6." />
+
+<Quiz id="m5-ngu-cung-thu-q2" question="E ngũ cung thứ gồm những nốt nào?" options={['E G A B D', 'E F♯ G♯ B C♯', 'E G A B♭ B D', 'E G B D']} answer={0} explain="E (1) – G (♭3) – A (4) – B (5) – D (♭7)." />
+
+<Quiz id="m5-ngu-cung-thu-q3" question="Vì sao ngũ cung dễ dùng khi mới improvise?" options={['Vì có ít nốt hơn nên dễ nhớ, và không có quãng nửa cung dễ gây chỏi', 'Vì nó chỉ dùng phím trắng', 'Vì nó giống hệt hợp âm', 'Vì nó chỉ dùng cho blues']} answer={0} />
+
+<FindNotes id="m5-ngu-cung-thu-find-d" prompt="Bấm đủ 5 nốt của D ngũ cung thứ." targets="D F G A C" />

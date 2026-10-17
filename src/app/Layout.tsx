@@ -21,6 +21,9 @@ export function Layout() {
             <NavLink to="/explorer" className={navClass}>
               Explorer
             </NavLink>
+            <NavLink to="/jam" className={navClass}>
+              Jam Room
+            </NavLink>
           </nav>
           <div className="ml-auto">
             <Segmented
