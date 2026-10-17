@@ -1,0 +1,60 @@
+export const meta = {
+  title: 'Guide tones: nốt 3 và nốt 7',
+  description: 'Hai nốt quyết định "tính cách" của hợp âm, và đường giai điệu chúng vẽ ra qua tiến trình.',
+  minutes: 15,
+}
+
+Trong bốn chord tones, có hai nốt quan trọng hơn cả: **quãng 3** (trưởng hay thứ?) và **quãng 7** (maj7, 7 hay m7?). Gọi là **guide tones** — nốt dẫn đường. Chỉ nghe hai nốt này, tai đã biết hợp âm là gì.
+
+## Guide tones trong ii – V – I
+
+| Hợp âm | Quãng 3 | Quãng 7 |
+|---|---|---|
+| Dm7 | F | C |
+| G7 | B | F |
+| Cmaj7 | E | B |
+
+Để ý: khi đổi hợp âm, mỗi guide tone **đứng yên hoặc đi nửa cung**:
+
+- Đường 1: **C → B → B** (7 của Dm7 → 3 của G7 → 7 của Cmaj7)
+- Đường 2: **F → F → E** (3 của Dm7 → 7 của G7 → 3 của Cmaj7)
+
+Nghe: <Play notes="C5 B4 B4">C – B – B</Play> <Play notes="F4 F4 E4">F – F – E</Play> <Play notes="F4 C5 F4 B4 E4 B4">cả hai</Play>
+
+<OnlyFor instrument="piano">
+
+<Show notes="D3 C4 F4" labels="note" play="chord" caption="Dm7: C và F" />
+
+<Show notes="G2 B3 F4" labels="note" play="chord" caption="G7: B và F" />
+
+<Show notes="C3 B3 E4" labels="note" play="chord" caption="Cmaj7: B và E" />
+
+</OnlyFor>
+
+<OnlyFor instrument="guitar">
+
+Trên guitar, guide tones nằm gọn trên hai dây kề nhau — ví dụ dây 4 và dây 3:
+
+<Show root="D" chord="m7" positions="4:3 3:5" labels="interval" caption="Dm7: F (dây 4 phím 3) và C (dây 3 phím 5)" />
+
+<Show root="G" chord="7" positions="4:3 3:4" labels="interval" caption="G7: F (dây 4 phím 3) và B (dây 3 phím 4)" />
+
+<Show root="C" chord="maj7" positions="4:2 3:4" labels="interval" caption="Cmaj7: E (dây 4 phím 2) và B (dây 3 phím 4)" />
+
+</OnlyFor>
+
+## Solo bằng guide tones
+
+Bài tập: trên nhạc nền, chơi **một guide tone ở phách 1 của mỗi hợp âm**, chọn nốt gần nốt trước nhất. Bạn sẽ thấy câu nhạc tự "chảy" theo hòa âm — đó là cách các nhạc sĩ jazz xây khung giai điệu, rồi trang trí thêm.
+
+<Jam progression="Dm7 G7 Cmaj7 A7" songKey="C" groove="bossa" tempo={96} />
+
+<Callout type="note" title="A7 ở cuối vòng?">
+A7 không thuộc giọng C — nó là **át phụ** dẫn về Dm7 (Module 9). Guide tones của A7 là C♯ và G: C♯ đi lên D, G đi xuống F — đúng hai guide tones của Dm7!
+</Callout>
+
+<Quiz id="m7-guide-q1" question="Guide tones của A7 là?" options={['C♯ và G', 'A và E', 'C và G', 'E và G']} answer={0} explain="Quãng 3 của A là C♯, quãng ♭7 là G." />
+
+<Quiz id="m7-guide-q2" question="Trong G7 → C, nốt F giải quyết về đâu?" options={['E', 'G', 'F♯', 'C']} answer={0} />
+
+<Quiz id="m7-guide-q3" question="Vì sao gọi quãng 3 và 7 là guide tones?" options={['Chúng quyết định loại hợp âm và dẫn giọng mượt giữa các hợp âm', 'Chúng là nốt cao nhất', 'Chúng luôn là nốt bass', 'Chúng không bao giờ đổi']} answer={0} />

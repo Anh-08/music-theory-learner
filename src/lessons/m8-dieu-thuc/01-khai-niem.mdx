@@ -1,0 +1,53 @@
+export const meta = {
+  title: 'Điệu thức là gì?',
+  description: 'Bảy cách "đặt nhà" trên cùng một bộ nốt — và bảy màu sắc khác nhau.',
+  minutes: 15,
+}
+
+## Cùng nốt, khác "nhà"
+
+Lấy bảy phím trắng (các nốt của C trưởng). Nếu coi **C** là nhà, ta có scale trưởng. Nếu coi **A** là nhà, ta có scale thứ tự nhiên (Module 2). Còn năm nốt khác thì sao? Mỗi nốt làm "nhà" cho ra một **điệu thức** (mode):
+
+| Bắt đầu từ | Điệu thức | Tên khác |
+|---|---|---|
+| C | Ionian | = scale trưởng |
+| D | Dorian | |
+| E | Phrygian | |
+| F | Lydian | |
+| G | Mixolydian | |
+| A | Aeolian | = thứ tự nhiên |
+| B | Locrian | |
+
+Nghe D Dorian — toàn phím trắng, nhưng nhà là D: <Play notes="D4 E4 F4 G4 A4 B4 C5 D5">D Dorian</Play>
+
+## Nghe bằng cùng một chủ âm
+
+Cách trên dễ hiểu nhưng khó **nghe** ra màu sắc. Cách tốt hơn: so sánh các điệu thức **cùng chủ âm**, mỗi cái khác scale trưởng ở vài nốt:
+
+| Điệu thức | So với scale trưởng | Nốt đặc trưng | Cảm giác |
+|---|---|---|---|
+| Lydian | ♯4 | ♯4 | Sáng nhất, bay bổng, mơ màng |
+| Ionian | — | | Sáng, ổn định |
+| Mixolydian | ♭7 | ♭7 | Trưởng nhưng "bụi", rock, blues |
+| Dorian | ♭3 ♭7 | 6 (trưởng) | Thứ nhưng có hồn, funk, soul |
+| Aeolian | ♭3 ♭6 ♭7 | ♭6 | Buồn, u sầu |
+| Phrygian | ♭2 ♭3 ♭6 ♭7 | ♭2 | Tây Ban Nha, kịch tính, metal |
+| Locrian | ♭2 ♭3 ♭5 ♭6 ♭7 | ♭5 | Tối nhất, bất ổn |
+
+Bảng được xếp **từ sáng nhất đến tối nhất** — mỗi bước xuống chỉ hạ thêm một nốt.
+
+<Show root="C" scale="lydian" labels="interval" caption="C Lydian: chỉ khác C trưởng ở ♯4 (F♯)" />
+
+<Show root="C" scale="dorian" labels="interval" caption="C Dorian: ♭3 và ♭7, nhưng bậc 6 vẫn trưởng (A)" />
+
+<Callout type="tip" title="Nghĩ theo nốt đặc trưng">
+Đừng học điệu thức như "scale trưởng bắt đầu từ bậc khác" khi chơi. Hãy nghĩ: **"scale trưởng / thứ quen thuộc, đổi một nốt"**. Dorian = thứ tự nhiên nâng bậc 6. Mixolydian = trưởng hạ bậc 7. Lydian = trưởng nâng bậc 4. Phrygian = thứ tự nhiên hạ bậc 2.
+</Callout>
+
+<Quiz id="m8-khai-niem-q1" question="Điệu thức nào có ♯4?" options={['Lydian', 'Mixolydian', 'Dorian', 'Phrygian']} answer={0} />
+
+<Quiz id="m8-khai-niem-q2" question="D Dorian dùng những nốt của scale nào?" options={['C trưởng', 'D trưởng', 'G trưởng', 'F trưởng']} answer={0} explain="Dorian là điệu thức bắt đầu từ bậc 2: D là bậc 2 của C trưởng." />
+
+<Quiz id="m8-khai-niem-q3" question="Điệu thức nào sáng nhất?" options={['Lydian', 'Ionian', 'Aeolian', 'Locrian']} answer={0} />
+
+<Quiz id="m8-khai-niem-q4" question="Dorian khác thứ tự nhiên ở nốt nào?" options={['Bậc 6 trưởng thay vì ♭6', 'Bậc 2 thứ', 'Bậc 7 trưởng', 'Bậc 4 tăng']} answer={0} />

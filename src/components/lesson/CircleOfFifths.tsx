@@ -3,7 +3,7 @@ import { PLAY_RANGE } from '../../audio/instruments'
 import { usePlayer } from '../../audio/usePlayer'
 import { useT } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
-import { chordFromRoot, chroma, displayNote, rootMidiAtOrAbove, stackIntervals } from '../../theory'
+import { chordFromRoot, chroma, displayNote, rootMidiAtOrAbove, stackIntervals, type KeyRef } from '../../theory'
 
 /** Các giọng theo chiều kim đồng hồ: mỗi bước lên một quãng 5 đúng. */
 const KEYS = [
@@ -24,13 +24,25 @@ const KEYS = [
 const SIZE = 340
 const C = SIZE / 2
 
+interface CircleOfFifthsProps {
+  /** Giọng trưởng cần tô (dùng trong bài học). */
+  highlight?: string
+  /** Giọng đang chọn (Key Explorer) — tô cả giọng trưởng lẫn giọng thứ. */
+  selected?: KeyRef
+  /** Có thì bấm vào giọng để chọn (vẫn nghe hợp âm chủ). */
+  onSelect?: (key: KeyRef) => void
+}
+
 /** Vòng quãng năm: vòng ngoài là giọng trưởng, vòng trong là giọng thứ tương ứng. Bấm để nghe hợp âm chủ. */
-export function CircleOfFifths({ highlight }: { highlight?: string }) {
+export function CircleOfFifths({ highlight, selected, onSelect }: CircleOfFifthsProps) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)
   const { t } = useT()
 
+  const isSelected = (tonic: string, mode: KeyRef['mode']) => selected?.mode === mode && chroma(selected.tonic) === chroma(tonic)
+
   const playChord = (root: string, type: 'M' | 'm') => {
+    onSelect?.({ tonic: root, mode: type === 'M' ? 'major' : 'minor' })
     const info = chordFromRoot(root, type)
     const midis = stackIntervals(rootMidiAtOrAbove(chroma(root), PLAY_RANGE[instrument].chord), info.intervals)
     void play(chordEvents(midis, instrument === 'guitar' ? 0.035 : 0))
@@ -51,7 +63,8 @@ export function CircleOfFifths({ highlight }: { highlight?: string }) {
           const outer = at(i, 135)
           const sig = at(i, 113)
           const inner = at(i, 80)
-          const isHi = highlight === k.major
+          const isHi = highlight === k.major || isSelected(k.major, 'major')
+          const isMinorHi = isSelected(k.minor, 'minor')
           return (
             <g key={k.major}>
               <g role="button" aria-label={t('circle.majorChord', { name: displayNote(k.major) })} className="cursor-pointer" onClick={() => playChord(k.major, 'M')}>
@@ -64,8 +77,8 @@ export function CircleOfFifths({ highlight }: { highlight?: string }) {
                 {k.sig}
               </text>
               <g role="button" aria-label={t('circle.minorChord', { name: displayNote(k.minor) })} className="cursor-pointer" onClick={() => playChord(k.minor, 'm')}>
-                <circle cx={inner.x} cy={inner.y} r={15} className="fill-transparent hover:fill-sky-100 dark:hover:fill-sky-950" />
-                <text x={inner.x} y={inner.y + 4} textAnchor="middle" className="pointer-events-none fill-stone-600 text-[11px] dark:fill-stone-300">
+                <circle cx={inner.x} cy={inner.y} r={15} className={isMinorHi ? 'fill-sky-600' : 'fill-transparent hover:fill-sky-100 dark:hover:fill-sky-950'} />
+                <text x={inner.x} y={inner.y + 4} textAnchor="middle" className={`pointer-events-none text-[11px] ${isMinorHi ? 'fill-white font-bold' : 'fill-stone-600 dark:fill-stone-300'}`}>
                   {displayNote(k.minor)}m
                 </text>
               </g>

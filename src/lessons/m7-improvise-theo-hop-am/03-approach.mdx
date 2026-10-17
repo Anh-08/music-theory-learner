@@ -1,0 +1,41 @@
+export const meta = {
+  title: 'Nốt tiếp cận và nốt bao vây',
+  description: 'Đi tới chord tone từ nửa cung bên dưới, từ nốt scale bên trên, hoặc bao vây cả hai phía.',
+  minutes: 15,
+}
+
+Bạn đã biết nốt **đích** (chord tones). Bài này dạy cách **đi tới đích** cho hay — dùng cả những nốt *ngoài* scale một cách có chủ ý.
+
+## Ba cách tiếp cận một nốt đích
+
+Giả sử đích là **E** (quãng 3 của C), rơi vào phách 1:
+
+| Cách | Ví dụ | Nghe |
+|---|---|---|
+| Nửa cung bên dưới (chromatic) | D♯ → **E** | <Play notes="Eb4 E4" /> |
+| Nốt scale bên trên | F → **E** | <Play notes="F4 E4" /> |
+| Bao vây (enclosure): trên rồi dưới | F → D♯ → **E** | <Play notes="F4 Eb4 E4" /> |
+
+Nốt D♯ không thuộc C trưởng — nhưng vì nó **lập tức giải quyết** vào E đúng phách mạnh, tai nghe nó như một chút "gia vị", không phải nốt sai.
+
+<Callout type="tip" title="Quy tắc nhịp">
+Nốt tiếp cận đặt ở **phách yếu / giữa phách**, nốt đích ở **phách mạnh**. Đảo ngược lại (nốt ngoài scale ở phách mạnh) sẽ nghe như chơi nhầm.
+</Callout>
+
+## Nối các hợp âm bằng nốt tiếp cận
+
+Từ C sang Am: kết thúc câu trên C bằng nốt E, rồi tiếp cận **A** (gốc của Am) từ G♯: <Play notes="E4 D4 C4 G#3 A3">… C – G♯ – A</Play>
+
+Từ Dm sang G: tiếp cận **B** (3 của G) bằng bao vây C – A♯ – B: <Play notes="D4 F4 A4 C5 A#4 B4">Dm … C – A♯ – B</Play>
+
+## Thực hành
+
+Trên nhạc nền, chọn **một chord tone của hợp âm kế tiếp** làm đích, và đến nó bằng một nốt tiếp cận ngay trước khi hợp âm đổi.
+
+<Jam progression="C Am Dm G" songKey="C" groove="pop" tempo={88} scale="major" />
+
+<Quiz id="m7-approach-q1" question="Tiếp cận chromatic từ dưới tới nốt G là nốt nào?" options={['F♯', 'A♭', 'F', 'A']} answer={0} />
+
+<Quiz id="m7-approach-q2" question="Bao vây nốt C (trong C trưởng) bằng nốt scale trên và nốt chromatic dưới:" options={['D – B – C', 'D – C♯ – C', 'B – D – C', 'D – B♭ – C']} answer={0} explain="Trên: D (nốt scale), dưới: B (nửa cung dưới, cũng là nốt scale ở đây), rồi C." />
+
+<Quiz id="m7-approach-q3" question="Nốt tiếp cận nên rơi vào đâu?" options={['Phách yếu, ngay trước nốt đích', 'Phách 1', 'Cuối bài', 'Bất kỳ đâu']} answer={0} />

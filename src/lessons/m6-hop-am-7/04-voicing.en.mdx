@@ -1,0 +1,77 @@
+export const meta = {
+  title: 'Voicing seventh chords',
+  description: 'Guitar: movable shapes rooted on strings 6 and 5. Piano: two-hand voicings and guide-tone lines.',
+  minutes: 18,
+}
+
+A seventh chord has 4 notes — and guitar and piano offer many ways to arrange them. This lesson gives you voicings you can **use right away** to accompany songs with seventh chords.
+
+<OnlyFor instrument="guitar">
+
+## Movable shapes, root on string 6
+
+These four shapes have the root on string 6 (e.g. G at fret 3) and use strings 6 – 4 – 3 – 2 (mute strings 5 and 1 with your fingers):
+
+<Show root="G" chord="maj7" shape="3x443x" labels="interval" caption="Gmaj7: 3 x 4 4 3 x" />
+
+<Show root="G" chord="7" shape="3x343x" labels="interval" caption="G7: 3 x 3 4 3 x" />
+
+<Show root="G" chord="m7" shape="3x333x" labels="interval" caption="Gm7: 3 x 3 3 3 x" />
+
+<Show root="G" chord="m7b5" shape="3x332x" labels="interval" caption="Gm7♭5: 3 x 3 3 2 x" />
+
+## Movable shapes, root on string 5
+
+Root on string 5 (e.g. C at fret 3), using strings 5 – 4 – 3 – 2:
+
+<Show root="C" chord="maj7" shape="x3545x" labels="interval" caption="Cmaj7: x 3 5 4 5 x" />
+
+<Show root="C" chord="7" shape="x3535x" labels="interval" caption="C7: x 3 5 3 5 x" />
+
+<Show root="C" chord="m7" shape="x3534x" labels="interval" caption="Cm7: x 3 5 3 4 x" />
+
+<Show root="C" chord="m7b5" shape="x3434x" labels="interval" caption="Cm7♭5: x 3 4 3 4 x" />
+
+With these 8 shapes you can play **every** maj7, 7, m7 and m7♭5 chord in every key — all you need is the note names on strings 6 and 5.
+
+## ii – V – I without jumping around
+
+Combine the two groups: Dm7 (root on string 5, fret 5) → G7 (root on string 6, fret 3) → Cmaj7 (root on string 5, fret 3). Your hand stays around frets 3 – 5.
+
+<Show root="D" chord="m7" shape="x5756x" labels="interval" caption="Dm7: x 5 7 5 6 x" />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Left hand root, right hand colour
+
+The simplest approach: the **left hand** plays the root (or root + 7th), the **right hand** plays the 3rd – 5th – 7th (or 3rd – 7th – 9th).
+
+<Show notes="C3 E4 G4 B4" labels="interval" play="chord" caption="Cmaj7: left hand C, right hand E – G – B" />
+
+## A guide-tone line for ii – V – I
+
+The **3rd and 7th** alone are enough to hear the chord quality. The right hand holds these two notes, and each chord change moves by a half step or not at all:
+
+<Show notes="D3 C4 F4" labels="note" play="chord" caption="Dm7: left hand D, right hand C – F (7th and 3rd)" />
+
+<Show notes="G2 B3 F4" labels="note" play="chord" caption="G7: C falls to B, F stays (now B is the 3rd, F the 7th)" />
+
+<Show notes="C3 B3 E4" labels="note" play="chord" caption="Cmaj7: B stays, F falls to E" />
+
+Hear all three: <PlayChords chords="Dm7 G7 Cmaj7" seconds={1.4} />
+
+</OnlyFor>
+
+<Jam progression="Dm7 G7 Cmaj7 Am7" songKey="C" groove="bossa" />
+
+<Quiz id="m6-voicing-q1" question="When leaving notes out of a seventh chord, which one usually goes first?" options={['The 5th', 'The 3rd', 'The 7th', 'None']} answer={0} explain="The 5th barely affects the colour; the 3rd and 7th define the chord quality." />
+
+<Quiz id="m6-voicing-q2" question="Which two notes are enough to hear the quality of a seventh chord?" options={['Root and 5th', '3rd and 7th', '5th and 9th', 'Root and 9th']} answer={1} />
+
+<OnlyFor instrument="guitar">
+
+<Quiz id="m6-voicing-q-guitar" question="Play the m7 shape rooted on string 6 (3x333x) at fret 5. Which chord is it?" options={['Am7', 'Gm7', 'Bm7', 'Dm7']} answer={0} explain="String 6 fret 5 is A." />
+
+</OnlyFor>

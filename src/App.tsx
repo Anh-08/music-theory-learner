@@ -5,6 +5,9 @@ import { Home } from './features/curriculum/Home'
 import { Explorer } from './features/explorer/Explorer'
 import { JamRoomPage } from './features/jam/JamRoomPage'
 import { RhythmPage } from './features/rhythm/RhythmPage'
+import { KeyExplorer } from './features/keys/KeyExplorer'
+import { ChordIdentifier } from './features/identify/ChordIdentifier'
+import { Review } from './features/review/Review'
 import { LessonPage } from './features/lesson/LessonPage'
 import { ProgressProvider } from './store/ProgressProvider'
 import { SettingsProvider } from './store/SettingsProvider'
@@ -30,6 +33,9 @@ export function AppRoutes() {
         <Route path="explorer" element={<Explorer />} />
         <Route path="jam" element={<JamRoomPage />} />
         <Route path="rhythm" element={<RhythmPage />} />
+        <Route path="keys" element={<KeyExplorer />} />
+        <Route path="identify" element={<ChordIdentifier />} />
+        <Route path="review" element={<Review />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

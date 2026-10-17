@@ -15,7 +15,10 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: 'Music Theory Learner' })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: new RegExp(`Bắt đầu học: ${lessonMeta(LESSONS[0], 'vi').title}`) })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: /Module 0/ })).toBeInTheDocument()
-    expect(screen.getAllByText('Sắp có').length).toBeGreaterThan(0)
+    // Mọi module trong lộ trình đã có bài học.
+    expect(screen.queryByText('Sắp có')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Module 10/ })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /Nhánh guitar/ })).toBeInTheDocument()
   })
 
   it('đánh dấu bài học xong thì trang chủ cập nhật', () => {
@@ -27,9 +30,9 @@ describe('App', () => {
     expect(screen.getByRole('link', { name: new RegExp(`Học tiếp: ${lessonMeta(LESSONS[1], 'vi').title}`) })).toBeInTheDocument()
   })
 
-  it('đổi nhạc cụ ở thanh trên thì bài học đổi theo', () => {
+  it('đổi nhạc cụ ở thanh trên thì bài học đổi theo', async () => {
     renderWithProviders(<AppRoutes />, { route: `/learn/${LESSONS[0].id}` })
-    expect(screen.getAllByRole('group', { name: /Cần đàn guitar/ }).length).toBeGreaterThan(0)
+    expect((await screen.findAllByRole('group', { name: /Cần đàn guitar/ })).length).toBeGreaterThan(0)
     fireEvent.click(screen.getByRole('radio', { name: 'Piano' }))
     expect(screen.queryByRole('group', { name: /Cần đàn guitar/ })).not.toBeInTheDocument()
     expect(screen.getAllByRole('group', { name: /Bàn phím piano/ }).length).toBeGreaterThan(0)

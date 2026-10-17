@@ -1,0 +1,54 @@
+export const meta = {
+  title: 'Diatonic seventh chords and ii – V – I',
+  description: 'The seven seventh chords of a key, and the most important progression in jazz.',
+  minutes: 15,
+}
+
+In Module 3 you built a triad on each degree. Now stack one more note — still using only notes from the scale:
+
+| Degree | Notes (C major) | Chord | Roman numeral |
+|---|---|---|---|
+| 1 | C E G B | Cmaj7 | Imaj7 |
+| 2 | D F A C | Dm7 | ii7 |
+| 3 | E G B D | Em7 | iii7 |
+| 4 | F A C E | Fmaj7 | IVmaj7 |
+| 5 | G B D F | G7 | V7 |
+| 6 | A C E G | Am7 | vi7 |
+| 7 | B D F A | Bm7♭5 | viiø7 |
+
+Listen in order: <PlayChords chords="Cmaj7 Dm7 Em7 Fmaj7 G7 Am7 Bm7b5 Cmaj7" seconds={1.2} />
+
+The pattern for every major key: **maj7 – m7 – m7 – maj7 – 7 – m7 – m7♭5**.
+
+<Callout type="tip" title="Only one dominant 7th">
+In each major key only **degree V** is a dominant 7th chord. See G7 on a chord sheet → the song is almost certainly heading to C. The **Tools → Keys** page shows this table for every key.
+</Callout>
+
+## ii – V – I
+
+The backbone of jazz: **Dm7 – G7 – Cmaj7**. Subdominant → dominant → tonic.
+
+The magic is in the **voice leading**: the 7th of each chord moves down a half step to become the 3rd of the next:
+
+- Dm7 → G7: **C** (7th of Dm7) falls to **B** (3rd of G7).
+- G7 → Cmaj7: **F** (7th of G7) falls to **E** (3rd of Cmaj7).
+
+Hear the lines: <Play notes="C5 B4 B4">C – B – B</Play> <Play notes="F4 F4 E4">F – F – E</Play>
+
+<Jam progression="Dm7 G7 Cmaj7*2" songKey="C" groove="bossa" scale="major" />
+
+## ii – V – i in a minor key
+
+Minor keys have their own version: **iiø7 – V7 – i**. In A minor: **Bm7♭5 – E7 – Am**. The E7 (instead of Em7) comes from the harmonic minor, with the leading tone G♯ pulling strongly to A.
+
+<Jam progression="Bm7b5 E7 Am*2" songKey="Am" groove="bossa" scale="harmonic minor" />
+
+<Quiz id="m6-thuan-giong-q1" question="In G major, what is the V7 chord?" options={['D7', 'Dmaj7', 'Dm7', 'G7']} answer={0} explain="G A B C D E F♯: degree 5 is D; stacking D F♯ A C gives D7." />
+
+<Quiz id="m6-thuan-giong-q2" question="In F major, what is iii7?" options={['Am7', 'Amaj7', 'A7', 'Gm7']} answer={0} />
+
+<Quiz id="m6-thuan-giong-q3" question="Which degrees of a major key are maj7 chords?" options={['I and IV', 'I and V', 'ii and vi', 'Only I']} answer={0} />
+
+<Quiz id="m6-thuan-giong-q4" question="What is the ii – V – I in B♭ major?" options={['Cm7 – F7 – B♭maj7', 'Dm7 – G7 – Cmaj7', 'Cm7 – Fmaj7 – B♭7', 'Gm7 – C7 – Fmaj7']} answer={0} />
+
+<Quiz id="m6-thuan-giong-q5" question="In Dm7 → G7, where does C (the 7th of Dm7) go?" options={['Up to D', 'Down to B — the 3rd of G7', 'It stays on C', 'Up to G']} answer={1} />

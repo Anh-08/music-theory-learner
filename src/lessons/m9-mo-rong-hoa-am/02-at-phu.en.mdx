@@ -1,0 +1,38 @@
+export const meta = {
+  title: 'Secondary dominants',
+  description: 'Borrow the pull of a dominant chord to lead into any chord in the key.',
+  minutes: 15,
+}
+
+V7 pulls strongly to I. The idea of secondary dominants: **give each diatonic chord its own "V7"** — a dominant 7th chord placed right before it, a fifth above it.
+
+## Secondary dominants in C major
+
+| Secondary dominant | Symbol | Leads to |
+|---|---|---|
+| A7 | V7/ii | Dm |
+| B7 | V7/iii | Em |
+| C7 | V7/IV | F |
+| D7 | V7/V | G |
+| E7 | V7/vi | Am |
+
+Listen: <PlayChords chords="C A7 Dm G7 C" /> <PlayChords chords="C E7 Am F G C" /> <PlayChords chords="C D7 G C" />
+
+<Callout type="tip" title="How to spot a secondary dominant">
+See a **major or 7th chord that doesn't belong to the key**, followed by a chord **a fifth lower** (moving around the circle of fifths)? It is almost certainly a secondary dominant. For example in C: E7 → Am, A7 → Dm.
+</Callout>
+
+## Improvising over secondary dominants
+
+A secondary dominant brings a **foreign note** — the leading tone of its target chord: E7 has G♯ (leading tone of A), A7 has C♯ (leading tone of D). Over that chord:
+
+- Aim for **the 3rd of the secondary dominant** (G♯ over E7), then resolve it up a half step (to A).
+- Or use the Mixolydian / the target's harmonic minor (A harmonic minor over E7).
+
+<Jam progression="C E7 Am A7 Dm G7 C*2" songKey="C" groove="pop" tempo={92} scale="major" />
+
+<Quiz id="m9-at-phu-q1" question="In the key of G, which chord is V7/V?" options={['A7', 'D7', 'E7', 'B7']} answer={0} explain="V of G is D; the V7 of D is A7." />
+
+<Quiz id="m9-at-phu-q2" question="In the key of C, where does E7 usually lead?" options={['Am', 'Em', 'F', 'G']} answer={0} />
+
+<Quiz id="m9-at-phu-q3" question="Which note in A7 is foreign to the key of C?" options={['C♯', 'G', 'E', 'A']} answer={0} explain="A7 = A C♯ E G. C♯ is the leading tone of D — A7's target." />

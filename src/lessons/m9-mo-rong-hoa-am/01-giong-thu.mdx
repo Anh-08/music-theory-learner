@@ -1,0 +1,37 @@
+export const meta = {
+  title: 'Giọng thứ: ba loại scale thứ',
+  description: 'Thứ tự nhiên, thứ hòa âm, thứ giai điệu — và vì sao bài giọng thứ hay có hợp âm V trưởng.',
+  minutes: 15,
+}
+
+## Thứ tự nhiên và vấn đề cảm âm
+
+Hợp âm thuận giọng của A thứ tự nhiên: **Am – B° – C – Dm – Em – F – G** (i – ii° – III – iv – v – VI – VII).
+
+Vấn đề: hợp âm bậc v (**Em**) không có **cảm âm** — nốt G cách A cả một cung, không "kéo" về chủ âm mạnh như B về C trong giọng trưởng. Nghe so sánh: <PlayChords chords="Am Dm Em Am" /> và <PlayChords chords="Am Dm E7 Am" />
+
+Cách thứ hai nghe "về nhà" rõ hơn hẳn — vì E7 có G♯.
+
+## Ba loại scale thứ
+
+| Scale | Công thức | A thứ | Dùng khi |
+|---|---|---|---|
+| Thứ tự nhiên | 1 2 ♭3 4 5 ♭6 ♭7 | A B C D E F G | Giai điệu, hợp âm i, iv, VI, VII |
+| Thứ hòa âm | 1 2 ♭3 4 5 ♭6 **7** | A B C D E F **G♯** | Hợp âm V / V7 và vii°7 |
+| Thứ giai điệu | 1 2 ♭3 4 5 **6 7** | A B C D E **F♯ G♯** | Giai điệu đi lên, jazz |
+
+<Show root="A" scale="harmonic minor" labels="interval" caption="A thứ hòa âm: nâng bậc 7 (G♯) — khoảng ♭6 – 7 là một cung rưỡi, nghe rất 'phương Đông'" />
+
+<Show root="A" scale="melodic minor" labels="interval" caption="A thứ giai điệu: nâng cả bậc 6 và 7 — mượt hơn khi đi lên" />
+
+## Trong thực tế: trộn cả ba
+
+Bài giọng thứ thường **trộn**: hợp âm i, iv, VI, VII lấy từ thứ tự nhiên, còn **V (hoặc V7) lấy từ thứ hòa âm**. Khi improvise trên V7, dùng thứ hòa âm (để có G♯); trên các hợp âm khác, dùng thứ tự nhiên hoặc ngũ cung thứ.
+
+<Jam progression="Am Dm E7 Am F G E7 Am" songKey="Am" groove="ballad" scale="harmonic minor" />
+
+<Quiz id="m9-thu-q1" question="Thứ hòa âm khác thứ tự nhiên ở bậc nào?" options={['Bậc 7 được nâng', 'Bậc 6 được nâng', 'Bậc 3 được nâng', 'Bậc 2 được hạ']} answer={0} />
+
+<Quiz id="m9-thu-q2" question="Trong giọng D thứ, hợp âm V7 (dùng thứ hòa âm) là?" options={['A7', 'Am7', 'Amaj7', 'G7']} answer={0} explain="Nâng bậc 7 của D thứ (C → C♯): A C♯ E G = A7." />
+
+<Quiz id="m9-thu-q3" question="E thứ giai điệu (đi lên) gồm những nốt nào?" options={['E F♯ G A B C♯ D♯', 'E F♯ G A B C D', 'E F♯ G A B C D♯', 'E F G A B C D']} answer={0} />

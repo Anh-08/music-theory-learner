@@ -1,5 +1,5 @@
 import type { MDXProps } from 'mdx/types'
-import type { ComponentType } from 'react'
+import { lazy, type ComponentType, type LazyExoticComponent } from 'react'
 import { LOCALES, type Locale } from '../i18n/locale'
 import { MODULES } from './modules'
 
@@ -10,14 +10,10 @@ export interface LessonMeta {
   minutes: number
 }
 
-interface LessonFile {
-  default: ComponentType<MDXProps>
-  meta: LessonMeta
-}
-
 export interface LessonVariant {
   meta: LessonMeta
-  Component: ComponentType<MDXProps>
+  /** Nội dung bài, tải riêng khi mở bài (mỗi bài một phần tải). */
+  Component: LazyExoticComponent<ComponentType<MDXProps>>
 }
 
 export interface Lesson {
@@ -29,22 +25,23 @@ export interface Lesson {
 }
 
 // Mỗi bài học là src/lessons/<moduleId>/<NN-slug>.mdx (tiếng Việt) và <NN-slug>.en.mdx (tiếng Anh),
-// mỗi file có `export const meta = {...}`.
-const files = import.meta.glob<LessonFile>('./*/*.mdx', { eager: true })
+// mỗi file có `export const meta = {...}`. Meta được nạp sẵn (qua `?meta`, xem vite.config.ts); nội dung tải khi cần.
+const metas = import.meta.glob<LessonMeta>('./*/*.mdx', { eager: true, query: '?meta', import: 'meta' })
+const contents = import.meta.glob<{ default: ComponentType<MDXProps> }>('./*/*.mdx')
 
 const moduleOrder = new Map(MODULES.map((m, i) => [m.id, i]))
 
 function collect(): Lesson[] {
   const byId = new Map<string, Lesson>()
-  for (const [path, file] of Object.entries(files)) {
+  for (const [path, meta] of Object.entries(metas)) {
     const [, moduleId, name] = path.match(/^\.\/([^/]+)\/(.+)\.mdx$/)!
     if (!moduleOrder.has(moduleId)) throw new Error(`Bài học ${path} thuộc module không có trong MODULES`)
-    if (!file.meta?.title) throw new Error(`Bài học ${path} thiếu export const meta`)
+    if (!meta?.title) throw new Error(`Bài học ${path} thiếu export const meta`)
     const locale: Locale = name.endsWith('.en') ? 'en' : 'vi'
     const slug = name.replace(/\.en$/, '')
     const id = `${moduleId}/${slug}`
     const lesson = byId.get(id) ?? { id, moduleId, slug, variants: {} }
-    lesson.variants[locale] = { meta: file.meta, Component: file.default }
+    lesson.variants[locale] = { meta, Component: lazy(contents[path]) }
     byId.set(id, lesson)
   }
   return [...byId.values()].sort((a, b) => moduleOrder.get(a.moduleId)! - moduleOrder.get(b.moduleId)! || a.slug.localeCompare(b.slug))

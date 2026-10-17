@@ -1,0 +1,59 @@
+export const meta = {
+  title: 'Năm loại hợp âm 7',
+  description: 'Chồng thêm một quãng 3 lên hợp âm ba: maj7, 7, m7, m7♭5 và dim7 — mỗi loại một màu.',
+  minutes: 15,
+}
+
+Hợp âm ba là "đen trắng", hợp âm 7 là "màu". Chỉ cần chồng thêm **một quãng 3** lên hợp âm ba, ta có nốt thứ tư — **quãng 7** tính từ nốt gốc.
+
+## Năm loại hợp âm 7
+
+| Tên | Ký hiệu | Công thức | Gốc C | Màu sắc |
+|---|---|---|---|---|
+| Bảy trưởng | Cmaj7 | 1 – 3 – 5 – 7 | C E G B | Mơ màng, êm (ballad, bossa, jazz) |
+| Bảy (át) | C7 | 1 – 3 – 5 – ♭7 | C E G B♭ | Căng, muốn đi tiếp (blues, rock) |
+| Thứ bảy | Cm7 | 1 – ♭3 – 5 – ♭7 | C E♭ G B♭ | Mềm, buồn nhẹ (soul, R&B) |
+| Nửa giảm | Cm7♭5 (Cø) | 1 – ♭3 – ♭5 – ♭7 | C E♭ G♭ B♭ | U tối, chơi vơi |
+| Bảy giảm | Cdim7 (C°7) | 1 – ♭3 – ♭5 – ♭♭7 | C E♭ G♭ B♭♭ | Rất căng, kịch tính |
+
+Nghe: <Play notes="C4 E4 G4 B4" as="both">Cmaj7</Play> <Play notes="C4 E4 G4 Bb4" as="both">C7</Play> <Play notes="C4 Eb4 G4 Bb4" as="both">Cm7</Play> <Play notes="C4 Eb4 Gb4 Bb4" as="both">Cm7♭5</Play> <Play notes="C4 Eb4 Gb4 A4" as="both">Cdim7</Play>
+
+<Callout type="note" title="Đừng nhầm maj7 và 7">
+"C7" **không** có quãng 7 trưởng — nó là hợp âm **át** với quãng 7 *thứ* (B♭). Muốn quãng 7 trưởng (B) phải viết rõ **maj7** (hoặc M7, Δ7). Đây là lỗi đọc hợp âm phổ biến nhất.
+</Callout>
+
+<Show root="C" chord="maj7" labels="interval" caption="Cmaj7: 1 – 3 – 5 – 7" />
+
+<Show root="C" chord="7" labels="interval" caption="C7: 1 – 3 – 5 – ♭7" />
+
+<OnlyFor instrument="guitar">
+
+## Các thế mở quen thuộc
+
+<Show root="C" chord="maj7" shape="x32000" labels="interval" caption="Cmaj7 (x32000): nhấc ngón ở dây 2 của hợp âm C" />
+
+<Show root="G" chord="7" shape="320001" labels="interval" caption="G7 (320001)" />
+
+<Show root="A" chord="m7" shape="x02010" labels="interval" caption="Am7 (x02010): nhấc ngón ở dây 3 của Am" />
+
+<Show root="D" chord="m7" shape="xx0211" labels="interval" caption="Dm7 (xx0211)" />
+
+</OnlyFor>
+
+## Tritone trong hợp âm 7 át
+
+Trong G7 (G B D F), nốt **B** (quãng 3) và **F** (quãng ♭7) cách nhau đúng một **tritone** — quãng căng nhất (Module 1). Đó là lý do hợp âm 7 át luôn "đòi" giải quyết: B muốn lên C, F muốn xuống E. <PlayChords chords="G7 C" seconds={1.8} />
+
+## Luyện tai
+
+<EarQuiz id="m6-loai-tai" kind="chord" options="maj7 7 m7 m7b5" />
+
+<Quiz id="m6-loai-q1" question="Hợp âm G7 gồm những nốt nào?" options={['G B D F', 'G B D F♯', 'G B♭ D F', 'G B D E']} answer={0} explain="G7 = 1 – 3 – 5 – ♭7: G B D F." />
+
+<Quiz id="m6-loai-q2" question="Công thức 1 – ♭3 – 5 – ♭7 là hợp âm gì?" options={['maj7', '7', 'm7', 'm7♭5']} answer={2} />
+
+<Quiz id="m6-loai-q3" question="Bm7♭5 gồm những nốt nào?" options={['B D F♯ A', 'B D F A', 'B D♯ F♯ A', 'B D F A♭']} answer={1} explain="1 – ♭3 – ♭5 – ♭7: B D F A — đây là hợp âm bậc vii của C trưởng." />
+
+<Quiz id="m6-loai-q4" question="Ký hiệu 'C7' nghĩa là?" options={['C với quãng 7 trưởng (B)', 'C với quãng 7 thứ (B♭) — hợp âm át', 'C thêm nốt thứ 7 bất kỳ', 'C giảm']} answer={1} />
+
+<FindNotes id="m6-loai-find-dmaj7" prompt="Bấm đủ các nốt của Dmaj7." targets="D F# A C#" />

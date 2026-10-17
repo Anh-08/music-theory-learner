@@ -1,0 +1,41 @@
+export const meta = {
+  title: 'Các điệu thức trưởng: Ionian, Lydian, Mixolydian',
+  description: 'Ba điệu thức có quãng 3 trưởng, và cách nghe ra màu của từng cái qua nhạc nền vamp.',
+  minutes: 15,
+}
+
+Ba điệu thức có **quãng 3 trưởng** (dùng trên hợp âm trưởng): Ionian, Lydian, Mixolydian. Cách tốt nhất để cảm màu điệu thức là chơi trên một **vamp** — một hoặc hai hợp âm lặp mãi — để tai "đóng đinh" chủ âm.
+
+## Ionian — scale trưởng
+
+Bạn đã quá quen. Ổn định, sáng. Nốt "cần cẩn thận" là bậc 4 (chỏi với quãng 3 của hợp âm chủ).
+
+## Lydian — trưởng với ♯4
+
+Nâng bậc 4 lên nửa cung: hết chỏi với quãng 3, thay vào là cảm giác **bay bổng, mơ màng** — rất hay gặp trong nhạc phim. Nhạc hiệu *The Simpsons* dựa trên màu Lydian.
+
+Vamp Lydian kinh điển: **I – II** (C – D). Hợp âm D trưởng chứa F♯ — chính là ♯4 của C.
+
+<Jam progression="C*2 D*2" songKey="C" groove="ballad" tempo={76} scale="lydian" />
+
+<Show root="C" scale="lydian" labels="interval" play="none" caption="C Lydian — nhấn vào ♯4 (F♯) để nghe màu" />
+
+## Mixolydian — trưởng với ♭7
+
+Hạ bậc 7: hết cảm âm, nghe **thoải mái, "bụi"** — màu của rock, blues, nhạc đồng quê, nhạc Celtic. Mixolydian khớp hoàn hảo với hợp âm 7 át (1 3 5 ♭7).
+
+Vamp Mixolydian kinh điển: **I – ♭VII** (G – F) — như *Sweet Home Alabama* hay rất nhiều bài rock.
+
+<Jam progression="G*2 F*2" songKey="G" groove="rock" tempo={104} scale="mixolydian" />
+
+<Show root="G" scale="mixolydian" labels="interval" play="none" caption="G Mixolydian — nốt F (♭7) là linh hồn" />
+
+<Callout type="tip" title="Cách nghĩ nhanh">
+G Mixolydian = nốt của **C trưởng**, nhà là G. A Lydian = nốt của **E trưởng**, nhà là A. Nhưng khi chơi, hãy nghĩ "G trưởng, hạ bậc 7" — tai và tay sẽ nhanh hơn.
+</Callout>
+
+<Quiz id="m8-truong-q1" question="Hợp âm nào khớp nhất với Mixolydian?" options={['Hợp âm 7 át (như G7)', 'Hợp âm maj7', 'Hợp âm m7♭5', 'Hợp âm dim7']} answer={0} />
+
+<Quiz id="m8-truong-q2" question="Vamp I – II (C – D) gợi màu điệu thức nào?" options={['Lydian', 'Mixolydian', 'Dorian', 'Ionian']} answer={0} explain="D trưởng chứa F♯ — ♯4 của C." />
+
+<Quiz id="m8-truong-q3" question="D Mixolydian gồm những nốt nào?" options={['D E F♯ G A B C', 'D E F♯ G A B C♯', 'D E F G A B C', 'D E F♯ G♯ A B C♯']} answer={0} explain="D trưởng hạ bậc 7: C♯ → C (cũng là nốt của G trưởng)." />

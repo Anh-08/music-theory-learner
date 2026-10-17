@@ -1,0 +1,37 @@
+export const meta = {
+  title: 'Minor keys: the three minor scales',
+  description: 'Natural, harmonic and melodic minor — and why songs in minor keys so often have a major V chord.',
+  minutes: 15,
+}
+
+## Natural minor and the missing leading tone
+
+The diatonic chords of A natural minor: **Am – B° – C – Dm – Em – F – G** (i – ii° – III – iv – v – VI – VII).
+
+The problem: the v chord (**Em**) has no **leading tone** — G is a whole step below A, so it doesn't "pull" home as strongly as B pulls to C in a major key. Compare: <PlayChords chords="Am Dm Em Am" /> and <PlayChords chords="Am Dm E7 Am" />
+
+The second sounds much more like coming home — because E7 contains G♯.
+
+## The three minor scales
+
+| Scale | Formula | A minor | Used for |
+|---|---|---|---|
+| Natural minor | 1 2 ♭3 4 5 ♭6 ♭7 | A B C D E F G | Melodies, chords i, iv, VI, VII |
+| Harmonic minor | 1 2 ♭3 4 5 ♭6 **7** | A B C D E F **G♯** | The V / V7 and vii°7 chords |
+| Melodic minor | 1 2 ♭3 4 5 **6 7** | A B C D E **F♯ G♯** | Rising melodies, jazz |
+
+<Show root="A" scale="harmonic minor" labels="interval" caption="A harmonic minor: raised 7th (G♯) — the ♭6 – 7 gap is a step and a half, very 'exotic'" />
+
+<Show root="A" scale="melodic minor" labels="interval" caption="A melodic minor: raised 6th and 7th — smoother when ascending" />
+
+## In practice: mix all three
+
+Minor-key songs usually **mix**: chords i, iv, VI and VII from the natural minor, and **V (or V7) from the harmonic minor**. When improvising over V7, use the harmonic minor (to get the G♯); over the other chords, use the natural minor or the minor pentatonic.
+
+<Jam progression="Am Dm E7 Am F G E7 Am" songKey="Am" groove="ballad" scale="harmonic minor" />
+
+<Quiz id="m9-thu-q1" question="How does harmonic minor differ from natural minor?" options={['The 7th is raised', 'The 6th is raised', 'The 3rd is raised', 'The 2nd is lowered']} answer={0} />
+
+<Quiz id="m9-thu-q2" question="In D minor, what is the V7 chord (using harmonic minor)?" options={['A7', 'Am7', 'Amaj7', 'G7']} answer={0} explain="Raise the 7th of D minor (C → C♯): A C♯ E G = A7." />
+
+<Quiz id="m9-thu-q3" question="Which notes are in E melodic minor (ascending)?" options={['E F♯ G A B C♯ D♯', 'E F♯ G A B C D', 'E F♯ G A B C D♯', 'E F G A B C D']} answer={0} />

@@ -1,0 +1,49 @@
+export const meta = {
+  title: 'Chord – scale: choosing a mode for each chord',
+  description: 'Each chord type has a mode that "fits" it — and why, within one key, they are all the same set of notes.',
+  minutes: 15,
+}
+
+## Every diatonic chord is a mode
+
+In C major, each diatonic seventh chord corresponds to the mode starting on that degree:
+
+| Chord | Mode | Notes |
+|---|---|---|
+| Cmaj7 (I) | C Ionian | C D E F G A B |
+| Dm7 (ii) | D Dorian | D E F G A B C |
+| Em7 (iii) | E Phrygian | E F G A B C D |
+| Fmaj7 (IV) | F Lydian | F G A B C D E |
+| G7 (V) | G Mixolydian | G A B C D E F |
+| Am7 (vi) | A Aeolian | A B C D E F G |
+| Bm7♭5 (vii) | B Locrian | B C D E F G A |
+
+Look at the "Notes" column: **they are all the seven notes of C major!** So over a diatonic progression you can play the key's scale — the modes are just a way of **landing on each chord's chord tones** in the right places.
+
+## A quick chart by chord type
+
+When you meet a chord **outside the key**, or a long vamp, pick a mode by chord type:
+
+| Chord type | Common mode |
+|---|---|
+| maj7 | Ionian, or Lydian (a modern colour) |
+| 7 (dominant) | Mixolydian |
+| m7 | Dorian (most common), Aeolian or Phrygian depending on the key |
+| m7♭5 | Locrian |
+
+## Two ways of thinking when improvising
+
+1. **Think in keys**: play the key's scale and target each chord's chord tones (Module 7). Simple, and enough for most pop songs.
+2. **Think in modes**: for each chord, think of a mode rooted on that chord. Useful when chords keep changing key (jazz) or over a one-chord vamp.
+
+Try it on ii – V – I: think "D Dorian → G Mixolydian → C Ionian". They are all white keys, but your phrases will naturally revolve around each chord's root.
+
+<Jam progression="Dm7 G7 Cmaj7*2" songKey="C" groove="bossa" tempo={104} scale="major" />
+
+<Quiz id="m8-chord-scale-q1" question="In the key of C, which mode corresponds to Fmaj7?" options={['F Lydian', 'F Ionian', 'F Mixolydian', 'F Dorian']} answer={0} />
+
+<Quiz id="m8-chord-scale-q2" question="Over an A7 chord on its own, which mode is commonly used?" options={['A Mixolydian', 'A Dorian', 'A Locrian', 'A Lydian']} answer={0} />
+
+<Quiz id="m8-chord-scale-q3" question="Over the ii – V – I in G (Am7 – D7 – Gmaj7), the corresponding modes share the notes of which scale?" options={['G major', 'A major', 'D major', 'C major']} answer={0} />
+
+<Quiz id="m8-chord-scale-q4" question="Which mode fits an m7♭5 chord?" options={['Locrian', 'Dorian', 'Lydian', 'Ionian']} answer={0} />

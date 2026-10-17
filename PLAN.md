@@ -324,9 +324,11 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 ✅ *Kết quả: cầm tờ hợp âm là đệm hát được với nhiều điệu.*
 
 ### Giai đoạn 5 — Nội dung nâng cao
-- [ ] Module 6 → 10.
-- [ ] Luyện tai nâng cao, spaced repetition.
-- [ ] Key Explorer + vòng quãng năm tương tác, Chord Identifier.
+- [x] Module 6 → 10.
+- [x] Luyện tai nâng cao, spaced repetition.
+- [x] Key Explorer + vòng quãng năm tương tác, Chord Identifier.
+
+> Ghi chú: trang Ôn tập (`#/review`) có 7 bộ thẻ sinh câu hỏi ngẫu nhiên (gọi tên quãng, đọc nốt hợp âm, hóa biểu, hợp âm thuận giọng, nghe quãng, nghe loại hợp âm kể cả hợp âm 7, nghe tiến trình), lịch ôn theo hộp Leitner lưu trong tiến độ. Key Explorer ở `#/keys`, nhận diện hợp âm ở `#/identify` (cả hai nằm trong menu Công cụ). Nội dung bài học được tải riêng từng bài (plugin `lesson-meta` trong `vite.config.ts`).
 
 ### Giai đoạn 6 — Tùy chọn / mở rộng
 - [ ] Web MIDI input (piano điện).

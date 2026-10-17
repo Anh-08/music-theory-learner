@@ -1,0 +1,77 @@
+export const meta = {
+  title: 'Cách xếp hợp âm 7',
+  description: 'Guitar: thế bấm dời được gốc dây 6 và dây 5, shell voicing. Piano: xếp hai tay và đường guide tone.',
+  minutes: 18,
+}
+
+Hợp âm 7 có 4 nốt — trên guitar và piano có nhiều cách xếp. Bài này cho bạn những cách xếp **dùng được ngay** để đệm các bài có hợp âm 7.
+
+<OnlyFor instrument="guitar">
+
+## Thế bấm dời được, gốc dây 6
+
+Bốn hình dưới đây có nốt gốc ở dây 6 (ví dụ gốc G, phím 3), đánh 4 dây 6 – 4 – 3 – 2 (câm dây 5 và dây 1 bằng ngón tay):
+
+<Show root="G" chord="maj7" shape="3x443x" labels="interval" caption="Gmaj7: 3 x 4 4 3 x" />
+
+<Show root="G" chord="7" shape="3x343x" labels="interval" caption="G7: 3 x 3 4 3 x" />
+
+<Show root="G" chord="m7" shape="3x333x" labels="interval" caption="Gm7: 3 x 3 3 3 x" />
+
+<Show root="G" chord="m7b5" shape="3x332x" labels="interval" caption="Gm7♭5: 3 x 3 3 2 x" />
+
+## Thế bấm dời được, gốc dây 5
+
+Gốc ở dây 5 (ví dụ C, phím 3), đánh dây 5 – 4 – 3 – 2:
+
+<Show root="C" chord="maj7" shape="x3545x" labels="interval" caption="Cmaj7: x 3 5 4 5 x" />
+
+<Show root="C" chord="7" shape="x3535x" labels="interval" caption="C7: x 3 5 3 5 x" />
+
+<Show root="C" chord="m7" shape="x3534x" labels="interval" caption="Cm7: x 3 5 3 4 x" />
+
+<Show root="C" chord="m7b5" shape="x3434x" labels="interval" caption="Cm7♭5: x 3 4 3 4 x" />
+
+Với 8 hình này, bạn chơi được **mọi** hợp âm maj7, 7, m7, m7♭5 ở mọi giọng — chỉ cần biết tên nốt trên dây 6 và dây 5.
+
+## ii – V – I không cần nhảy tay
+
+Kết hợp hai nhóm hình: Dm7 (gốc dây 5, phím 5) → G7 (gốc dây 6, phím 3) → Cmaj7 (gốc dây 5, phím 3). Tay gần như đứng yên quanh phím 3 – 5.
+
+<Show root="D" chord="m7" shape="x5756x" labels="interval" caption="Dm7: x 5 7 5 6 x" />
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Tay trái gốc, tay phải màu
+
+Cách đơn giản nhất: **tay trái** chơi nốt gốc (hoặc gốc + quãng 7), **tay phải** chơi quãng 3 – 5 – 7 (hoặc 3 – 7 – 9).
+
+<Show notes="C3 E4 G4 B4" labels="interval" play="chord" caption="Cmaj7: tay trái C, tay phải E – G – B" />
+
+## Đường guide tone cho ii – V – I
+
+Chỉ cần **quãng 3 và quãng 7** là đủ nghe ra loại hợp âm. Tay phải giữ hai nốt này, mỗi lần đổi hợp âm chỉ di chuyển nửa cung hoặc đứng yên:
+
+<Show notes="D3 C4 F4" labels="note" play="chord" caption="Dm7: tay trái D, tay phải C – F (7 và 3)" />
+
+<Show notes="G2 B3 F4" labels="note" play="chord" caption="G7: C xuống B, F giữ nguyên (giờ B là 3, F là 7)" />
+
+<Show notes="C3 B3 E4" labels="note" play="chord" caption="Cmaj7: B giữ nguyên, F xuống E" />
+
+Nghe cả ba: <PlayChords chords="Dm7 G7 Cmaj7" seconds={1.4} />
+
+</OnlyFor>
+
+<Jam progression="Dm7 G7 Cmaj7 Am7" songKey="C" groove="bossa" />
+
+<Quiz id="m6-voicing-q1" question="Khi bỏ bớt nốt trong hợp âm 7, nốt nào thường bỏ đầu tiên?" options={['Quãng 5', 'Quãng 3', 'Quãng 7', 'Không bỏ nốt nào']} answer={0} explain="Quãng 5 ít ảnh hưởng tới màu hợp âm; quãng 3 và 7 quyết định loại hợp âm." />
+
+<Quiz id="m6-voicing-q2" question="Hai nốt nào đủ để nghe ra loại hợp âm 7?" options={['Gốc và quãng 5', 'Quãng 3 và quãng 7', 'Quãng 5 và quãng 9', 'Gốc và quãng 9']} answer={1} />
+
+<OnlyFor instrument="guitar">
+
+<Quiz id="m6-voicing-q-guitar" question="Dùng hình m7 gốc dây 6 (3x333x) ở phím 5, ta được hợp âm gì?" options={['Am7', 'Gm7', 'Bm7', 'Dm7']} answer={0} explain="Dây 6 phím 5 là A." />
+
+</OnlyFor>

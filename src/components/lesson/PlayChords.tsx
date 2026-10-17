@@ -7,7 +7,7 @@ import { displayNote } from '../../theory'
 
 function displaySymbol(symbol: string): string {
   const { tonic } = parseChordSymbol(symbol)
-  return displayNote(tonic) + symbol.slice(tonic.length)
+  return displayNote(tonic) + symbol.slice(tonic.length).replace(/b(\d)/g, '♭$1').replace(/#(\d)/g, '♯$1')
 }
 
 /** Nút nghe một chuỗi hợp âm: <PlayChords chords="C G Am F" />. */

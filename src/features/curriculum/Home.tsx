@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router'
 import { LESSONS, lessonMeta, lessonPath, lessonsOf } from '../../lessons/registry'
 import { moduleLabel } from '../../lessons/moduleLabel'
@@ -5,13 +6,18 @@ import { MODULES } from '../../lessons/modules'
 import { useT } from '../../i18n/useT'
 import { useProgress } from '../../store/progressContext'
 import { ProgressBackup } from './ProgressBackup'
+import { DECKS, pickSession } from '../review/cards'
 
 export function Home() {
   const { progress } = useProgress()
   const { t, locale } = useT()
+  const [now] = useState(() => Date.now())
   const done = new Set(progress.completedLessons)
   const nextLesson = LESSONS.find((l) => !done.has(l.id))
   const doneCount = LESSONS.filter((l) => done.has(l.id)).length
+  // Chỉ nhắc ôn tập khi người học đã bắt đầu ôn (có thẻ trong lịch) và có thẻ đến hạn.
+  const srs = progress.srs ?? {}
+  const dueCount = Object.keys(srs).length ? pickSession(srs, DECKS.map((d) => d.id), now, 99).filter((id) => srs[id]).length : 0
 
   return (
     <div className="space-y-10">
@@ -25,6 +31,11 @@ export function Home() {
             </Link>
           )}
           <span className="text-sm text-stone-500">{t('home.doneCount', { done: doneCount, total: LESSONS.length })}</span>
+          {dueCount > 0 && (
+            <Link to="/review" className="text-sm font-medium text-violet-600 hover:underline dark:text-violet-400">
+              {t('home.reviewDue', { n: dueCount })}
+            </Link>
+          )}
         </div>
       </section>
 

@@ -6,6 +6,20 @@ export interface Progress {
   quizzes: Record<string, { correct: boolean; attempts: number }>
   /** Bài luyện lặp lại (luyện tai, tìm nốt…): chuỗi đúng liên tiếp tốt nhất và tổng số câu đúng. */
   drills: Record<string, { best: number; total: number }>
+  /** Thẻ ôn tập lặp lại ngắt quãng: hộp Leitner (0–6) và thời điểm đến hạn (ms). Có thể thiếu ở dữ liệu cũ. */
+  srs?: Record<string, { box: number; due: number }>
+}
+
+/** Khoảng cách ôn theo hộp Leitner, tính bằng ngày. */
+export const SRS_DAYS = [0, 1, 2, 4, 8, 16, 32]
+const DAY = 86_400_000
+
+/** Ghi kết quả một thẻ: đúng thì lên hộp và giãn lịch ôn; sai thì về hộp 0, ôn lại sau 10 phút. */
+export function recordCard(p: Progress, cardId: string, correct: boolean, now: number): Progress {
+  const prev = p.srs?.[cardId] ?? { box: 0, due: now }
+  const box = correct ? Math.min(prev.box + 1, SRS_DAYS.length - 1) : 0
+  const due = correct ? now + SRS_DAYS[box] * DAY : now + 10 * 60_000
+  return { ...p, srs: { ...p.srs, [cardId]: { box, due } } }
 }
 
 export function emptyProgress(): Progress {
@@ -49,5 +63,9 @@ export function parseProgress(json: string): Progress | null {
   const quizOk = Object.values(quizzes).every((q) => isRecord(q) && typeof q.correct === 'boolean' && typeof q.attempts === 'number')
   const drillOk = Object.values(drills).every((d) => isRecord(d) && typeof d.best === 'number' && typeof d.total === 'number')
   if (!quizOk || !drillOk) return null
+  if (data.srs !== undefined) {
+    if (!isRecord(data.srs)) return null
+    if (!Object.values(data.srs).every((c) => isRecord(c) && typeof c.box === 'number' && typeof c.due === 'number')) return null
+  }
   return data as unknown as Progress
 }

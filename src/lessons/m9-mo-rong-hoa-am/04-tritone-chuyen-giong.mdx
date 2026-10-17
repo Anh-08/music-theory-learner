@@ -1,0 +1,39 @@
+export const meta = {
+  title: 'Thay thế tritone, hợp âm giảm và chuyển giọng',
+  description: 'Những màu hòa âm "cao cấp": ♭II7 thay cho V7, hợp âm giảm chuyển tiếp, và cách đổi giọng giữa bài.',
+  minutes: 18,
+}
+
+## Thay thế tritone
+
+G7 (G B D F) và **D♭7** (D♭ F A♭ C♭) có chung hai nốt **B (= C♭) và F** — chính là cặp tritone tạo nên sức hút của hợp âm át. Vì vậy D♭7 có thể **thay** G7 để về C. Gốc của chúng cách nhau một tritone — nên gọi là **thay thế tritone**.
+
+Hiệu ứng: bass đi xuống từng nửa cung, rất mượt: **Dm7 – D♭7 – Cmaj7** (D – D♭ – C).
+
+So sánh: <PlayChords chords="Dm7 G7 Cmaj7" /> <PlayChords chords="Dm7 Db7 Cmaj7" />
+
+<Jam progression="Dm7 Db7 Cmaj7*2" songKey="C" groove="bossa" tempo={100} scale="major" />
+
+## Hợp âm giảm chuyển tiếp
+
+Hợp âm **dim7** chen giữa hai hợp âm cách nhau một cung, tạo đường bass đi nửa cung: **C – C♯dim7 – Dm7**, hoặc **Dm7 – D♯dim7 – Em7**. Nghe: <PlayChords chords="C C#dim7 Dm7 G7" />
+
+<Callout type="note" title="dim7 đối xứng">
+Hợp âm dim7 được tạo từ các quãng 3 thứ chồng đều nhau, nên **cứ dời 3 phím là ra cùng một hợp âm** (C♯dim7 = Edim7 = Gdim7 = B♭dim7). Chỉ có 3 hợp âm dim7 khác nhau!
+</Callout>
+
+## Chuyển giọng
+
+**Chuyển giọng bằng hợp âm chung (pivot):** tìm một hợp âm thuộc cả hai giọng. Từ C sang G: Am là vi của C và cũng là ii của G. Đi C → Am (lúc này nghe như ii của G) → D7 → G, ta đã sang giọng G.
+
+<PlayChords chords="C F Am D7 G C D7 G" seconds={1.1} />
+
+**Chuyển giọng trực tiếp:** nâng cả bài lên nửa cung hoặc một cung ở điệp khúc cuối — cách tạo cao trào quen thuộc của nhạc pop: <PlayChords chords="C G Am F D A Bm G" seconds={1} />
+
+<Quiz id="m9-tritone-q1" question="Thay thế tritone của D7 là?" options={['A♭7', 'G7', 'E♭7', 'A7']} answer={0} explain="D cộng một tritone (6 nửa cung) là A♭." />
+
+<Quiz id="m9-tritone-q2" question="G7 và D♭7 có chung cặp nốt nào?" options={['B (C♭) và F', 'G và D♭', 'D và A♭', 'Không có']} answer={0} />
+
+<Quiz id="m9-tritone-q3" question="Hợp âm chung để chuyển từ C trưởng sang G trưởng có thể là?" options={['Am (vi của C, ii của G)', 'F', 'B♭', 'D♭']} answer={0} />
+
+<Quiz id="m9-tritone-q4" question="Có bao nhiêu hợp âm dim7 thực sự khác nhau?" options={['3', '12', '4', '7']} answer={0} />

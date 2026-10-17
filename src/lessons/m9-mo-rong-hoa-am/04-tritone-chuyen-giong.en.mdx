@@ -1,0 +1,39 @@
+export const meta = {
+  title: 'Tritone substitution, diminished chords and modulation',
+  description: '"Advanced" harmonic colours: ♭II7 in place of V7, passing diminished chords, and changing key mid-song.',
+  minutes: 18,
+}
+
+## Tritone substitution
+
+G7 (G B D F) and **D♭7** (D♭ F A♭ C♭) share two notes: **B (= C♭) and F** — exactly the tritone pair that gives a dominant chord its pull. So D♭7 can **replace** G7 on the way to C. Their roots are a tritone apart — hence **tritone substitution**.
+
+The effect: the bass slides down by half steps, very smoothly: **Dm7 – D♭7 – Cmaj7** (D – D♭ – C).
+
+Compare: <PlayChords chords="Dm7 G7 Cmaj7" /> <PlayChords chords="Dm7 Db7 Cmaj7" />
+
+<Jam progression="Dm7 Db7 Cmaj7*2" songKey="C" groove="bossa" tempo={100} scale="major" />
+
+## Passing diminished chords
+
+A **dim7** chord slipped between two chords a whole step apart creates a bass line moving by half steps: **C – C♯dim7 – Dm7**, or **Dm7 – D♯dim7 – Em7**. Listen: <PlayChords chords="C C#dim7 Dm7 G7" />
+
+<Callout type="note" title="dim7 is symmetrical">
+A dim7 chord is built from equally stacked minor thirds, so **moving it 3 frets gives the same chord** (C♯dim7 = Edim7 = Gdim7 = B♭dim7). There are only 3 different dim7 chords!
+</Callout>
+
+## Modulation
+
+**Pivot-chord modulation:** find a chord that belongs to both keys. From C to G: Am is vi in C and also ii in G. Go C → Am (now heard as ii of G) → D7 → G, and you have arrived in G.
+
+<PlayChords chords="C F Am D7 G C D7 G" seconds={1.1} />
+
+**Direct modulation:** raise the whole song by a half or whole step for the final chorus — a familiar way to build a climax in pop: <PlayChords chords="C G Am F D A Bm G" seconds={1} />
+
+<Quiz id="m9-tritone-q1" question="What is the tritone substitute for D7?" options={['A♭7', 'G7', 'E♭7', 'A7']} answer={0} explain="D plus a tritone (6 half steps) is A♭." />
+
+<Quiz id="m9-tritone-q2" question="Which pair of notes do G7 and D♭7 share?" options={['B (C♭) and F', 'G and D♭', 'D and A♭', 'None']} answer={0} />
+
+<Quiz id="m9-tritone-q3" question="Which could be a pivot chord to move from C major to G major?" options={['Am (vi in C, ii in G)', 'F', 'B♭', 'D♭']} answer={0} />
+
+<Quiz id="m9-tritone-q4" question="How many truly different dim7 chords are there?" options={['3', '12', '4', '7']} answer={0} />

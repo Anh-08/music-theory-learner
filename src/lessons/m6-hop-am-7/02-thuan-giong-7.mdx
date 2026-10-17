@@ -1,0 +1,54 @@
+export const meta = {
+  title: 'Hợp âm 7 thuận giọng và ii – V – I',
+  description: 'Bảy hợp âm 7 của một giọng, và tiến trình quan trọng nhất của jazz.',
+  minutes: 15,
+}
+
+Ở Module 3 bạn dựng hợp âm ba trên mỗi bậc. Giờ chồng thêm một nốt nữa — vẫn chỉ dùng nốt trong scale:
+
+| Bậc | Nốt (C trưởng) | Hợp âm | Ký hiệu La Mã |
+|---|---|---|---|
+| 1 | C E G B | Cmaj7 | Imaj7 |
+| 2 | D F A C | Dm7 | ii7 |
+| 3 | E G B D | Em7 | iii7 |
+| 4 | F A C E | Fmaj7 | IVmaj7 |
+| 5 | G B D F | G7 | V7 |
+| 6 | A C E G | Am7 | vi7 |
+| 7 | B D F A | Bm7♭5 | viiø7 |
+
+Nghe lần lượt: <PlayChords chords="Cmaj7 Dm7 Em7 Fmaj7 G7 Am7 Bm7b5 Cmaj7" seconds={1.2} />
+
+Quy luật cho mọi giọng trưởng: **maj7 – m7 – m7 – maj7 – 7 – m7 – m7♭5**.
+
+<Callout type="tip" title="Chỉ có một hợp âm 7 át">
+Trong mỗi giọng trưởng chỉ **bậc V** là hợp âm 7 át. Thấy G7 trên tờ hợp âm → gần như chắc chắn bài đang hướng về C. Trang **Công cụ → Giọng** hiện bảng này cho mọi giọng.
+</Callout>
+
+## ii – V – I
+
+Tiến trình xương sống của jazz: **Dm7 – G7 – Cmaj7**. Hạ át → át → chủ.
+
+Điều kỳ diệu nằm ở **dẫn giọng**: quãng 7 của mỗi hợp âm đi xuống nửa cung thành quãng 3 của hợp âm sau:
+
+- Dm7 → G7: **C** (7 của Dm7) xuống **B** (3 của G7).
+- G7 → Cmaj7: **F** (7 của G7) xuống **E** (3 của Cmaj7).
+
+Nghe đường dẫn giọng: <Play notes="C5 B4 B4">C – B – B</Play> <Play notes="F4 F4 E4">F – F – E</Play>
+
+<Jam progression="Dm7 G7 Cmaj7*2" songKey="C" groove="bossa" scale="major" />
+
+## ii – V – i trong giọng thứ
+
+Giọng thứ có phiên bản riêng: **iiø7 – V7 – i**. Ở A thứ: **Bm7♭5 – E7 – Am**. Hợp âm E7 (thay vì Em7) lấy từ thứ hòa âm, có cảm âm G♯ kéo mạnh về A.
+
+<Jam progression="Bm7b5 E7 Am*2" songKey="Am" groove="bossa" scale="harmonic minor" />
+
+<Quiz id="m6-thuan-giong-q1" question="Trong giọng G trưởng, hợp âm V7 là?" options={['D7', 'Dmaj7', 'Dm7', 'G7']} answer={0} explain="G A B C D E F♯: bậc 5 là D, chồng D F♯ A C → D7." />
+
+<Quiz id="m6-thuan-giong-q2" question="Trong giọng F trưởng, iii7 là?" options={['Am7', 'Amaj7', 'A7', 'Gm7']} answer={0} />
+
+<Quiz id="m6-thuan-giong-q3" question="Bậc nào trong giọng trưởng là hợp âm maj7?" options={['I và IV', 'I và V', 'ii và vi', 'Chỉ bậc I']} answer={0} />
+
+<Quiz id="m6-thuan-giong-q4" question="ii – V – I của giọng B♭ trưởng là?" options={['Cm7 – F7 – B♭maj7', 'Dm7 – G7 – Cmaj7', 'Cm7 – Fmaj7 – B♭7', 'Gm7 – C7 – Fmaj7']} answer={0} />
+
+<Quiz id="m6-thuan-giong-q5" question="Trong Dm7 → G7, nốt C (quãng 7 của Dm7) đi về đâu?" options={['Lên D', 'Xuống B — quãng 3 của G7', 'Giữ nguyên C', 'Lên G']} answer={1} />

@@ -1,0 +1,60 @@
+export const meta = {
+  title: 'Guide tones: the 3rd and the 7th',
+  description: 'The two notes that define a chord\'s character, and the melodic line they trace through a progression.',
+  minutes: 15,
+}
+
+Of the four chord tones, two matter most: the **3rd** (major or minor?) and the **7th** (maj7, 7 or m7?). They are called **guide tones**. Hearing just these two notes, your ear already knows which chord it is.
+
+## Guide tones in ii – V – I
+
+| Chord | 3rd | 7th |
+|---|---|---|
+| Dm7 | F | C |
+| G7 | B | F |
+| Cmaj7 | E | B |
+
+Notice: when the chord changes, each guide tone **stays put or moves a half step**:
+
+- Line 1: **C → B → B** (7th of Dm7 → 3rd of G7 → 7th of Cmaj7)
+- Line 2: **F → F → E** (3rd of Dm7 → 7th of G7 → 3rd of Cmaj7)
+
+Listen: <Play notes="C5 B4 B4">C – B – B</Play> <Play notes="F4 F4 E4">F – F – E</Play> <Play notes="F4 C5 F4 B4 E4 B4">both</Play>
+
+<OnlyFor instrument="piano">
+
+<Show notes="D3 C4 F4" labels="note" play="chord" caption="Dm7: C and F" />
+
+<Show notes="G2 B3 F4" labels="note" play="chord" caption="G7: B and F" />
+
+<Show notes="C3 B3 E4" labels="note" play="chord" caption="Cmaj7: B and E" />
+
+</OnlyFor>
+
+<OnlyFor instrument="guitar">
+
+On guitar, guide tones sit neatly on two adjacent strings — for example strings 4 and 3:
+
+<Show root="D" chord="m7" positions="4:3 3:5" labels="interval" caption="Dm7: F (string 4 fret 3) and C (string 3 fret 5)" />
+
+<Show root="G" chord="7" positions="4:3 3:4" labels="interval" caption="G7: F (string 4 fret 3) and B (string 3 fret 4)" />
+
+<Show root="C" chord="maj7" positions="4:2 3:4" labels="interval" caption="Cmaj7: E (string 4 fret 2) and B (string 3 fret 4)" />
+
+</OnlyFor>
+
+## Soloing with guide tones
+
+Exercise: over the backing track, play **one guide tone on beat 1 of each chord**, choosing the one closest to your previous note. You will find the line "flows" with the harmony by itself — this is how jazz musicians build the skeleton of a melody before decorating it.
+
+<Jam progression="Dm7 G7 Cmaj7 A7" songKey="C" groove="bossa" tempo={96} />
+
+<Callout type="note" title="An A7 at the end?">
+A7 is not in the key of C — it is a **secondary dominant** leading to Dm7 (Module 9). The guide tones of A7 are C♯ and G: C♯ rises to D and G falls to F — exactly the two guide tones of Dm7!
+</Callout>
+
+<Quiz id="m7-guide-q1" question="What are the guide tones of A7?" options={['C♯ and G', 'A and E', 'C and G', 'E and G']} answer={0} explain="The 3rd of A is C♯; the ♭7 is G." />
+
+<Quiz id="m7-guide-q2" question="In G7 → C, where does F resolve?" options={['E', 'G', 'F♯', 'C']} answer={0} />
+
+<Quiz id="m7-guide-q3" question="Why are the 3rd and 7th called guide tones?" options={['They define the chord quality and lead smoothly between chords', 'They are the highest notes', 'They are always in the bass', 'They never change']} answer={0} />

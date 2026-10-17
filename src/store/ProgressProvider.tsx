@@ -1,5 +1,5 @@
 import { useMemo, type ReactNode } from 'react'
-import { emptyProgress, recordDrill, recordQuiz, setLessonDone, type Progress } from './progress'
+import { emptyProgress, recordCard, recordDrill, recordQuiz, setLessonDone, type Progress } from './progress'
 import { ProgressContext, type ProgressApi } from './progressContext'
 import { usePersistentState } from './usePersistentState'
 
@@ -12,6 +12,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
       setLessonDone: (id, done) => setProgress((p) => setLessonDone(p, id, done)),
       recordQuiz: (id, correct) => setProgress((p) => recordQuiz(p, id, correct)),
       recordDrill: (id, streak, correct) => setProgress((p) => recordDrill(p, id, streak, correct)),
+      recordCard: (id, correct) => setProgress((p) => recordCard(p, id, correct, Date.now())),
       replace: setProgress,
     }),
     [progress, setProgress],

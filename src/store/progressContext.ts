@@ -6,6 +6,7 @@ export interface ProgressApi {
   setLessonDone: (lessonId: string, done: boolean) => void
   recordQuiz: (quizId: string, correct: boolean) => void
   recordDrill: (drillId: string, streak: number, correct: boolean) => void
+  recordCard: (cardId: string, correct: boolean) => void
   replace: (p: Progress) => void
 }
 
@@ -16,6 +17,7 @@ export const ProgressContext = createContext<ProgressApi>({
   setLessonDone: noop,
   recordQuiz: noop,
   recordDrill: noop,
+  recordCard: noop,
   replace: noop,
 })
 

@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react'
+import { screen, waitFor } from '@testing-library/react'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { AppRoutes } from '../App'
 import { renderWithProviders } from '../test/renderWithProviders'
@@ -42,8 +42,10 @@ describe('mỗi bài học hiển thị được', () => {
   for (const lesson of LESSONS) {
     for (const instrument of ['guitar', 'piano'] as const) {
       for (const locale of ['vi', 'en'] as const) {
-        it(`${lesson.id} (${instrument}, ${locale})`, () => {
+        it(`${lesson.id} (${instrument}, ${locale})`, async () => {
           const { container } = renderWithProviders(<AppRoutes />, { route: lessonPath(lesson), instrument, locale })
+          // Nội dung bài được tải riêng (lazy): chờ nội dung hiện ra.
+          await waitFor(() => expect(container.querySelector('article')?.textContent?.length ?? 0).toBeGreaterThan(100), { timeout: 10_000 })
           expect(screen.getByRole('heading', { level: 1, name: lessonMeta(lesson, locale).title })).toBeInTheDocument()
           expect(screen.queryByRole('note'), 'bài chưa được dịch').not.toBeInTheDocument()
           const ids = [...container.querySelectorAll('[data-exercise-id]')].map((el) => el.getAttribute('data-exercise-id')!)

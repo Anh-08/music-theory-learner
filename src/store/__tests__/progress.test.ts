@@ -34,3 +34,22 @@ describe('progress', () => {
     expect(parseProgress('{"version":1,"completedLessons":[],"quizzes":{"q":{"correct":"yes"}},"drills":{}}')).toBeNull()
   })
 })
+
+describe('ôn tập lặp lại ngắt quãng', async () => {
+  const { recordCard, SRS_DAYS } = await import('../progress')
+  const DAY = 86_400_000
+
+  it('đúng thì lên hộp và giãn lịch, sai thì về hộp 0', () => {
+    let p = recordCard(emptyProgress(), 'c', true, 0)
+    expect(p.srs!.c).toEqual({ box: 1, due: SRS_DAYS[1] * DAY })
+    p = recordCard(p, 'c', true, 10)
+    expect(p.srs!.c).toEqual({ box: 2, due: 10 + 2 * DAY })
+    p = recordCard(p, 'c', false, 20)
+    expect(p.srs!.c).toEqual({ box: 0, due: 20 + 600_000 })
+  })
+
+  it('dữ liệu cũ không có srs vẫn đọc được; srs sai định dạng bị từ chối', () => {
+    expect(parseProgress('{"version":1,"completedLessons":[],"quizzes":{},"drills":{}}')).not.toBeNull()
+    expect(parseProgress('{"version":1,"completedLessons":[],"quizzes":{},"drills":{},"srs":{"x":{"box":"1"}}}')).toBeNull()
+  })
+})

@@ -1,0 +1,49 @@
+export const meta = {
+  title: 'Chord – scale: chọn điệu thức theo hợp âm',
+  description: 'Mỗi loại hợp âm có điệu thức "hợp" với nó — và vì sao trong một giọng, tất cả chỉ là cùng một bộ nốt.',
+  minutes: 15,
+}
+
+## Mỗi hợp âm thuận giọng là một điệu thức
+
+Trong giọng C trưởng, mỗi hợp âm 7 thuận giọng tương ứng với điệu thức bắt đầu từ bậc đó:
+
+| Hợp âm | Điệu thức | Nốt |
+|---|---|---|
+| Cmaj7 (I) | C Ionian | C D E F G A B |
+| Dm7 (ii) | D Dorian | D E F G A B C |
+| Em7 (iii) | E Phrygian | E F G A B C D |
+| Fmaj7 (IV) | F Lydian | F G A B C D E |
+| G7 (V) | G Mixolydian | G A B C D E F |
+| Am7 (vi) | A Aeolian | A B C D E F G |
+| Bm7♭5 (vii) | B Locrian | B C D E F G A |
+
+Nhìn cột "Nốt": **tất cả đều là bảy nốt của C trưởng!** Nghĩa là trên một tiến trình thuận giọng, bạn có thể chơi scale của giọng — điệu thức chỉ là cách **nhấn vào chord tones của từng hợp âm** cho đúng chỗ.
+
+## Bảng chọn nhanh theo loại hợp âm
+
+Khi gặp hợp âm **ngoài giọng** hoặc một vamp dài, chọn điệu thức theo loại hợp âm:
+
+| Loại hợp âm | Điệu thức thường dùng |
+|---|---|
+| maj7 | Ionian, hoặc Lydian (màu hiện đại) |
+| 7 (át) | Mixolydian |
+| m7 | Dorian (phổ biến nhất), Aeolian hoặc Phrygian tùy giọng |
+| m7♭5 | Locrian |
+
+## Hai cách nghĩ khi improvise
+
+1. **Nghĩ theo giọng**: chơi scale của giọng, nhắm chord tones của từng hợp âm (Module 7). Đơn giản, đủ cho đa số bài pop.
+2. **Nghĩ theo điệu thức**: với mỗi hợp âm, nghĩ một điệu thức có chủ âm là gốc hợp âm. Hữu ích khi hợp âm đổi giọng liên tục (jazz) hoặc trên vamp một hợp âm.
+
+Thử trên ii – V – I: nghĩ "D Dorian → G Mixolydian → C Ionian", để ý cùng là các phím trắng, nhưng câu nhạc của bạn sẽ tự xoay quanh gốc của từng hợp âm.
+
+<Jam progression="Dm7 G7 Cmaj7*2" songKey="C" groove="bossa" tempo={104} scale="major" />
+
+<Quiz id="m8-chord-scale-q1" question="Trong giọng C, trên Fmaj7 tương ứng điệu thức nào?" options={['F Lydian', 'F Ionian', 'F Mixolydian', 'F Dorian']} answer={0} />
+
+<Quiz id="m8-chord-scale-q2" question="Trên hợp âm A7 (đứng một mình), điệu thức nào thường dùng?" options={['A Mixolydian', 'A Dorian', 'A Locrian', 'A Lydian']} answer={0} />
+
+<Quiz id="m8-chord-scale-q3" question="Trên ii – V – I của giọng G (Am7 – D7 – Gmaj7), các điệu thức tương ứng dùng chung nốt của scale nào?" options={['G trưởng', 'A trưởng', 'D trưởng', 'C trưởng']} answer={0} />
+
+<Quiz id="m8-chord-scale-q4" question="Hợp âm m7♭5 hợp với điệu thức nào?" options={['Locrian', 'Dorian', 'Lydian', 'Ionian']} answer={0} />

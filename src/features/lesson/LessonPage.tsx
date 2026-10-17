@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { Suspense, useEffect } from 'react'
 import { Link, useParams } from 'react-router'
 import { useT } from '../../i18n/useT'
 import { findLesson, lessonMeta, lessonPath, lessonsOf, localizedLesson, neighbors } from '../../lessons/registry'
@@ -68,7 +68,9 @@ export function LessonPage() {
         )}
 
         <article className="prose prose-stone mt-6 max-w-none dark:prose-invert prose-headings:scroll-mt-6 prose-table:text-sm">
-          <Component components={mdxComponents} />
+          <Suspense fallback={<p className="text-stone-400">…</p>}>
+            <Component components={mdxComponents} />
+          </Suspense>
         </article>
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-4 border-t border-stone-200 pt-6 dark:border-stone-800">

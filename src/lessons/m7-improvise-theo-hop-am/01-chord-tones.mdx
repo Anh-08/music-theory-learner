@@ -1,0 +1,42 @@
+export const meta = {
+  title: 'Nhắm vào chord tones',
+  description: 'Scale là vốn từ, chord tones là điểm tựa: đặt nốt của hợp âm đang vang vào phách mạnh.',
+  minutes: 15,
+}
+
+Ở Module 5, bạn improvise bằng một scale cho cả bài. Nghe đã ổn, nhưng đôi khi câu nhạc "trôi" không gắn với hợp âm. Bí quyết của người solo hay: **mỗi hợp âm có những nốt riêng của nó — chord tones** (nốt gốc, 3, 5, 7) — và họ nhắm vào chúng.
+
+## Scale là vốn từ, chord tones là điểm tựa
+
+- **Scale** cho bạn biết nốt nào "không sai".
+- **Chord tones** cho bạn biết nốt nào "đúng nhất" **lúc này** — vì chúng trùng với hợp âm đang vang.
+
+Quy tắc vàng: **đặt chord tones vào phách mạnh** (phách 1 và 3), đặc biệt là **phách 1 khi đổi hợp âm**. Các nốt khác của scale dùng để đi giữa chúng, ở phách yếu.
+
+## Bài tập 1: chỉ dùng chord tones
+
+Trên tiến trình dưới đây, chỉ chơi **nốt của hợp âm đang vang** (nốt đỏ và xanh trên đàn ảo — chúng đổi theo từng hợp âm). Đây là "solo bằng arpeggio" — nghe sẽ rất khớp với hòa âm.
+
+<Jam progression="C Am F G" songKey="C" groove="pop" tempo={84} />
+
+## Bài tập 2: nối chord tones bằng nốt scale
+
+Giờ chơi chord tone ở phách 1, rồi đi bằng các nốt scale (nốt xám) tới **chord tone gần nhất của hợp âm kế tiếp**. Ví dụ từ C sang Am: E (3 của C) → D → C (♭3 của Am). Từ Am sang F: C → C (giữ nguyên — C là quãng 5 của F!).
+
+<Callout type="tip" title="Nốt chung là cầu nối">
+Hai hợp âm liền nhau thường có **nốt chung**: C và Am chung C, E; Am và F chung A, C; F và G không chung nốt nào — phải đi qua. Giữ nguyên một nốt chung khi hợp âm đổi là cách nghe rất "có chủ ý".
+</Callout>
+
+## Nốt cần tránh
+
+Có những nốt thuộc scale nhưng **chỏi khi đặt lên phách mạnh** của một hợp âm: thường là nốt cách chord tone **nửa cung phía trên**. Ví dụ trên Cmaj7, nốt **F** (cách E nửa cung) nghe rất căng nếu ngân dài. Dùng nó như nốt đi qua thì không sao.
+
+<Jam progression="Dm7 G7 Cmaj7*2" songKey="C" groove="bossa" tempo={100} scale="major" />
+
+<Quiz id="m7-chord-tones-q1" question="Chord tones của hợp âm F là?" options={['F A C', 'F G A', 'F A♭ C', 'F B♭ C']} answer={0} />
+
+<Quiz id="m7-chord-tones-q2" question="Ở phách 1 của hợp âm G7, những nốt nào an toàn nhất?" options={['G B D F', 'A C E', 'C E G', 'F♯ A']} answer={0} explain="Chord tones của G7 là G B D F." />
+
+<Quiz id="m7-chord-tones-q3" question="Trên Cmaj7, nốt nào nghe chỏi nhất nếu ngân dài ở phách mạnh?" options={['E', 'G', 'F', 'B']} answer={2} explain="F cách E (quãng 3 của hợp âm) chỉ nửa cung phía trên." />
+
+<Quiz id="m7-chord-tones-q4" question="Am và F có nốt chung nào?" options={['A và C', 'E và F', 'G', 'Không có']} answer={0} />

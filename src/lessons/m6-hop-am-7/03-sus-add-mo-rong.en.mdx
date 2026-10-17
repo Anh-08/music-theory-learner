@@ -1,0 +1,63 @@
+export const meta = {
+  title: 'Suspended, added-note and extended chords',
+  description: 'sus2, sus4, add9, 6 and the extensions 9 – 11 – 13: adding colour to chords.',
+  minutes: 15,
+}
+
+## Suspended chords: sus2 and sus4
+
+Replace the 3rd with a 2nd or a 4th and you get a **suspended** chord:
+
+| Chord | Formula | Root D |
+|---|---|---|
+| Dsus2 | 1 – 2 – 5 | D E A |
+| Dsus4 | 1 – 4 – 5 | D G A |
+
+With no 3rd, a suspended chord is **neither major nor minor** — it sounds floating, expectant. The classic use: suspend, then **resolve to the triad**: <PlayChords chords="D Dsus4 D Dsus2 D" seconds={1} />
+
+<OnlyFor instrument="guitar">
+
+<Show root="D" chord="sus4" shape="xx0233" labels="interval" caption="Dsus4 (xx0233): add your little finger on string 1 fret 3" />
+
+<Show root="A" chord="sus2" shape="x02200" labels="interval" caption="Asus2 (x02200): lift the finger on string 2" />
+
+</OnlyFor>
+
+There is also **7sus4** (1 – 4 – 5 – ♭7) — a "suspended" dominant, very often used before V7 or in place of it.
+
+## Added notes: add9 and 6
+
+- **add9** (1 – 3 – 5 – 9): adds the 9th (= the 2nd an octave up) without a 7th. Clear and modern: <PlayChords chords="C Cadd9 C" seconds={1.3} />
+- **6** (1 – 3 – 5 – 6) and **m6** (1 – ♭3 – 5 – 6): sweet, slightly vintage.
+
+<Callout type="note" title="Same notes, different names">
+C6 = C E G A. Am7 = A C E G. **The same four notes!** Whether it is C6 or Am7 depends on which note is in the bass and what role the chord plays in the progression.
+</Callout>
+
+## Extensions: 9, 11, 13
+
+Keep stacking thirds on a 7th chord and you get **extensions** — degrees 2, 4 and 6, but an octave higher:
+
+| Note | Equals | Example |
+|---|---|---|
+| 9 | 2 (an octave up) | C9 = C E G B♭ **D** |
+| 11 | 4 | Cm11 = C E♭ G B♭ D **F** |
+| 13 | 6 | C13 = C E G B♭ D (F) **A** |
+
+Listen: <PlayChords chords="C9 Cmaj9 Cm9" seconds={1.6} />
+
+In practice players **leave notes out**: drop the 5th (it barely affects the colour), and sometimes even the root (the bass player covers it). Keep the **3rd, the 7th and the extension** — those are the colour notes.
+
+<Callout type="tip" title="Careful with the 11 on major chords">
+The 11th (= 4) is only a half step above the major 3rd (F over the E of Cmaj7), so it clashes badly. On major chords players use the **♯11** (F♯) instead — the Lydian colour you will meet in Module 8.
+</Callout>
+
+<Quiz id="m6-mo-rong-q1" question="Which notes make up Asus4?" options={['A D E', 'A C♯ E', 'A B E', 'A C E']} answer={0} />
+
+<Quiz id="m6-mo-rong-q2" question="C6 has the same notes as which chord?" options={['Am7', 'Em7', 'Cmaj7', 'Fmaj7']} answer={0} />
+
+<Quiz id="m6-mo-rong-q3" question="The 9th is…" options={['The 2nd an octave higher', 'An augmented 7th', 'The 4th an octave higher', 'The 6th']} answer={0} />
+
+<Quiz id="m6-mo-rong-q4" question="Why do sus chords sound 'floating'?" options={['They have no 3rd', 'They have two 5ths', 'They are diminished', 'They have a 7th']} answer={0} />
+
+<FindNotes id="m6-mo-rong-find-gsus4" prompt="Click all the notes of Gsus4." targets="G C D" />

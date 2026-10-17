@@ -1,0 +1,63 @@
+export const meta = {
+  title: 'Hợp âm treo, thêm nốt và mở rộng',
+  description: 'sus2, sus4, add9, 6 và các nốt mở rộng 9 – 11 – 13: tô màu cho hợp âm.',
+  minutes: 15,
+}
+
+## Hợp âm treo: sus2 và sus4
+
+Thay quãng 3 bằng quãng 2 hoặc quãng 4, ta có hợp âm **treo** (suspended):
+
+| Hợp âm | Công thức | Gốc D |
+|---|---|---|
+| Dsus2 | 1 – 2 – 5 | D E A |
+| Dsus4 | 1 – 4 – 5 | D G A |
+
+Không có quãng 3 nên hợp âm treo **không trưởng cũng không thứ** — nghe lơ lửng, chờ đợi. Cách dùng kinh điển: treo rồi **giải quyết về hợp âm ba**: <PlayChords chords="D Dsus4 D Dsus2 D" seconds={1} />
+
+<OnlyFor instrument="guitar">
+
+<Show root="D" chord="sus4" shape="xx0233" labels="interval" caption="Dsus4 (xx0233): thêm ngón út ở dây 1 phím 3" />
+
+<Show root="A" chord="sus2" shape="x02200" labels="interval" caption="Asus2 (x02200): nhấc ngón ở dây 2" />
+
+</OnlyFor>
+
+Còn có **7sus4** (1 – 4 – 5 – ♭7) — hợp âm át "treo", rất hay dùng trước khi về V7 hoặc thay cho V7.
+
+## Thêm nốt: add9 và 6
+
+- **add9** (1 – 3 – 5 – 9): thêm quãng 9 (= quãng 2 lên một quãng tám) mà không có quãng 7. Nghe trong trẻo, hiện đại: <PlayChords chords="C Cadd9 C" seconds={1.3} />
+- **6** (1 – 3 – 5 – 6) và **m6** (1 – ♭3 – 5 – 6): ngọt, hơi cổ điển.
+
+<Callout type="note" title="Cùng nốt, khác tên">
+C6 = C E G A. Am7 = A C E G. **Cùng bốn nốt!** Gọi là C6 hay Am7 tùy nốt nào ở bass và hợp âm đóng vai trò gì trong tiến trình.
+</Callout>
+
+## Nốt mở rộng: 9, 11, 13
+
+Cứ chồng tiếp quãng 3 lên hợp âm 7, ta có các nốt **mở rộng** (extensions) — chính là bậc 2, 4, 6 nhưng ở quãng tám trên:
+
+| Nốt | Bằng | Ví dụ |
+|---|---|---|
+| 9 | 2 (lên quãng tám) | C9 = C E G B♭ **D** |
+| 11 | 4 | Cm11 = C E♭ G B♭ D **F** |
+| 13 | 6 | C13 = C E G B♭ D (F) **A** |
+
+Nghe: <PlayChords chords="C9 Cmaj9 Cm9" seconds={1.6} />
+
+Khi chơi thật, người ta thường **bỏ bớt** nốt: bỏ quãng 5 (ít ảnh hưởng màu), có khi bỏ cả nốt gốc (để bass lo). Giữ lại **quãng 3, quãng 7 và nốt mở rộng** — đó là những nốt tạo màu.
+
+<Callout type="tip" title="Cẩn thận với 11 trên hợp âm trưởng">
+Quãng 11 (= 4) cách quãng 3 trưởng chỉ nửa cung (F trên nền E của Cmaj7) nên rất chỏi. Trên hợp âm trưởng người ta dùng **♯11** (F♯) thay vào — màu Lydian bạn sẽ gặp ở Module 8.
+</Callout>
+
+<Quiz id="m6-mo-rong-q1" question="Hợp âm Asus4 gồm những nốt nào?" options={['A D E', 'A C♯ E', 'A B E', 'A C E']} answer={0} />
+
+<Quiz id="m6-mo-rong-q2" question="C6 có cùng nốt với hợp âm nào?" options={['Am7', 'Em7', 'Cmaj7', 'Fmaj7']} answer={0} />
+
+<Quiz id="m6-mo-rong-q3" question="Quãng 9 chính là?" options={['Quãng 2 lên một quãng tám', 'Quãng 7 tăng', 'Quãng 4 lên một quãng tám', 'Quãng 6']} answer={0} />
+
+<Quiz id="m6-mo-rong-q4" question="Vì sao hợp âm sus 'lơ lửng'?" options={['Vì không có quãng 3', 'Vì có hai quãng 5', 'Vì là hợp âm giảm', 'Vì có quãng 7']} answer={0} />
+
+<FindNotes id="m6-mo-rong-find-gsus4" prompt="Bấm đủ các nốt của Gsus4." targets="G C D" />

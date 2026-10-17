@@ -1,0 +1,47 @@
+export const meta = {
+  title: 'Cấu trúc bài và viết tiến trình',
+  description: 'Verse, chorus, bridge — và cách viết tiến trình cho từng đoạn để bài hát có cao trào.',
+  minutes: 15,
+}
+
+Đến đây bạn đã có đủ "nguyên liệu": scale, hợp âm, tiến trình, màu hòa âm. Module cuối ghép tất cả thành **một bài hát**.
+
+## Các đoạn của một bài hát
+
+| Đoạn | Vai trò |
+|---|---|
+| Intro | Dạo đầu, giới thiệu không khí |
+| Verse (phiên khúc) | Kể chuyện; giai điệu thấp, năng lượng vừa phải |
+| Pre-chorus | Đoạn chuyển, tăng dần căng thẳng |
+| Chorus (điệp khúc) | Ý chính, "hook" — cao trào, dễ nhớ nhất |
+| Bridge | Đổi không khí một lần trước điệp khúc cuối |
+| Outro | Kết bài |
+
+Hai dạng phổ biến: **Verse – Chorus – Verse – Chorus – Bridge – Chorus** (pop) và **AABA** (nhiều bài cổ điển, jazz standard).
+
+## Viết tiến trình cho từng đoạn
+
+Mẹo tạo **tương phản** giữa verse và chorus:
+
+- **Hợp âm mở đầu khác nhau**: verse bắt đầu bằng **vi** (buồn, kể lể), chorus bắt đầu bằng **IV** hoặc **I** (mở ra, sáng).
+- **Nhịp đổi hợp âm**: verse mỗi hợp âm 2 ô nhịp, chorus mỗi ô nhịp một hợp âm → chorus nghe "dồn" hơn.
+- **Kết lửng – kết trọn**: verse kết ở **V** (lửng, chờ chorus), chorus kết ở **I**.
+- **Bridge dùng màu lạ**: hợp âm mượn (♭VI, ♭VII, iv) hoặc át phụ (Module 9).
+
+Ví dụ giọng C. Verse:
+
+<Jam progression="Am*2 F*2 C*2 G*2" songKey="C" groove="ballad" />
+
+Chorus:
+
+<Jam progression="F G C Am F G C C" songKey="C" groove="pop" />
+
+<Callout type="practice" title="Viết thử">
+Viết một verse 8 ô nhịp và một chorus 8 ô nhịp ở giọng G, theo các mẹo trên. Gõ vào **Jam Room** để nghe với nhạc nền, sửa tới khi bạn thấy chorus thực sự "bùng" lên so với verse.
+</Callout>
+
+<Quiz id="m10-cau-truc-q1" question="Đoạn nào thường là cao trào, dễ nhớ nhất?" options={['Chorus', 'Verse', 'Intro', 'Outro']} answer={0} />
+
+<Quiz id="m10-cau-truc-q2" question="Để verse 'chờ' chorus, verse nên kết ở hợp âm nào?" options={['V (kết lửng)', 'I (kết trọn)', 'vi', 'iii']} answer={0} />
+
+<Quiz id="m10-cau-truc-q3" question="Cách nào giúp chorus nghe 'dồn' hơn verse?" options={['Đổi hợp âm thường xuyên hơn', 'Chơi chậm lại', 'Bỏ hết hợp âm', 'Dùng đúng tiến trình của verse']} answer={0} />
