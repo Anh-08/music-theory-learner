@@ -340,6 +340,96 @@ Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — ch�
 
 > Ghi chú: trang `#/connect` (menu Công cụ) kết nối đàn MIDI hoặc micro; nhận diện cao độ bằng phương pháp McLeod tự viết (`src/input/pitch.ts`), không gửi âm thanh đi đâu. Đàn thật dùng được trong bài luyện tên nốt, bài "bấm trên đàn", nhận diện hợp âm, Explorer và chấm nhịp ở trang Đệm guitar. PWA qua `vite-plugin-pwa`: cài được lên điện thoại, dùng offline (sample piano được lưu sau lần nghe đầu). Explorer có thêm tuning bass 4/5 dây, ukulele, ukulele baritone, mandolin.
 
+### Giai đoạn 7 — Luyện phản xạ hợp âm (guitar)
+
+Mục tiêu: hợp âm hiện lên **liên tục theo metronome**, người dùng phải đổi tay kịp; nhờ các hợp âm nối nhau **mượt** nên luyện lâu không thấy khó chịu, và tai tự quen cách hợp âm đi với nhau. Khác Rhythm Trainer ở chỗ tiến trình **không lặp cố định** mà luôn thay đổi, nên không học thuộc được — phải đọc và phản xạ.
+
+Đã chốt: chỉ cho guitar; **không dùng micro, không chấm điểm** — người dùng tự tập theo metronome; màn hình **chỉ có hợp âm**, không hiện số La Mã hay lời giải thích.
+
+**Màn hình** (trang mới `#/reflex/chords`, menu *Luyện phản xạ*):
+- Một "băng chạy" ngang: hợp âm **hiện tại** to ở giữa kèm thế bấm, 1–2 hợp âm **sắp tới** mờ hơn bên phải (để chuẩn bị tay), đèn phách nháy theo metronome. Đếm ngược 1 ô nhịp trước khi bắt đầu.
+- Thế bấm lấy từ `chordShapes` (`src/theory/guitarShapes.ts`), ưu tiên thế **gần thế trước** để tay ít phải nhảy.
+- Âm thanh: chỉ metronome (phách 1 nhấn mạnh). Tùy chọn bật tiếng hợp âm mẫu, mặc định tắt.
+
+**Cách đánh — 2 kiểu:**
+1. **Quạt theo phách**: mỗi phách metronome quạt xuống 1 lần; mỗi hợp âm giữ N phách (4 → 2 → 1).
+2. **Một lượt điệu**: mỗi hợp âm chơi đúng **1 lượt điệu** (1 ô nhịp) của điệu đã chọn trong `src/audio/rhythms.ts`, hiện pattern nhỏ dưới hợp âm bằng `<PatternView />`; số phách theo nhịp của điệu (3/4, 4/4, 12/8).
+
+**Nguồn hợp âm — làm sao cho mượt:**
+- **Nối vòng**: các tiến trình quen tai (I–V–vi–IV, vi–IV–I–V, I–vi–IV–V, ii–V–I, vòng Canon…), mỗi vòng chơi 1–2 lần rồi nối sang vòng khác **cùng giọng**, ở ranh giới ô nhịp; chỉ nối khi hợp âm cuối vòng trước đi tự nhiên sang hợp âm đầu vòng sau (ví dụ kết ở V thì vòng sau bắt đầu bằng I hoặc vi).
+- **Tự sinh**: "đồ thị hòa âm" trong giọng — nút là các hợp âm thuận giọng, cạnh có trọng số theo thói quen nhạc phổ thông (I → bất kỳ; ii → V; iii → vi, IV; IV → V, I, ii; V → I, vi; vi → ii, IV). Ưu tiên bước chuyển có **nốt chung** và bước nhảy gốc quãng 4/5; câu 4 hoặc 8 ô nhịp, luôn **kết bằng cadence** (V–I, IV–I) để nghe tròn câu. Bỏ vii° ở mức dễ (khó bấm, nghe gắt).
+- **Tránh khó chịu**: không đổi giọng đột ngột. Chỉ khi bật tùy chọn mới đổi giọng, và chỉ sang giọng gần (giọng tương đối, giọng cách một dấu hóa) qua **hợp âm chung** (pivot chord).
+- **Tự nhập**: gõ vài tiến trình (dùng `parseProgression`), app nối chúng theo quy tắc trên.
+- Bộ sinh ngẫu nhiên có seed để chia sẻ qua URL (`?seed=`).
+
+**Mức khó** (chỉnh riêng từng cái, hoặc chọn sẵn Dễ / Vừa / Khó):
+- Số phách mỗi hợp âm (kiểu quạt theo phách), tempo, tùy chọn tự tăng tempo sau mỗi câu.
+- Ẩn thế bấm (chỉ còn tên hợp âm).
+- Giọng: chỉ giọng dễ bấm thế mở (C, G, D, A, E, Am, Em, Dm) → mọi giọng (thêm hợp âm chặn).
+- Loại hợp âm: hợp âm ba → thêm 7 (V7, ii7…) → thêm sus/add9.
+
+**Việc cần làm:**
+- [ ] `src/theory/chordFlow.ts`: đồ thị chức năng có trọng số "mượt", sinh câu có cadence, nối vòng, đổi giọng qua pivot, seed. Test kỹ (mọi bước chuyển nằm trong danh sách cho phép, câu luôn kết đúng, cùng seed ra cùng chuỗi).
+- [ ] Chọn thế bấm gần nhau cho cả chuỗi hợp âm.
+- [ ] Component băng chạy hợp âm + trang `#/reflex/chords`, metronome và chế độ một lượt điệu (dùng lại lịch phát của Rhythm Trainer).
+- [ ] Bài học song ngữ ngắn ở nhánh guitar, nhúng `<ChordReflex />`; chuỗi giao diện trong `src/i18n/messages.ts`.
+
+### Giai đoạn 8 — Luyện phản xạ nốt trên cần đàn guitar
+
+Mục tiêu: thấy tên nốt là bấm được ngay, không phải đếm ngăn. Nốt hiện lên liên tục theo thời gian giới hạn (hoặc theo metronome), giống Giai đoạn 7 nhưng với từng nốt.
+
+**Cách chỉ nốt cần tìm — theo vùng cần đàn (mặc định).** Trên một dây, nốt cùng tên lặp lại sau 12 ngăn, nên chia cần đàn thành 2 vùng: **ngăn 0–11** và **ngăn 12–22**. Trong mỗi vùng, mỗi tên nốt chỉ có **đúng một vị trí** trên một dây. Màn hình hiện tên nốt (Mi) kèm một **cần đàn thu nhỏ**, vùng cần tìm được tô sáng; không cần biết quãng tám hay ký hiệu gì thêm.
+
+```
+        Dây 6
+         Mi
+  ┌────────────┬──────────┐
+  │░░░░░░░░░░░░│██████████│   ← vùng tô sáng = nơi cần tìm
+  └────────────┴──────────┘
+   0          11 12        22    (đáp án: ngăn 12)
+```
+
+**Tên có quãng tám — chế độ nâng cao** (bật trong cài đặt của trang, dành cho người đã vững nhạc lý): dùng ký hiệu cao độ khoa học theo cao độ thật — dây 6 buông là **E2**, ngăn 12 dây 6 là **E3**, dây 1 buông là **E4**; bản tiếng Việt hiện *Mi3 (E3)*. Khi bật thì ẩn cần đàn thu nhỏ. Không dùng "Mi thấp / Mi cao" vì cả cần đàn có tới 4 nốt Mi khác cao độ (E2–E5).
+
+**Phần 1 — Trên một dây**
+- Chọn một dây (hoặc để app đổi dây sau mỗi N nốt).
+- **Cấp 1 — một vùng cố định**: chỉ luyện trong ngăn 0–11 (hoặc chỉ 12–22). Vùng không đổi nên chỉ cần nhớ tên nốt. Đây là cách vào dễ nhất.
+- **Cấp 2 — cả dây**: mỗi lượt app chọn ngẫu nhiên vùng, cần đàn thu nhỏ cho biết vùng nào; người dùng phải bấm **đúng nốt trong vùng đó**.
+- **Cấp 3 — nâng cao**: như cấp 2 nhưng chỉ hiện tên có quãng tám (E2 / E3), không có cần đàn thu nhỏ.
+- Về ý "bấm tất cả nốt Mi trên dây": trên một dây hai nốt cùng tên luôn cách nhau đúng 12 ngăn, nên tìm được một nốt là suy ra nốt kia — đúng như lo ngại, người dùng sẽ "cộng 12" thay vì nhớ. Vì vậy **không dùng** chế độ "tìm tất cả" cho một dây; dùng cấp 1 + cấp 2 ở trên. Chế độ "tìm tất cả" chỉ có ý nghĩa trên nhiều dây (xem dưới).
+
+**Phần 2 — Trên nhiều dây**
+- **Tên nốt + dây**: "Fa♯ — dây 3", dây chọn ngẫu nhiên trong các dây được bật; cần đàn thu nhỏ tô sáng dây và vùng cần tìm. Có cấp 1–3 như phần 1.
+- **Tìm tất cả trên cần đàn**: "Tìm mọi nốt Fa♯ từ ngăn 0 đến 12" — bấm hết các vị trí trên mọi dây. Ở đây không có mẹo "cộng 12" vì các dây lệch nhau quãng 4 (riêng dây 3–2 là quãng 3 trưởng), nên người dùng học được **hình quãng tám** giữa các dây. Có giới hạn thời gian cho cả lượt.
+- **Cao độ chính xác** (chỉ có ở chế độ nâng cao, vì cần tên có quãng tám): "Tìm mọi vị trí của G3" — cùng một cao độ có ở nhiều dây (dây 6 ngăn 15, dây 5 ngăn 10, dây 4 ngăn 5, dây 3 buông). Rất có ích khi solo: biết chơi một câu ở nhiều vị trí.
+- **Theo thế (position)**: giới hạn trong một khung 4–5 ngăn (ví dụ ngăn 5–8), mọi dây — đúng cách nghĩ khi improvise trong một hộp scale.
+
+**Cơ chế phản xạ (dùng chung cho mọi chế độ):**
+- Mỗi nốt có thời gian giới hạn (ví dụ 5 giây → 1,5 giây), hoặc nốt đổi theo metronome (1 nốt mỗi ô nhịp → mỗi phách).
+- Sau khi bấm: phát tiếng nốt đó (gắn tai với vị trí), tô xanh/đỏ, hiện vị trí đúng nếu sai hoặc hết giờ.
+- Nốt yếu (sai nhiều, phản ứng chậm) xuất hiện thường hơn; lưu theo từng **vị trí dây/ngăn** vào lịch Leitner (`note-pos:3:11`).
+- **Bản đồ nhiệt** cần đàn cuối buổi: ô nào chậm/sai nhiều tô đậm — thấy ngay "vùng mù" (thường là ngăn 6–11 trên dây 3, 4).
+- Kỷ lục cá nhân: số nốt đúng / phút, thời gian phản ứng trung bình.
+- Chế độ ngược (đã có một phần ở `NoteDrill`): app chỉ một vị trí → người dùng gọi tên nốt.
+
+**Cách nhận câu trả lời:**
+- **Bấm trên đàn ảo** (`<Fretboard />` với `onNoteClick`) — cách mặc định: biết chính xác dây + ngăn.
+- **Đàn thật qua micro** (tùy chọn): nhận cao độ đúng đến quãng tám (đủ cho cấp 2 và chế độ cao độ chính xác), nhưng **không phân biệt được dây** — E3 ở dây 6 ngăn 12 và dây 4 ngăn 2 nghe như nhau. Với chế độ "tên nốt + dây" thì chấp nhận đúng cao độ (người dùng tự giữ đúng dây). Với "tìm tất cả", người dùng đánh lần lượt từng vị trí, app đếm số cao độ khác nhau đã nghe.
+- Tuning lấy theo cài đặt (Standard, Drop D…), nên dùng được cho bass/ukulele luôn.
+
+**Việc cần làm:**
+- [ ] `src/theory/fretTargets.ts`: sinh mục tiêu theo chế độ/dây/vùng/tuning (đảm bảo mỗi tên nốt chỉ có một vị trí trong vùng trên một dây), kiểm tra câu trả lời (vị trí hoặc cao độ), chọn nốt theo trọng số yếu. Dùng `fretboardPositions` / `positionForMidi` trong `src/theory/fretboard.ts`. Test kỹ.
+- [ ] Component cần đàn thu nhỏ chỉ vùng/dây; trang `#/reflex/notes`: thanh chọn chế độ, công tắc chế độ nâng cao, đếm giờ/metronome, đàn ảo, phản hồi.
+- [ ] Nối micro (cao độ có quãng tám) + MIDI.
+- [ ] Bản đồ nhiệt, kỷ lục, lịch ôn theo vị trí.
+- [ ] Bài học song ngữ ngắn ở Module 0 ("Thuộc cần đàn"), nhúng `<FretReflex mode="..." />`.
+
+**Đã chốt với người dùng (18/10/2026):**
+1. Phản xạ hợp âm chỉ cho guitar, không dùng micro, không chấm điểm.
+2. Hợp âm đổi theo metronome: quạt 1 lần mỗi phách, hoặc chơi 1 lượt điệu cho mỗi hợp âm.
+3. Màn hình chỉ hiện hợp âm, không giải thích; ưu tiên chuyển hợp âm mượt.
+4. Luyện nốt: mặc định chỉ nốt bằng **vùng cần đàn**; tên E2/E3 là chế độ nâng cao cho người đã vững nhạc lý.
+
 ## 10. Trạng thái (17/10/2026)
 
 Đã xong toàn bộ 6 giai đoạn: 48 bài học song ngữ (Module 0–10 và nhánh guitar), Explorer, Key Explorer, nhận diện hợp âm, Jam Room, trang tập đệm, ôn tập lặp lại ngắt quãng, kết nối đàn thật, PWA.
