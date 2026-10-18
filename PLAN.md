@@ -365,16 +365,20 @@ Mục tiêu: hợp âm hiện lên **liên tục theo metronome**, người dùn
 **Mức khó** (chỉnh riêng từng cái, hoặc chọn sẵn Dễ / Vừa / Khó):
 - Số phách mỗi hợp âm (kiểu quạt theo phách), tempo, tùy chọn tự tăng tempo sau mỗi câu.
 - Ẩn thế bấm (chỉ còn tên hợp âm).
-- Giọng: chỉ giọng dễ bấm thế mở (C, G, D, A, E, Am, Em, Dm) → mọi giọng (thêm hợp âm chặn).
+- Giọng: chọn trong 14 giọng hay gặp khi đệm hát (C, G, D, A, E, F, B♭, Am, Em, Dm, Bm, F♯m, Gm, Cm).
 - Loại hợp âm: hợp âm ba → thêm 7 (V7, ii7…) → thêm sus/add9.
 
 **Việc cần làm:**
-- [ ] `src/theory/chordFlow.ts`: đồ thị chức năng có trọng số "mượt", sinh câu có cadence, nối vòng, đổi giọng qua pivot, seed. Test kỹ (mọi bước chuyển nằm trong danh sách cho phép, câu luôn kết đúng, cùng seed ra cùng chuỗi).
-- [ ] Chọn thế bấm gần nhau cho cả chuỗi hợp âm.
-- [ ] Component băng chạy hợp âm + trang `#/reflex/chords`, metronome và chế độ một lượt điệu (dùng lại lịch phát của Rhythm Trainer).
-- [ ] Bài học song ngữ ngắn ở nhánh guitar, nhúng `<ChordReflex />`; chuỗi giao diện trong `src/i18n/messages.ts`.
+- [x] `src/theory/chordFlow.ts`: đồ thị chức năng có trọng số "mượt", sinh câu có cadence, nối vòng, đổi giọng qua pivot, seed. Test kỹ (mọi bước chuyển nằm trong danh sách cho phép, câu luôn kết đúng, cùng seed ra cùng chuỗi).
+- [x] Chọn thế bấm gần nhau cho cả chuỗi hợp âm.
+- [x] Component băng chạy hợp âm + trang `#/reflex/chords`, metronome và chế độ một lượt điệu (dùng lại lịch phát của Rhythm Trainer).
+- [x] Bài học song ngữ ngắn ở nhánh guitar, nhúng `<ChordReflex />`; chuỗi giao diện trong `src/i18n/messages.ts`.
 
-### Giai đoạn 8 — Luyện phản xạ nốt trên cần đàn guitar
+> Ghi chú: trang `#/reflex/chords` (mục *Phản xạ hợp âm* trên thanh chính, nhận `?seed=` để chia sẻ đúng một chuỗi). Bộ sinh ở `src/theory/chordFlow.ts`, lịch phát riêng ở `src/audio/reflex.ts` (Transport `scheduleRepeat` mỗi phách, chuỗi vô hạn — không dùng vòng lặp cố định của Jam Room), giao diện ở `src/features/reflex/`. Mức Dễ / Vừa / Khó là bộ cài đặt sẵn. Trong bài học: `<ChordReflex level="easy" source="loops" songKey="G" />`; bài Đ8 "Đổi hợp âm theo phản xạ".
+
+✅ *Kết quả: hợp âm chạy liên tục theo metronome, không học thuộc được, nối nhau mượt.*
+
+### Giai đoạn 8 — Luyện phản xạ nốt trên cần đàn guitar (làm từ 19/10/2026)
 
 Mục tiêu: thấy tên nốt là bấm được ngay, không phải đếm ngăn. Nốt hiện lên liên tục theo thời gian giới hạn (hoặc theo metronome), giống Giai đoạn 7 nhưng với từng nốt.
 
@@ -430,9 +434,11 @@ Mục tiêu: thấy tên nốt là bấm được ngay, không phải đếm ng�
 3. Màn hình chỉ hiện hợp âm, không giải thích; ưu tiên chuyển hợp âm mượt.
 4. Luyện nốt: mặc định chỉ nốt bằng **vùng cần đàn**; tên E2/E3 là chế độ nâng cao cho người đã vững nhạc lý.
 
-## 10. Trạng thái (17/10/2026)
+## 10. Trạng thái (18/10/2026)
 
 Đã xong toàn bộ 6 giai đoạn: 48 bài học song ngữ (Module 0–10 và nhánh guitar), Explorer, Key Explorer, nhận diện hợp âm, Jam Room, trang tập đệm, ôn tập lặp lại ngắt quãng, kết nối đàn thật, PWA.
+
+Giai đoạn 7 (luyện phản xạ hợp âm) xong ngày 18/10/2026; Giai đoạn 8 (phản xạ nốt trên cần đàn) bắt đầu từ 19/10/2026.
 
 Bổ sung sau: trang **Thế bấm hợp âm** (`#/chords`, menu Công cụ) — bộ tìm thế bấm tự động (`src/theory/guitarShapes.ts`) cho 31 loại hợp âm (thêm m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) ở nhiều vị trí, có số ngón và chặn; đổi thế bấm của từng hợp âm ngay trong trang Đệm guitar; bài Đ7 "Thế bấm hợp âm".
 

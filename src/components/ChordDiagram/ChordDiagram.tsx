@@ -10,13 +10,15 @@ interface ChordDiagramProps {
   /** Dây nốt gốc (dây 6 → 1) để tô đỏ. */
   rootStrings?: boolean[]
   size?: number
+  /** Không vẽ tên trên sơ đồ (tên đã hiện bên ngoài) — tên vẫn dùng cho trình đọc màn hình. */
+  hideName?: boolean
 }
 
 const STRINGS = 6
 const FRETS = 5
 
 /** Sơ đồ hợp âm dạng ô dọc như sách hợp âm: dây dọc, phím ngang, chấm ghi số ngón; x / o ở trên. */
-export function ChordDiagram({ shape, name, labels, rootStrings, size = 150 }: ChordDiagramProps) {
+export function ChordDiagram({ shape, name, labels, rootStrings, size = 150, hideName = false }: ChordDiagramProps) {
   const { t } = useT()
   const fretted = shape.frets.filter((f): f is number => f !== null && f > 0)
   const maxF = fretted.length ? Math.max(...fretted) : 0
@@ -34,7 +36,7 @@ export function ChordDiagram({ shape, name, labels, rootStrings, size = 150 }: C
 
   return (
     <svg viewBox={`0 0 ${W} ${H}`} width={size} height={(size * H) / W} role="img" aria-label={t('shapes.diagramAria', { name: name ?? '', frets })} className="select-none">
-      {name && (
+      {name && !hideName && (
         <text x={W / 2} y={10} textAnchor="middle" className="fill-stone-800 text-[11px] font-bold dark:fill-stone-100">
           {name}
         </text>

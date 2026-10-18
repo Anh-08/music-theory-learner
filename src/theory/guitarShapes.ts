@@ -195,3 +195,21 @@ export function shapeMidis(shape: ChordShape): (number | null)[] {
 export function shapeId(shape: Pick<ChordShape, 'frets'>): string {
   return shape.frets.map((f) => (f === null ? 'x' : f)).join(shape.frets.some((f) => (f ?? 0) >= 10) ? ',' : '')
 }
+
+/**
+ * Chọn thế bấm cho hợp âm kế tiếp: gần vị trí thế đang bấm nhất (tay ít phải nhảy),
+ * hơi ưu tiên thế quen thuộc (đứng đầu danh sách). Không có thế trước thì lấy thế quen thuộc.
+ */
+export function nearestShape(shapes: ChordShape[], prev?: ChordShape): ChordShape | undefined {
+  if (!prev || shapes.length < 2) return shapes[0]
+  let best = shapes[0]
+  let bestCost = Infinity
+  shapes.forEach((s, i) => {
+    const cost = Math.abs(s.position - prev.position) + Math.abs(s.bassString - prev.bassString) * 0.5 + i * 0.4
+    if (cost < bestCost) {
+      best = s
+      bestCost = cost
+    }
+  })
+  return best
+}

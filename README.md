@@ -15,6 +15,7 @@ Kế hoạch chi tiết: [PLAN.md](PLAN.md)
 - **Jam Room**: gõ tiến trình (ký hiệu hợp âm hoặc số La Mã), ứng dụng đoán giọng, phát nhạc nền trống – bass – đệm, tô nốt của hợp âm đang vang theo thời gian thực và gợi ý scale để improvise.
 - **Đệm guitar**: 24 điệu quạt / móc (cả 3/4 và 12/8) trên lưới phách có vạch chạy, tăng tempo dần, tự tạo điệu, chấm độ đều tay qua micro, đổi thế bấm của từng hợp âm.
 - **Thế bấm hợp âm**: nhiều cách bấm cho mọi hợp âm (trưởng, thứ, sus, dim, aug, 6, 7, maj7, m7♭5, dim7, 9, 11, 13, 7♭9, 7♯9…) với sơ đồ, số ngón, chặn và nút nghe.
+- **Phản xạ hợp âm**: hợp âm hiện liên tục theo metronome, không lặp một vòng cố định nhưng luôn nối nhau mượt (vòng quen thuộc, tự sinh theo chức năng, hoặc tự nhập); quạt theo phách hoặc một lượt điệu, xem trước hợp âm tiếp theo, mức Dễ / Vừa / Khó.
 - **Công cụ**: Key Explorer (vòng quãng năm, hợp âm thuận giọng và chức năng), nhận diện hợp âm, kết nối đàn thật (MIDI hoặc micro).
 - **Ôn tập hằng ngày**: 7 bộ thẻ sinh câu hỏi ngẫu nhiên, lịch ôn lặp lại ngắt quãng.
 - Tiến độ lưu trong trình duyệt, xuất / nhập được bằng file JSON. Không có tài khoản, không gửi dữ liệu đi đâu.
