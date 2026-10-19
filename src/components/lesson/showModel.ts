@@ -23,19 +23,19 @@ import {
 
 export type PlayMode = 'run' | 'arp' | 'chord' | 'sequence' | 'none'
 
-/** Thuộc tính mô tả "cần hiển thị gì" — dùng trực tiếp trong MDX. */
+/** Props describing "what to show" — used directly in MDX. */
 export interface ShowSpec {
-  /** Chủ âm, ví dụ "C", "F#", "Bb". */
+  /** Root, e.g. "C", "F#", "Bb". */
   root?: string
-  /** Loại scale (id trong SCALE_TYPES), cần `root`. */
+  /** Scale type (id in SCALE_TYPES), requires `root`. */
   scale?: string
-  /** Loại hợp âm (id trong CHORD_TYPES), cần `root`. */
+  /** Chord type (id in CHORD_TYPES), requires `root`. */
   chord?: string
-  /** Danh sách nốt cách nhau bởi khoảng trắng; có số quãng tám ("C4 E4 G4") thì piano chỉ tô đúng các phím đó. */
+  /** Space-separated notes; with octave numbers ("C4 E4 G4") piano highlights exactly those keys. */
   notes?: string
-  /** Thế bấm guitar từ dây 6 → 1: "x32010" hoặc "8,10,10,9,8,8". */
+  /** Guitar shape from string 6 → 1: "x32010" or "8,10,10,9,8,8". */
   shape?: string
-  /** Vị trí guitar "dây:phím": "6:3 5:2". */
+  /** Guitar positions "string:fret": "6:3 5:2". */
   positions?: string
   labels?: LabelMode
   play?: PlayMode
@@ -52,7 +52,7 @@ export interface ShowModel {
 
 const STANDARD = tuning('standard')
 
-/** Xếp các nốt (không có quãng tám) đi lên liên tiếp, bắt đầu từ `low`. */
+/** Stacks notes (without octaves) upward one after another, starting from `low`. */
 export function ascendingMidis(notes: string[], low: number): number[] {
   const out: number[] = []
   for (const n of notes) {
@@ -72,7 +72,7 @@ export function buildShow(spec: ShowSpec, instrument: InstrumentId, locale: Loca
   let defaultPlay: PlayMode
 
   if (spec.scale || spec.chord) {
-    if (!spec.root) throw new Error('<Show> cần `root` khi dùng `scale` hoặc `chord`')
+    if (!spec.root) throw new Error('<Show> needs `root` when using `scale` or `chord`')
     const info = spec.scale ? scaleFromRoot(spec.root, spec.scale) : chordFromRoot(spec.root, spec.chord!)
     notes = info.notes
     intervals = info.intervals
@@ -96,10 +96,10 @@ export function buildShow(spec: ShowSpec, instrument: InstrumentId, locale: Loca
     }
     defaultPlay = 'sequence'
   } else {
-    throw new Error('<Show> cần `scale`, `chord` hoặc `notes`')
+    throw new Error('<Show> needs `scale`, `chord` or `notes`')
   }
 
-  // Thế bấm / vị trí chỉ áp dụng cho guitar; trên piano vẫn phát các nốt đã dựng ở trên.
+  // Shapes / positions only apply to guitar; on piano the notes built above are still played.
   let only: StringFret[] | undefined
   if (spec.shape) {
     only = parseShape(spec.shape)
@@ -128,7 +128,7 @@ export function buildShow(spec: ShowSpec, instrument: InstrumentId, locale: Loca
   return { notes, labels, highlights: makeHighlights(notes, labels, labelMode, locale), only, onlyMidis, events }
 }
 
-/** Khoảng phím piano đủ chứa các phím cần tô, tối thiểu C3–B4, luôn bắt đầu ở C và kết thúc ở B. */
+/** Piano key range wide enough for the highlighted keys, at least C3–B4, always starting on C and ending on B. */
 export function pianoRangeFor(midis?: ReadonlySet<number>): [number, number] {
   let lo = 48
   let hi = 71

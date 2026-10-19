@@ -7,9 +7,9 @@ interface RhythmGridProps {
   steps: Step[]
   beatsPerBar: number
   stepsPerBeat: number
-  /** Bước đang vang (vạch chạy), -1 nếu không phát. */
+  /** Step currently sounding (playhead), -1 when not playing. */
   current?: number
-  /** Có thì bấm vào ô để sửa điệu. */
+  /** If given, clicking a cell edits the rhythm. */
   onChange?: (steps: Step[]) => void
 }
 
@@ -20,7 +20,7 @@ function strumSymbol(step: Step): { text: string; value: MessageKey; light?: boo
   return { text: '↑', value: step.light ? 'grid.lightUp' : 'grid.up', light: step.light }
 }
 
-/** Lưới phách: mỗi cột là một bước của ô nhịp, các hàng là quạt / bass / từng dây. */
+/** Rhythm grid: each column is a step of the bar, rows are strum / bass / each string. */
 export function RhythmGrid({ steps, beatsPerBar, stepsPerBeat, current = -1, onChange }: RhythmGridProps) {
   const { t } = useT()
   const editing = Boolean(onChange)

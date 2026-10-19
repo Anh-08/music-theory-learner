@@ -1,13 +1,13 @@
 import { useSyncExternalStore } from 'react'
 
 export interface JamState {
-  /** Id của JamPlayer đang phát, hoặc null khi không phát. */
+  /** Id of the JamPlayer that is playing, or null when stopped. */
   ownerId: string | null
-  /** Ô nhịp đang phát (tính từ 0 trong vòng lặp). */
+  /** Bar being played (from 0 within the loop). */
   bar: number
-  /** Bước đang phát trong điệu guitar (nếu có). */
+  /** Step being played in the guitar rhythm (if any). */
   step: number
-  /** Tempo hiện tại (thay đổi khi bật "tăng tempo dần"). */
+  /** Current tempo (changes when "gradual tempo increase" is on). */
   tempo: number
 }
 

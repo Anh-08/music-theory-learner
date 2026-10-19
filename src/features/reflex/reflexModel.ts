@@ -6,13 +6,13 @@ export type ReflexLevel = 'easy' | 'medium' | 'hard'
 
 export interface ReflexSettings {
   source: FlowSource
-  /** Giọng: "C", "Am"… */
+  /** Key: "C", "Am"… */
   key: string
-  /** Các vòng tự nhập, mỗi dòng một vòng. */
+  /** Custom loops, one loop per line. */
   custom: string
   mode: ReflexMode
   beatsPerChord: 1 | 2 | 4
-  /** Id điệu (chế độ một lượt điệu). */
+  /** Rhythm id (one-rhythm-pass mode). */
   rhythm: string
   phraseLength: 4 | 8
   tempo: number
@@ -43,7 +43,7 @@ export const DEFAULT_REFLEX: ReflexSettings = {
   ramp: false,
 }
 
-/** Cài đặt sẵn theo mức: chỉ đụng tới độ khó, không đổi giọng / nguồn / điệu. */
+/** Level presets: only touch difficulty, never the key / source / rhythm. */
 export const LEVELS: Record<ReflexLevel, Partial<ReflexSettings>> = {
   easy: { beatsPerChord: 4, tempo: 70, sevenths: false, colors: false, modulate: false, hideShapes: false },
   medium: { beatsPerChord: 2, tempo: 80, sevenths: true, colors: false, modulate: false, hideShapes: false },
@@ -54,10 +54,10 @@ export function levelOf(s: ReflexSettings): ReflexLevel | null {
   return (Object.keys(LEVELS) as ReflexLevel[]).find((l) => Object.entries(LEVELS[l]).every(([k, v]) => s[k as keyof ReflexSettings] === v)) ?? null
 }
 
-/** Giọng cho người tập chọn: các giọng hay gặp khi đệm hát. */
+/** Keys offered to the learner: the keys most common when accompanying singing. */
 export const REFLEX_KEYS = ['C', 'G', 'D', 'A', 'E', 'F', 'Bb', 'Am', 'Em', 'Dm', 'Bm', 'F#m', 'Gm', 'Cm']
 
-/** Đọc các vòng tự nhập: mỗi dòng (hoặc mỗi đoạn cách nhau bởi ";") là một vòng. */
+/** Parses custom loops: each line (or each ";"-separated segment) is one loop. */
 export function parseCustomLoops(text: string, keyText: string): { loops: ProgressionChord[][]; error: unknown } {
   const lines = text
     .split(/[\n;]+/)
@@ -71,8 +71,8 @@ export function parseCustomLoops(text: string, keyText: string): { loops: Progre
 }
 
 /**
- * Nguồn hợp âm cho băng chạy: chuỗi từ `chordFlow`, kèm thế bấm (thế quen thuộc hoặc thế gần thế trước)
- * và số phách (một lượt điệu = một ô nhịp; hợp âm kéo dài nhiều ô như "C*2" thì nhân lên).
+ * Chord source for the running tape: the `chordFlow` stream, with shapes (the familiar shape or one near the previous)
+ * and beat counts (one rhythm pass = one bar; chords lasting several bars like "C*2" are multiplied).
  */
 export function reflexSource(s: ReflexSettings, seed: number, beatsPerBar: number, customLoops: ProgressionChord[][] = []): () => ReflexSlot {
   const next = chordFlow(

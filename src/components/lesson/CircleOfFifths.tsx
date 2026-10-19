@@ -5,7 +5,7 @@ import { useT } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
 import { chordFromRoot, chroma, displayNote, rootMidiAtOrAbove, stackIntervals, type KeyRef } from '../../theory'
 
-/** Các giọng theo chiều kim đồng hồ: mỗi bước lên một quãng 5 đúng. */
+/** Keys clockwise: each step goes up a perfect fifth. */
 const KEYS = [
   { major: 'C', minor: 'A', sig: '' },
   { major: 'G', minor: 'E', sig: '1♯' },
@@ -25,15 +25,15 @@ const SIZE = 340
 const C = SIZE / 2
 
 interface CircleOfFifthsProps {
-  /** Giọng trưởng cần tô (dùng trong bài học). */
+  /** Major key to highlight (used in lessons). */
   highlight?: string
-  /** Giọng đang chọn (Key Explorer) — tô cả giọng trưởng lẫn giọng thứ. */
+  /** Selected key (Key Explorer) — highlights both the major and the relative minor. */
   selected?: KeyRef
-  /** Có thì bấm vào giọng để chọn (vẫn nghe hợp âm chủ). */
+  /** If given, clicking a key selects it (the tonic chord still plays). */
   onSelect?: (key: KeyRef) => void
 }
 
-/** Vòng quãng năm: vòng ngoài là giọng trưởng, vòng trong là giọng thứ tương ứng. Bấm để nghe hợp âm chủ. */
+/** Circle of fifths: outer ring is major keys, inner ring the relative minors. Click to hear the tonic chord. */
 export function CircleOfFifths({ highlight, selected, onSelect }: CircleOfFifthsProps) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)

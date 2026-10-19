@@ -6,15 +6,15 @@ export type LiveSource = 'none' | 'midi' | 'mic'
 export interface LiveState {
   source: LiveSource
   status: 'idle' | 'connecting' | 'on' | 'error' | 'unsupported'
-  /** Mã lỗi để giao diện dịch: 'denied' (không được cấp quyền), 'noDevice', 'other'. */
+  /** Error code for the UI to translate: 'denied' (permission refused), 'noDevice', 'other'. */
   error?: 'denied' | 'noDevice' | 'other'
-  /** Tên thiết bị MIDI đang nghe. */
+  /** Name of the MIDI device being listened to. */
   devices: string[]
-  /** MIDI: các phím đang giữ. */
+  /** MIDI: keys being held. */
   held: number[]
-  /** Micro: nốt đang nghe thấy (midi) và độ lệch cent, null khi im lặng / không rõ. */
+  /** Mic: note being heard (midi) and its cent offset, null when silent / unclear. */
   detected: { midi: number; cents: number } | null
-  /** Micro: âm lượng 0–1. */
+  /** Mic: level 0–1. */
   level: number
 }
 
@@ -38,13 +38,13 @@ export const liveStore = {
   },
 }
 
-/** Nghe từng nốt mới được chơi trên đàn thật (MIDI: phím được nhấn; micro: nốt mới ổn định). */
+/** Listens for each new note played on a real instrument (MIDI: key pressed; mic: a newly stable note). */
 export function onLiveNote(l: (midi: number) => void): () => void {
   noteListeners.add(l)
   return () => noteListeners.delete(l)
 }
 
-/** Nghe các tiếng gảy / quạt (micro), thời điểm tính theo đồng hồ AudioContext của Tone.js. */
+/** Listens for strums / plucks (mic), timed on Tone.js's AudioContext clock. */
 export function onLiveOnset(l: (time: number) => void): () => void {
   onsetListeners.add(l)
   return () => onsetListeners.delete(l)
@@ -62,7 +62,7 @@ export function disconnectLive() {
   set(initial)
 }
 
-/** Nhận một tin nhắn MIDI thô (tách riêng để kiểm thử). */
+/** Handles one raw MIDI message (separate so it can be tested). */
 export function handleMidiMessage(data: ArrayLike<number>) {
   const [status, note, velocity] = [data[0], data[1], data[2] ?? 0]
   const type = status & 0xf0
@@ -97,7 +97,7 @@ export async function connectMidi(): Promise<void> {
   }
 }
 
-/** Theo dõi nốt ổn định từ micro: cùng một nốt rõ ràng trong vài khung liên tiếp mới tính là một nốt mới. */
+/** Tracks stable notes from the mic: the same clear note over several consecutive frames counts as one new note. */
 export function createNoteStabilizer(frames = 3) {
   let candidate: number | null = null
   let count = 0
@@ -128,7 +128,7 @@ export async function connectMic(): Promise<void> {
   set({ source: 'mic', status: 'connecting' })
   try {
     const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } })
-    // Dùng chung AudioContext với Tone.js để thời điểm onset so được với nhạc nền.
+    // Share Tone.js's AudioContext so onset times line up with the backing track.
     const T = await getTone()
     const ctx = T.getContext().rawContext as AudioContext
     const source = ctx.createMediaStreamSource(stream)
@@ -142,14 +142,14 @@ export async function connectMic(): Promise<void> {
     let pitchTick = 0
 
     const timer = setInterval(() => {
-      // Khung ngắn (512 mẫu) cho onset — độ phân giải thời gian tốt hơn.
+      // Short frames (512 samples) for onsets — better time resolution.
       analyser.getFloatTimeDomainData(buf)
       small.set(buf.subarray(buf.length - small.length))
       const level = rms(small)
       const now = ctx.currentTime - small.length / ctx.sampleRate / 2
       if (onset(level, now)) onsetListeners.forEach((l) => l(now))
 
-      // Cao độ: mỗi khung thứ 4 (~40 ms), dùng cả khung dài.
+      // Pitch: every 4th frame (~40 ms), using the full long frame.
       if (++pitchTick % 4) return
       const r = rms(buf) > 0.01 ? detectPitch(buf, ctx.sampleRate) : null
       const ok = r && r.clarity > 0.88 && r.freq > 60 && r.freq < 1400

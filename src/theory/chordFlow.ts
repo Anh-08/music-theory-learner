@@ -3,8 +3,8 @@ import { keyScale, parseProgression, type KeyRef, type ProgressionChord } from '
 import { relatedKeys } from './keys'
 
 /**
- * Sinh chuỗi hợp âm không lặp cố định cho bài luyện phản xạ: hợp âm luôn đổi nhưng nối nhau "mượt"
- * (theo thói quen hòa âm nhạc phổ thông), câu nào cũng kết về chủ âm.
+ * Generates a non-repeating chord stream for the reflex drill: chords keep changing but connect "smoothly"
+ * (following common-practice pop harmony habits), and every phrase resolves to the tonic.
  */
 
 export type FlowSource = 'loops' | 'generate' | 'custom'
@@ -12,26 +12,26 @@ export type FlowSource = 'loops' | 'generate' | 'custom'
 export interface FlowOptions {
   key: KeyRef
   source: FlowSource
-  /** Thêm hợp âm 7 (V7, ii7, IVmaj7…). */
+  /** Add seventh chords (V7, ii7, IVmaj7…). */
   sevenths?: boolean
-  /** Thêm hợp âm tô màu (sus4, add9). */
+  /** Add colour chords (sus4, add9). */
   colors?: boolean
-  /** Thỉnh thoảng chuyển sang giọng gần (giọng tương ứng, giọng át, giọng hạ át) qua một hợp âm chung. */
+  /** Occasionally move to a closely related key (relative, dominant, subdominant) via a pivot chord. */
   modulate?: boolean
-  /** Số hợp âm mỗi câu khi tự sinh: 4 hoặc 8. */
+  /** Chords per generated phrase: 4 or 8. */
   phraseLength?: 4 | 8
-  /** Các vòng người dùng tự nhập (chế độ `custom`). */
+  /** User-entered loops (`custom` mode). */
   custom?: ProgressionChord[][]
 }
 
 export interface FlowChord {
   chord: ProgressionChord
   key: KeyRef
-  /** Hợp âm đầu một câu / một lượt vòng. */
+  /** First chord of a phrase / of a loop pass. */
   phraseStart: boolean
 }
 
-/** Bộ sinh số ngẫu nhiên có seed (mulberry32): cùng seed ra cùng chuỗi. */
+/** Seeded random number generator (mulberry32): the same seed gives the same sequence. */
 export function seededRandom(seed: number): () => number {
   let a = seed >>> 0
   return () => {
@@ -46,8 +46,8 @@ export function seededRandom(seed: number): () => number {
 type Edges = Record<number, [number, number][]>
 
 /**
- * Đồ thị hòa âm theo bậc (0 = bậc I). Trọng số càng lớn càng hay gặp.
- * Giọng trưởng bỏ vii° (khó bấm, nghe gắt); giọng thứ dùng V trưởng (thứ hòa âm), bỏ ii°.
+ * Harmonic graph by scale degree (0 = degree I). Higher weight = more common.
+ * Major keys drop vii° (hard to fret, harsh); minor keys use a major V (harmonic minor) and drop ii°.
  */
 export const FLOW_EDGES: Record<KeyRef['mode'], Edges> = {
   major: {
@@ -68,10 +68,10 @@ export const FLOW_EDGES: Record<KeyRef['mode'], Edges> = {
   },
 }
 
-/** Hợp âm áp chót của câu (trước chủ âm): V–I, IV–I; giọng thứ thêm ♭VII–i. */
+/** Penultimate chord of a phrase (before the tonic): V–I, IV–I; minor keys also allow ♭VII–i. */
 const CADENCE: Record<KeyRef['mode'], number[]> = { major: [4, 3], minor: [4, 3, 6] }
 
-/** Các vòng quen thuộc, viết theo bậc. Mọi bước chuyển (kể cả quay về đầu vòng) đều có trong đồ thị. */
+/** Familiar loops, written as degrees. Every move (including back to the start of the loop) exists in the graph. */
 export const FLOW_LOOPS: Record<KeyRef['mode'], number[][]> = {
   major: [
     [0, 4, 5, 3], // I V vi IV
@@ -81,7 +81,7 @@ export const FLOW_LOOPS: Record<KeyRef['mode'], number[][]> = {
     [0, 3, 5, 4], // I IV vi V
     [3, 4, 2, 5], // IV V iii vi
     [0, 2, 3, 4], // I iii IV V
-    [0, 4, 5, 2, 3, 0, 3, 4], // vòng Canon
+    [0, 4, 5, 2, 3, 0, 3, 4], // Canon progression
   ],
   minor: [
     [0, 5, 2, 6], // i VI III VII
@@ -92,7 +92,7 @@ export const FLOW_LOOPS: Record<KeyRef['mode'], number[][]> = {
   ],
 }
 
-/** Tính chất hợp âm ba trên từng bậc: true = thứ. */
+/** Triad quality on each degree: true = minor. */
 const MINOR_TRIAD: Record<KeyRef['mode'], Record<number, boolean>> = {
   major: { 0: false, 1: true, 2: true, 3: false, 4: false, 5: true },
   minor: { 0: true, 2: false, 3: true, 4: false, 5: false, 6: false },
@@ -112,7 +112,7 @@ function edgeWeight(mode: KeyRef['mode'], from: number, to: number): number {
   return FLOW_EDGES[mode][from]?.find(([d]) => d === to)?.[1] ?? 0
 }
 
-/** Ký hiệu hợp âm của một bậc, có thể thêm 7 / tô màu. */
+/** Chord symbol for a degree, optionally with a 7th / colour. */
 export function degreeSymbol(key: KeyRef, degree: number, opts: Pick<FlowOptions, 'sevenths' | 'colors'> = {}, random: () => number = Math.random): string {
   const root = keyScale(key)[degree]
   const minor = MINOR_TRIAD[key.mode][degree]
@@ -120,7 +120,7 @@ export function degreeSymbol(key: KeyRef, degree: number, opts: Pick<FlowOptions
   let suffix = minor ? 'm' : ''
   if (opts.sevenths) {
     const isDominant = degree === 4
-    // V7 trên bậc V; hợp âm thứ thành m7; hợp âm trưởng thành maj7, riêng ♭VII của giọng thứ là 7.
+    // V7 on degree V; minor chords become m7; major chords become maj7, except minor-key ♭VII which becomes 7.
     if (random() < (isDominant ? 0.65 : 0.3)) suffix = isDominant ? '7' : minor ? 'm7' : !major && degree === 6 ? '7' : 'maj7'
   }
   if (opts.colors && suffix === (minor ? 'm' : '') && random() < 0.25) {
@@ -134,7 +134,7 @@ function sameKey(a: KeyRef, b: KeyRef): boolean {
   return a.mode === b.mode && chroma(a.tonic) === chroma(b.tonic)
 }
 
-/** Bậc trong giọng `to` của hợp âm ba trên bậc `degree` của giọng `from` (hợp âm chung), nếu nó là một nút của đồ thị. */
+/** Degree in key `to` of the triad on `degree` in key `from` (a pivot chord), if it is a node of the graph. */
 function pivotDegree(from: KeyRef, degree: number, to: KeyRef): number | null {
   const c = chroma(keyScale(from)[degree])
   const deg = keyScale(to).findIndex((n) => chroma(n) === c)
@@ -147,13 +147,13 @@ function neighborKeys(key: KeyRef): KeyRef[] {
   return [relatedKeys(key).relative, { tonic: scale[4], mode: key.mode }, { tonic: scale[3], mode: key.mode }]
 }
 
-/** Giọng gần giọng gốc: chỉ đi tối đa một bước để không lạc sang giọng khó. */
+/** Keys close to the home key: at most one step away so we never drift into a hard key. */
 function allowedKeys(home: KeyRef): KeyRef[] {
   const near = neighborKeys(home)
   return [home, ...near, ...near.slice(1).map((k) => relatedKeys(k).relative)]
 }
 
-/** Có thể đổi giọng sau hợp âm cuối câu (bậc `last`): trả về giọng mới và bậc của hợp âm đó trong giọng mới. */
+/** Possible key change after the last chord of a phrase (degree `last`): returns the new key and that chord's degree in it. */
 function maybeModulate(current: KeyRef, last: number, home: KeyRef, random: () => number): { key: KeyRef; degree: number } | null {
   if (random() >= 0.35) return null
   const allowed = allowedKeys(home)
@@ -166,7 +166,7 @@ function maybeModulate(current: KeyRef, last: number, home: KeyRef, random: () =
   return options.length ? weighted(options, random) : null
 }
 
-/** Một câu tự sinh dài `length` hợp âm, kết bằng cadence về chủ âm. `from` là bậc ngay trước câu (null = bắt đầu từ chủ âm). */
+/** A generated phrase of `length` chords ending with a cadence to the tonic. `from` is the degree just before the phrase (null = start on the tonic). */
 export function generatePhrase(mode: KeyRef['mode'], length: number, from: number | null, random: () => number): number[] {
   const edges = FLOW_EDGES[mode]
   for (let attempt = 0; attempt < 60; attempt++) {
@@ -182,15 +182,15 @@ export function generatePhrase(mode: KeyRef['mode'], length: number, from: numbe
     out.push(weighted(cad.map((c) => [c, edgeWeight(mode, prev!, c)] as [number, number]), random), 0)
     return out
   }
-  // Hiếm khi tới đây: ép kết V–I.
+  // Rarely reached: force a V–I ending.
   return [...Array.from({ length: length - 2 }, (_, i) => (i === 0 && from === null ? 0 : 3)), 4, 0]
 }
 
 /**
- * Tạo bộ sinh hợp âm vô hạn: mỗi lần gọi trả về hợp âm kế tiếp.
- * - `loops`: các vòng quen thuộc, mỗi vòng chơi 1–2 lượt rồi nối sang vòng khác mà hợp âm đầu đi tự nhiên sau hợp âm cuối.
- * - `generate`: câu 4/8 hợp âm đi theo đồ thị hòa âm, luôn kết về chủ âm.
- * - `custom`: các vòng tự nhập, xáo thứ tự (không lặp một vòng hai lần liền nếu có nhiều vòng).
+ * Creates an endless chord generator: each call returns the next chord.
+ * - `loops`: familiar loops, each played 1–2 times, then joined to another loop whose first chord follows naturally from the last.
+ * - `generate`: 4/8-chord phrases walking the harmonic graph, always resolving to the tonic.
+ * - `custom`: user-entered loops in shuffled order (never the same loop twice in a row when there are several).
  */
 export function chordFlow(opts: FlowOptions, seed: number): () => FlowChord {
   const random = seededRandom(seed)
@@ -221,7 +221,7 @@ export function chordFlow(opts: FlowOptions, seed: number): () => FlowChord {
       return
     }
 
-    // Hết một câu: có thể đổi giọng, hợp âm cuối câu làm hợp âm chung.
+    // End of a phrase: maybe change key, using the phrase's last chord as the pivot.
     let from = lastDegree
     if (opts.modulate && from !== null) {
       const m = maybeModulate(key, from, home, random)

@@ -50,7 +50,7 @@ export function Explorer() {
   const { t, locale } = useT()
   const instrument: InstrumentId = view === 'piano' ? 'piano' : 'guitar'
   const { playing, activeMidis: playerMidis, play, stop, playNote } = usePlayer(instrument)
-  // Nốt đang chơi trên đàn thật cũng sáng lên.
+  // Notes being played on a real instrument light up too.
   const live = useLiveInput()
   const activeMidis = useMemo(() => {
     const extra = live.source === 'midi' ? live.held : live.detected ? [live.detected.midi] : []
@@ -64,7 +64,7 @@ export function Explorer() {
   const tuning = getTuning(tuningId)
 
   const title = kind === 'scale' ? `${displayNote(scale.root)} ${scaleTypeName(scale.type, locale)}` : `${displayNote(chord.root)}${chord.type.suffix}`
-  // Tiếng Việt: kèm tên tiếng Anh của scale; tiếng Anh: tên đã nằm ở tiêu đề.
+  // Vietnamese: add the scale's English name; English: the name is already in the heading.
   const subtitle =
     kind === 'scale'
       ? locale === 'vi'

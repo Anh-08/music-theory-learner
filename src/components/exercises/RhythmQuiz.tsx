@@ -12,12 +12,12 @@ import { useDrill } from './useDrill'
 
 interface RhythmQuizProps {
   id: string
-  /** Id các điệu để chọn, cách nhau bởi khoảng trắng: "ballad valse slowrock". */
+  /** Space-separated rhythm ids to choose from: "ballad valse slowrock". */
   options: string
   progression?: string
 }
 
-/** Luyện tai: nghe một điệu đệm guitar (có trống, bass) và đoán tên điệu. */
+/** Ear training: hear a guitar comping rhythm (with drums and bass) and guess its name. */
 export function RhythmQuiz({ id, options, progression = 'C G Am F' }: RhythmQuizProps) {
   const ownerId = useId()
   const { t, locale } = useT()

@@ -4,31 +4,31 @@ import { chroma, midi } from './notes'
 import type { ProgressionChord } from './progression'
 import { tuning } from './fretboard'
 
-const STANDARD = tuning('standard').strings.map(midi) // dây 6 → dây 1
+const STANDARD = tuning('standard').strings.map(midi) // string 6 → string 1
 
 export interface ChordShape {
-  /** Phím từng dây (dây 6 → dây 1); null = không đánh, 0 = dây buông. */
+  /** Fret per string (string 6 → string 1); null = not played, 0 = open string. */
   frets: (number | null)[]
-  /** Ngón bấm gợi ý (1 = trỏ … 4 = út); null = dây buông hoặc không đánh. */
+  /** Suggested finger (1 = index … 4 = pinky); null = open or muted string. */
   fingers: (number | null)[]
-  /** Ngón trỏ chặn nhiều dây ở phím `fret`, từ dây `from` tới dây `to` (số dây 6 → 1). */
+  /** Index finger barres several strings at `fret`, from string `from` to string `to` (string numbers 6 → 1). */
   barre?: { fret: number; from: number; to: number }
-  /** Phím thấp nhất có bấm (để vẽ sơ đồ ở đúng vị trí); 0 nếu là thế mở. */
+  /** Lowest fretted fret (to draw the diagram at the right position); 0 for open shapes. */
   position: number
-  /** Dây có nốt bass (6, 5 hoặc 4…). */
+  /** String holding the bass note (6, 5 or 4…). */
   bassString: number
 }
 
 interface ToneRule {
   chroma: number
-  /** Có bắt buộc phải có trong thế bấm không. */
+  /** Whether the note must be present in the shape. */
   required: boolean
 }
 
 /**
- * Nốt nào cần giữ khi bấm trên guitar: luôn giữ nốt gốc, quãng 3 (hoặc nốt treo), quãng 7, quãng 6,
- * quãng 5 bị biến đổi và nốt mở rộng cao nhất. Quãng 5 đúng được phép bỏ; quãng 9 được bỏ nếu đã có 11 hay 13;
- * quãng 11 được bỏ trong hợp âm 13.
+ * Which notes to keep when fretting on guitar: always keep the root, the 3rd (or suspended note), the 7th, the 6th,
+ * an altered 5th and the highest extension. A perfect 5th may be dropped; the 9th may be dropped when there is an 11 or 13;
+ * the 11th may be dropped in a 13 chord.
  */
 export function toneRules(chord: Pick<ProgressionChord, 'root' | 'intervals'>): ToneRule[] {
   const nums = chord.intervals.map((i) => Interval.get(i).num)
@@ -50,7 +50,7 @@ function fingersFor(frets: (number | null)[]): { fingers: (number | null)[]; bar
   if (!fretted.length) return { fingers, count: 0 }
   const minF = Math.min(...fretted.map((x) => x.f))
   const atMin = fretted.filter((x) => x.f === minF)
-  // Chặn được nếu ≥ 2 dây ở phím thấp nhất và không có dây buông / câm nằm dưới ngón chặn.
+  // Barre if ≥ 2 strings sit at the lowest fret and no open / muted string lies under the barre.
   let barre: ChordShape['barre']
   if (atMin.length >= 2) {
     const lo = atMin[0].i
@@ -63,7 +63,7 @@ function fingersFor(frets: (number | null)[]): { fingers: (number | null)[]; bar
   if (count > 4) return null
   if (barre) atMin.forEach((x) => (fingers[x.i] = 1))
   let next = barre ? 2 : 1
-  // Ngón tăng dần theo phím; nốt cách xa ngón trước thì nhảy ngón cho tự nhiên.
+  // Fingers increase with the fret; skip a finger when a note is far from the previous one, as players naturally do.
   let lastFret = barre ? minF : rest[0]?.f ?? minF
   for (const x of rest) {
     if (x.f - lastFret >= 2 && next < 4) next = Math.min(4, next + 1)
@@ -91,9 +91,9 @@ function score(frets: (number | null)[], fifthChroma: number | null, fingerCount
 const cache = new Map<string, ChordShape[]>()
 
 /**
- * Các thế bấm hợp âm trên guitar (lên dây chuẩn), nốt gốc (hoặc nốt bass của hợp âm "/") ở dây trầm nhất.
- * Quét cần đàn từ phím 0 đến 15, giữ thế bấm chơi được bằng ≤ 4 ngón (tính cả ngón chặn),
- * chấm điểm theo độ đầy đặn / dễ bấm, rồi chọn tối đa `max` thế ở các vị trí khác nhau, xếp từ thấp lên cao.
+ * Guitar chord shapes (standard tuning) with the root (or the bass of a slash chord) on the lowest string.
+ * Scans frets 0 to 15, keeps shapes playable with ≤ 4 fingers (barre included),
+ * scores them for fullness / ease, then picks up to `max` shapes at different positions, sorted low to high.
  */
 export function chordShapes(chord: Pick<ProgressionChord, 'root' | 'intervals' | 'symbol'> & { bass?: string }, max = 8): ChordShape[] {
   const key = `${chord.symbol}|${max}`
@@ -112,12 +112,12 @@ export function chordShapes(chord: Pick<ProgressionChord, 'root' | 'intervals' |
     const hi = f0 + 3
     const options = STANDARD.map((open) => {
       const opts: (number | null)[] = [null]
-      // Dây buông chỉ dùng khi thế bấm ở thấp (phím ≤ 5).
+      // Open strings are only used for low shapes (fret ≤ 5).
       if (hi <= 5 && allowed.has(open % 12)) opts.push(0)
       for (let f = lo; f <= hi; f++) if (allowed.has((open + f) % 12)) opts.push(f)
       return opts
     })
-    // Nốt bass ở dây 6, 5 hoặc 4 (thế bấm đầy đủ để đệm).
+    // Bass note on string 6, 5 or 4 (full shapes for accompaniment).
     for (let bs = 0; bs <= 2; bs++) {
       const bassOpts = options[bs].filter((f) => f !== null && (STANDARD[bs] + f) % 12 === bassChroma) as number[]
       for (const bf of bassOpts) {
@@ -132,10 +132,10 @@ export function chordShapes(chord: Pick<ProgressionChord, 'root' | 'intervals' |
             const first = bs
             const last = 5 - [...frets].reverse().findIndex((f) => f !== null)
             if (frets.slice(first, last + 1).filter((f) => f === null).length > 1) return
-            // Nốt thấp nhất phải là bass (dây trên có thể thấp hơn nếu là dây buông thấp — loại).
+            // The lowest note must be the bass (a higher string may sound lower if it is a low open string — reject).
             const lowest = Math.min(...frets.map((f, i) => (f === null ? Infinity : STANDARD[i] + f)))
             if (lowest !== STANDARD[bs] + bf) return
-            // Không trộn dây buông với nốt bấm ở phím cao (khó bấm, tiếng lệch).
+            // Do not mix open strings with notes fretted high up (hard to play, sounds off).
             if (frets.some((f) => f === 0) && frets.some((f) => f !== null && f > 4)) return
             const fing = fingersFor(frets)
             if (!fing) return
@@ -156,7 +156,7 @@ export function chordShapes(chord: Pick<ProgressionChord, 'root' | 'intervals' |
     }
   }
 
-  // Thế bấm "chuẩn" (thế mở / hình chặn quen thuộc) luôn được ưu tiên nếu hợp lệ.
+  // The "standard" shape (open shape / familiar barre) always comes first when valid.
   const standard = chordFrets({ ...chord, notes: [], suffix: '', bars: 1 } as ProgressionChord)
   const standardId = standard?.map((f) => (f === null ? 'x' : f)).join(',')
   const standardKey = standard ? shapeId({ frets: standard }) : null
@@ -172,7 +172,7 @@ export function chordShapes(chord: Pick<ProgressionChord, 'root' | 'intervals' |
   for (const c of sorted) {
     if (chosen.length >= max) break
     if (chosen.includes(c)) continue
-    // Đa dạng: khác vị trí ít nhất 2 phím, hoặc cùng vị trí nhưng nốt bass ở dây khác.
+    // Variety: at least 2 frets apart, or the same position with the bass on a different string.
     const clash = chosen.some((x) => Math.abs(posOf(x.frets) - posOf(c.frets)) < 2 && bassOf(x.frets) === bassOf(c.frets))
     if (!clash) chosen.push(c)
   }
@@ -182,7 +182,7 @@ export function chordShapes(chord: Pick<ProgressionChord, 'root' | 'intervals' |
       const fing = fingersFor(c.frets)!
       return { frets: c.frets, fingers: fing.fingers, barre: fing.barre, position: posOf(c.frets), bassString: 6 - bassOf(c.frets) }
     })
-    // Thế quen thuộc đứng đầu, còn lại xếp từ thấp lên cao.
+    // Familiar shape first, the rest sorted low to high.
     .sort((a, b) => Number(shapeId(b) === standardKey) - Number(shapeId(a) === standardKey) || a.position - b.position || b.bassString - a.bassString)
   cache.set(key, shapes)
   return shapes
@@ -197,8 +197,8 @@ export function shapeId(shape: Pick<ChordShape, 'frets'>): string {
 }
 
 /**
- * Chọn thế bấm cho hợp âm kế tiếp: gần vị trí thế đang bấm nhất (tay ít phải nhảy),
- * hơi ưu tiên thế quen thuộc (đứng đầu danh sách). Không có thế trước thì lấy thế quen thuộc.
+ * Picks the shape for the next chord: closest to the current shape's position (least hand movement),
+ * with a slight preference for the familiar shape (first in the list). Without a previous shape, take the familiar one.
  */
 export function nearestShape(shapes: ChordShape[], prev?: ChordShape): ChordShape | undefined {
   if (!prev || shapes.length < 2) return shapes[0]

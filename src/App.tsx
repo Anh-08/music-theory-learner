@@ -48,7 +48,7 @@ export function AppRoutes() {
   )
 }
 
-// HashRouter: GitHub Pages không hỗ trợ chuyển hướng mọi đường dẫn về index.html.
+// HashRouter: GitHub Pages cannot redirect every path to index.html.
 function App() {
   return (
     <HashRouter>

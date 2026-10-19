@@ -2,12 +2,12 @@ import { Interval } from 'tonal'
 import type { Locale } from '../i18n/locale'
 
 /**
- * Nhãn ngắn của một quãng tính từ chủ âm, dạng dùng trong công thức hợp âm/scale:
+ * Short label of an interval measured from the root, as used in chord/scale formulas:
  * "1P" → "1", "3m" → "♭3", "5d" → "♭5", "4A" → "♯4", "7d" → "♭♭7", "9M" → "9".
  */
 export function intervalLabel(name: string): string {
   const i = Interval.get(name)
-  if (i.empty) throw new Error(`Quãng không hợp lệ: ${name}`)
+  if (i.empty) throw new Error(`Invalid interval: ${name}`)
   const acc = i.alt < 0 ? '♭'.repeat(-i.alt) : '♯'.repeat(i.alt)
   return acc + i.num
 }
@@ -44,10 +44,10 @@ function englishName(i: ReturnType<typeof Interval.get>): string {
   return `${QUALITY_EN[i.q]} ${ORDINAL_EN[i.num] ?? `${i.num}th`}`
 }
 
-/** Tên đầy đủ: "3m" → "Quãng 3 thứ (minor 3rd)" (tiếng Việt) hoặc "Minor 3rd" (tiếng Anh). */
+/** Full name: "3m" → "Quãng 3 thứ (minor 3rd)" (Vietnamese) or "Minor 3rd" (English). */
 export function intervalName(name: string, locale: Locale = 'vi'): string {
   const i = Interval.get(name)
-  if (i.empty) throw new Error(`Quãng không hợp lệ: ${name}`)
+  if (i.empty) throw new Error(`Invalid interval: ${name}`)
   const en = englishName(i)
   if (locale === 'en') return en[0].toUpperCase() + en.slice(1)
   if (i.num === 1 && i.q === 'P') return 'Đồng âm (unison)'
@@ -55,7 +55,7 @@ export function intervalName(name: string, locale: Locale = 'vi'): string {
   return `Quãng ${i.num} ${QUALITY_VI[i.q]} (${en})`
 }
 
-/** Tên ngắn: "3m" → "Quãng 3 thứ" / "Minor 3rd". */
+/** Short name: "3m" → "Quãng 3 thứ" / "Minor 3rd". */
 export function intervalShortName(name: string, locale: Locale = 'vi'): string {
   return intervalName(name, locale).replace(/ \(.*\)$/, '')
 }

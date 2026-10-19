@@ -6,11 +6,11 @@ describe('fretboard', () => {
   const positions = fretboardPositions(standard, 12)
   const at = (string: number, fret: number) => positions.find((p) => p.string === string && p.fret === fret)!
 
-  it('có đủ vị trí cho 6 dây × 13 phím (tính dây buông)', () => {
+  it('has every position for 6 strings × 13 frets (open strings included)', () => {
     expect(positions).toHaveLength(6 * 13)
   })
 
-  it('tính đúng nốt trên cần đàn', () => {
+  it('computes the right notes on the neck', () => {
     expect(at(6, 0).midi).toBe(40) // E2
     expect(at(6, 5).chroma).toBe(9) // A
     expect(at(5, 3).chroma).toBe(0) // C
@@ -18,17 +18,17 @@ describe('fretboard', () => {
     expect(at(2, 1).chroma).toBe(0) // C
   })
 
-  it('dây 6 phím 5 cùng cao độ với dây 5 buông', () => {
+  it('string 6 fret 5 has the same pitch as open string 5', () => {
     expect(at(6, 5).midi).toBe(at(5, 0).midi)
     expect(at(3, 4).midi).toBe(at(2, 0).midi)
   })
 
-  it('đổi tuning thì đổi nốt', () => {
+  it('changing the tuning changes the notes', () => {
     const dropD = fretboardPositions(tuning('drop-d'), 5)
     expect(dropD.find((p) => p.string === 6 && p.fret === 0)!.chroma).toBe(2)
   })
 
-  it('vị trí phím tăng dần và khoảng cách thu hẹp dần', () => {
+  it('fret positions increase while the spacing narrows', () => {
     expect(fretX(0, 12)).toBe(0)
     expect(fretX(12, 12)).toBeCloseTo(1)
     const w1 = fretX(1, 12) - fretX(0, 12)
@@ -37,10 +37,10 @@ describe('fretboard', () => {
   })
 })
 
-describe('thế bấm và vị trí', async () => {
+describe('shapes and positions', async () => {
   const { parseShape, parsePositions, positionMidi } = await import('../fretboard')
 
-  it('đọc thế bấm hợp âm', () => {
+  it('parses chord shapes', () => {
     expect(parseShape('x32010')).toEqual([
       { string: 5, fret: 3 },
       { string: 4, fret: 2 },
@@ -52,7 +52,7 @@ describe('thế bấm và vị trí', async () => {
     expect(() => parseShape('x3201')).toThrow()
   })
 
-  it('đọc danh sách vị trí', () => {
+  it('parses position lists', () => {
     expect(parsePositions(' 6:3  5:2 ')).toEqual([
       { string: 6, fret: 3 },
       { string: 5, fret: 2 },
@@ -60,28 +60,28 @@ describe('thế bấm và vị trí', async () => {
     expect(() => parsePositions('7:a')).toThrow()
   })
 
-  it('tính cao độ của vị trí', () => {
+  it('computes the pitch of a position', () => {
     expect(positionMidi(tuning('standard'), { string: 5, fret: 3 })).toBe(48)
     expect(positionMidi(tuning('standard'), { string: 1, fret: 0 })).toBe(64)
   })
 })
 
-describe('nhạc cụ phím đàn khác', () => {
-  it('bass 4 dây và ukulele (dây G cao)', () => {
+describe('other fretted instruments', () => {
+  it('4-string bass and ukulele (high G string)', () => {
     const bass = fretboardPositions(tuning('bass4'), 5)
     expect(bass).toHaveLength(4 * 6)
     expect(bass.find((p) => p.string === 4 && p.fret === 0)!.midi).toBe(28) // E1
     const uke = fretboardPositions(tuning('ukulele'), 3)
-    expect(uke.find((p) => p.string === 4 && p.fret === 0)!.midi).toBe(67) // G4 — dây 4 cao hơn dây 3
+    expect(uke.find((p) => p.string === 4 && p.fret === 0)!.midi).toBe(67) // G4 — string 4 is higher than string 3
     expect(uke.find((p) => p.string === 1 && p.fret === 3)!.chroma).toBe(0) // A + 3 = C
   })
 })
 
 describe('positionForMidi', async () => {
   const { positionForMidi } = await import('../fretboard')
-  it('chọn phím thấp nhất, giới hạn theo dây, hoặc cùng tên nốt khi lệch quãng tám', () => {
+  it('picks the lowest fret, limits to a string, or the same note name when the octave is off', () => {
     expect(positionForMidi(tuning('standard'), 45, 12)).toMatchObject({ string: 5, fret: 0 })
     expect(positionForMidi(tuning('standard'), 45, 12, 6)).toMatchObject({ string: 6, fret: 5 })
-    expect(positionForMidi(tuning('standard'), 26, 12, 5)).toMatchObject({ string: 5, fret: 5 }) // D1 ngoài tầm → D trên dây 5
+    expect(positionForMidi(tuning('standard'), 26, 12, 5)).toMatchObject({ string: 5, fret: 5 }) // D1 out of range → D on string 5
   })
 })

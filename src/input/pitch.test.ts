@@ -10,9 +10,9 @@ function tone(freq: number, n = 2048, harmonics = [1, 0.5, 0.3]): Float32Array {
 }
 
 describe('detectPitch', () => {
-  it('nhận đúng cao độ nốt đơn, kể cả có hài âm', () => {
+  it('detects single-note pitch correctly, even with harmonics', () => {
     for (const [freq, midi] of [
-      [82.41, 40], // E2 — dây 6 guitar
+      [82.41, 40], // E2 — guitar string 6
       [110, 45], // A2
       [196, 55], // G3
       [329.63, 64], // E4
@@ -24,7 +24,7 @@ describe('detectPitch', () => {
     }
   })
 
-  it('tín hiệu nhiễu / im lặng thì không rõ ràng', () => {
+  it('noisy / silent signals are unclear', () => {
     expect(detectPitch(new Float32Array(2048), SR)).toBeNull()
     let seed = 1
     const noise = new Float32Array(2048).map(() => ((seed = (seed * 16807) % 2147483647) / 2147483647) * 2 - 1)
@@ -33,15 +33,15 @@ describe('detectPitch', () => {
   })
 })
 
-describe('tiện ích', () => {
-  it('đổi tần số sang midi và cent', () => {
+describe('utilities', () => {
+  it('converts frequency to midi and cents', () => {
     expect(freqToMidi(440)).toEqual({ midi: 69, cents: 0 })
     expect(freqToMidi(446).midi).toBe(69)
     expect(freqToMidi(446).cents).toBeGreaterThan(20)
     expect(rms(new Float32Array([1, -1, 1, -1]))).toBe(1)
   })
 
-  it('dò onset khi âm lượng tăng vọt, có khoảng cách tối thiểu', () => {
+  it('detects onsets when the level jumps, with a minimum gap', () => {
     const d = createOnsetDetector()
     const levels = [0.001, 0.001, 0.2, 0.18, 0.15, 0.01, 0.005, 0.3, 0.3]
     const hits = levels.map((l, i) => d(l, i * 0.05))

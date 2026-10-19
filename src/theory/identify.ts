@@ -5,24 +5,24 @@ import { chordTypeId } from './progression'
 import { intervalLabel } from './intervals'
 
 export interface ChordMatch {
-  /** Tên hiển thị: "C", "Am7", "C/E". */
+  /** Display name: "C", "Am7", "C/E". */
   name: string
   root: string
   bass?: string
   intervals: string[]
-  /** Công thức: "1 3 5". */
+  /** Formula: "1 3 5". */
   formula: string
 }
 
 /**
- * Đoán tên hợp âm từ các nốt (midi). Nốt thấp nhất là bass — nếu không phải nốt gốc thì ra hợp âm "/".
- * Trả về danh sách khả năng, hợp lý nhất trước.
+ * Guesses chord names from notes (midi). The lowest note is the bass — if it is not the root we get a slash chord.
+ * Returns the candidates, most plausible first.
  */
 export function identifyChord(midis: number[]): ChordMatch[] {
   const sorted = [...new Set(midis)].sort((a, b) => a - b)
   const pcs = [...new Set(sorted.map((m) => noteFromMidi(m).replace(/\d+$/, '')))]
   if (pcs.length < 3) return []
-  // Ưu tiên các loại hợp âm thông dụng (có trong CHORD_TYPES): C/E đứng trước Em#5.
+  // Prefer common chord types (those in CHORD_TYPES): C/E comes before Em#5.
   const detected = Chord.detect(pcs, { assumePerfectFifth: true })
   const known = (full: string) => (chordTypeId(Chord.get(full.split('/')[0]).intervals) ? 0 : 1)
   return [...detected]

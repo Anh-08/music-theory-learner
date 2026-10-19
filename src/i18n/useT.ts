@@ -9,7 +9,7 @@ export function translate(locale: Locale, key: MessageKey, params?: MessageParam
   return format(MESSAGES[locale][key], params)
 }
 
-/** Hàm dịch theo ngôn ngữ đang chọn, kèm ngôn ngữ đó. */
+/** Translation function for the current language, plus that language. */
 export function useT(): { t: Translate; locale: Locale } {
   const { locale } = useSettings()
   const t = useCallback<Translate>((key, params) => translate(locale, key, params), [locale])

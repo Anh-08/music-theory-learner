@@ -6,7 +6,7 @@ import type { Locale } from '../i18n/locale'
 import { ProgressProvider } from '../store/ProgressProvider'
 import { SettingsProvider } from '../store/SettingsProvider'
 
-/** Render kèm router + cài đặt + tiến độ. Nhạc cụ và ngôn ngữ được đặt qua localStorage như khi người dùng chọn. */
+/** Renders with router + settings + progress. Instrument and language are set via localStorage, as when the user picks them. */
 export function renderWithProviders(
   ui: ReactElement,
   { route = '/', instrument = 'guitar', locale = 'vi' }: { route?: string; instrument?: InstrumentId; locale?: Locale } = {},

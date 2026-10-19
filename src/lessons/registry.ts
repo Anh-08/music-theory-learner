@@ -6,26 +6,26 @@ import { MODULES } from './modules'
 export interface LessonMeta {
   title: string
   description: string
-  /** Thời gian học ước tính (phút). */
+  /** Estimated study time (minutes). */
   minutes: number
 }
 
 export interface LessonVariant {
   meta: LessonMeta
-  /** Nội dung bài, tải riêng khi mở bài (mỗi bài một phần tải). */
+  /** Lesson content, loaded when the lesson is opened (one chunk per lesson). */
   Component: LazyExoticComponent<ComponentType<MDXProps>>
 }
 
 export interface Lesson {
-  /** "<moduleId>/<slug>" — dùng chung cho mọi ngôn ngữ (tiến độ không phụ thuộc ngôn ngữ). */
+  /** "<moduleId>/<slug>" — shared across languages (progress does not depend on language). */
   id: string
   moduleId: string
   slug: string
   variants: Partial<Record<Locale, LessonVariant>>
 }
 
-// Mỗi bài học là src/lessons/<moduleId>/<NN-slug>.mdx (tiếng Việt) và <NN-slug>.en.mdx (tiếng Anh),
-// mỗi file có `export const meta = {...}`. Meta được nạp sẵn (qua `?meta`, xem vite.config.ts); nội dung tải khi cần.
+// Each lesson is src/lessons/<moduleId>/<NN-slug>.mdx (Vietnamese) and <NN-slug>.en.mdx (English),
+// each file has `export const meta = {...}`. Meta is preloaded (via `?meta`, see vite.config.ts); content loads on demand.
 const metas = import.meta.glob<LessonMeta>('./*/*.mdx', { eager: true, query: '?meta', import: 'meta' })
 const contents = import.meta.glob<{ default: ComponentType<MDXProps> }>('./*/*.mdx')
 
@@ -35,8 +35,8 @@ function collect(): Lesson[] {
   const byId = new Map<string, Lesson>()
   for (const [path, meta] of Object.entries(metas)) {
     const [, moduleId, name] = path.match(/^\.\/([^/]+)\/(.+)\.mdx$/)!
-    if (!moduleOrder.has(moduleId)) throw new Error(`Bài học ${path} thuộc module không có trong MODULES`)
-    if (!meta?.title) throw new Error(`Bài học ${path} thiếu export const meta`)
+    if (!moduleOrder.has(moduleId)) throw new Error(`Lesson ${path} belongs to a module missing from MODULES`)
+    if (!meta?.title) throw new Error(`Lesson ${path} is missing export const meta`)
     const locale: Locale = name.endsWith('.en') ? 'en' : 'vi'
     const slug = name.replace(/\.en$/, '')
     const id = `${moduleId}/${slug}`
@@ -49,7 +49,7 @@ function collect(): Lesson[] {
 
 export const LESSONS: Lesson[] = collect()
 
-/** Bản bài học theo ngôn ngữ; chưa có bản dịch thì dùng bản ngôn ngữ còn lại (`fallback: true`). */
+/** A lesson in the given language; without a translation, use the other language's version (`fallback: true`). */
 export function localizedLesson(l: Lesson, locale: Locale): LessonVariant & { fallback: boolean } {
   const exact = l.variants[locale]
   if (exact) return { ...exact, fallback: false }

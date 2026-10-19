@@ -4,13 +4,13 @@ import { useT } from '../../i18n/useT'
 import { markerFill } from '../markerColors'
 
 export interface PianoProps {
-  /** Phím đầu và phím cuối (midi), nên là phím trắng. */
+  /** First and last key (midi), ideally white keys. */
   startMidi: number
   endMidi: number
   highlights: HighlightMap
   activeMidis?: ReadonlySet<number>
   onKeyClick?: (midi: number) => void
-  /** Nếu có: chỉ tô sáng đúng các phím này thay vì mọi quãng tám. */
+  /** If given: highlight only these keys instead of every octave. */
   onlyMidis?: ReadonlySet<number>
 }
 

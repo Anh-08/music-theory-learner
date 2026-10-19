@@ -1,7 +1,7 @@
 import type { Localized } from '../i18n/locale'
 import type { Groove } from './grooves'
 
-/** Nốt được móc: bass (B), bass luân phiên (B'), hoặc số dây 1–6. */
+/** Picked note: bass (B), alternate bass (B'), or a string number 1–6. */
 export type PickNote = 'B' | "B'" | 1 | 2 | 3 | 4 | 5 | 6
 
 export type Step =
@@ -15,16 +15,16 @@ export interface Rhythm {
   name: Localized
   kind: 'strum' | 'pick'
   beatsPerBar: 3 | 4
-  /** Số bước trong một phách: 2 (móc đơn), 3 (chùm ba), 4 (móc kép). */
+  /** Steps per beat: 2 (eighths), 3 (triplets), 4 (sixteenths). */
   stepsPerBeat: 2 | 3 | 4
   /**
-   * Mẫu một ô nhịp, các bước cách nhau bởi khoảng trắng:
-   * D / U = quạt xuống / lên, d / u = quạt nhẹ, X = chặn tiếng, - = nghỉ,
-   * B / B' = bass / bass luân phiên, số = dây cần móc, nối nhiều nốt cùng lúc bằng "+" (B+1, 123 = dây 1, 2, 3).
+   * One bar of pattern, steps separated by spaces:
+   * D / U = down / up strum, d / u = light strum, X = muted chop, - = rest,
+   * B / B' = bass / alternate bass, number = string to pick, join simultaneous notes with "+" (B+1, 123 = strings 1, 2, 3).
    */
   pattern: string
   defaultTempo: number
-  /** Nhịp trống + bass đi kèm. */
+  /** Drum + bass groove that goes with it. */
   groove: Groove['id']
   description: Localized
 }
@@ -48,7 +48,7 @@ export function parseStep(token: string): Step {
   for (const part of token.split('+')) {
     if (part === 'B' || part === "B'") notes.push(part)
     else if (/^[1-6]+$/.test(part)) for (const ch of part) notes.push(Number(ch) as PickNote)
-    else throw new Error(`Bước không hợp lệ trong mẫu điệu: "${token}"`)
+    else throw new Error(`Invalid step in rhythm pattern: "${token}"`)
   }
   return { kind: 'pick', notes }
 }
@@ -77,19 +77,19 @@ export function stepsPerBar(r: Pick<Rhythm, 'beatsPerBar' | 'stepsPerBeat'>): nu
   return r.beatsPerBar * r.stepsPerBeat
 }
 
-/** Kiểm tra mẫu có đúng số bước cho một ô nhịp. */
+/** Checks the pattern has the right number of steps for one bar. */
 export function validateRhythm(r: Rhythm): void {
   const steps = parsePattern(r.pattern)
-  if (steps.length !== stepsPerBar(r)) throw new Error(`Điệu ${r.id}: cần ${stepsPerBar(r)} bước, có ${steps.length}`)
+  if (steps.length !== stepsPerBar(r)) throw new Error(`Rhythm ${r.id}: needs ${stepsPerBar(r)} steps, has ${steps.length}`)
 }
 
 const vi = (v: string, en: string): Localized => ({ vi: v, en })
 
 /**
- * Thư viện điệu. Đây là những phiên bản phổ biến / đơn giản hóa để tập — mỗi điệu ngoài đời có nhiều biến thể.
+ * Rhythm library. These are common / simplified versions for practice — each rhythm has many variants in real life.
  */
 export const RHYTHMS: Rhythm[] = [
-  // ---- Quạt
+  // ---- Strumming
   { id: 'ballad', name: vi('Ballad / Pop', 'Ballad / Pop'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D - D U - U D U', defaultTempo: 80, groove: 'ballad', description: vi('Kiểu quạt cơ bản nhất, hợp với rất nhiều bài pop và ballad.', 'The most basic strumming pattern, fits a huge number of pop songs and ballads.') },
   { id: 'slow', name: vi('Slow', 'Slow'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D - - U X - D U', defaultTempo: 66, groove: 'ballad', description: vi('Chậm, nhẹ, có tiếng chặn ở phách 3.', 'Slow and gentle, with a muted hit on beat 3.') },
   { id: 'slowrock', name: vi('Slow Rock', 'Slow rock (12/8)'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 3, pattern: 'D d d X d d D d d X d d', defaultTempo: 60, groove: 'slowrock', description: vi('Mỗi phách chia ba (12/8), chặn ở phách 2 và 4.', 'Each beat split in three (12/8), with mutes on beats 2 and 4.') },
@@ -105,7 +105,7 @@ export const RHYTHMS: Rhythm[] = [
   { id: 'tango', name: vi('Tango', 'Tango'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'X - X - X - X X', defaultTempo: 110, groove: 'pop', description: vi('Dứt khoát, tiếng chặn mạnh.', 'Crisp and sharp, with strong muted hits.') },
   { id: 'surf', name: vi('Surf', 'Surf'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D U D U D U D U', defaultTempo: 140, groove: 'rock', description: vi('Quạt lên xuống liên tục, rất sôi động.', 'Continuous down-up strumming, very energetic.') },
   { id: 'reggae', name: vi('Reggae', 'Reggae'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: '- - X - - - X -', defaultTempo: 80, groove: 'pop', description: vi('Chỉ đánh chặn ở phách 2 và 4 (phách yếu).', 'Only short muted chops on beats 2 and 4 (the offbeats).') },
-  // ---- Móc
+  // ---- Picking
   { id: 'ballad-pick', name: vi('Móc Ballad', 'Ballad picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'B 3 2 3 1 3 2 3', defaultTempo: 76, groove: 'ballad', description: vi('Kiểu móc cơ bản nhất: bass rồi rải các dây cao.', 'The most basic fingerpicking pattern: bass, then the treble strings.') },
   { id: 'slow-pick', name: vi('Móc Slow', 'Slow picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 2, pattern: "B 3 2 1 B' 3 2 1", defaultTempo: 66, groove: 'ballad', description: vi('Rải lên đều, bass luân phiên ở phách 3.', 'Even upward arpeggios, alternate bass on beat 3.') },
   { id: 'slowrock-pick', name: vi('Móc Slow Rock', 'Slow rock picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 3, pattern: "B 3 2 1 2 3 B' 3 2 1 2 3", defaultTempo: 60, groove: 'slowrock', description: vi('Chùm ba 12/8: rải lên rồi xuống.', 'Triplets in 12/8: arpeggio up and back down.') },
@@ -119,6 +119,6 @@ export const RHYTHMS: Rhythm[] = [
 
 export function rhythm(id: string): Rhythm {
   const r = RHYTHMS.find((x) => x.id === id)
-  if (!r) throw new Error(`Không có điệu: ${id}`)
+  if (!r) throw new Error(`Unknown rhythm: ${id}`)
   return r
 }

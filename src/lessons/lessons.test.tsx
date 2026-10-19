@@ -5,8 +5,8 @@ import { renderWithProviders } from '../test/renderWithProviders'
 import { MODULES } from './modules'
 import { LESSONS, lessonMeta, lessonPath, lessonsOf, neighbors } from './registry'
 
-describe('danh sách bài học', () => {
-  it('có bài cho Module 0–3, đúng thứ tự', () => {
+describe('lesson list', () => {
+  it('has lessons for Modules 0–3, in order', () => {
     for (const id of ['m0-ban-do', 'm1-quang', 'm2-scale-truong', 'm3-hop-am-ba']) {
       expect(lessonsOf(id).length, id).toBeGreaterThan(0)
     }
@@ -15,7 +15,7 @@ describe('danh sách bài học', () => {
     expect(indices).toEqual([...indices].sort((a, b) => a - b))
   })
 
-  it('mỗi bài có meta đầy đủ và id duy nhất', () => {
+  it('every lesson has complete meta and a unique id', () => {
     for (const l of LESSONS) {
       expect(lessonMeta(l, 'vi').title, l.id).toBeTruthy()
       expect(lessonMeta(l, 'vi').description, l.id).toBeTruthy()
@@ -24,18 +24,18 @@ describe('danh sách bài học', () => {
     expect(new Set(LESSONS.map((l) => l.id)).size).toBe(LESSONS.length)
   })
 
-  it('bài trước / bài sau nối liền nhau', () => {
+  it('previous / next lessons link up', () => {
     expect(neighbors(LESSONS[0].id).prev).toBeUndefined()
     expect(neighbors(LESSONS[0].id).next).toBe(LESSONS[1])
     expect(neighbors(LESSONS[LESSONS.length - 1].id).next).toBeUndefined()
   })
 })
 
-describe('mỗi bài học hiển thị được', () => {
+describe('every lesson renders', () => {
   beforeEach(() => localStorage.clear())
 
-  // Id bài tập dùng làm khóa lưu tiến độ nên không được trùng giữa các bài,
-  // và bản tiếng Việt / tiếng Anh của cùng một bài phải có đúng cùng bộ id.
+  // Exercise ids are progress storage keys, so they must not repeat across lessons,
+  // and the Vietnamese / English versions of a lesson must have exactly the same set of ids.
   const exerciseOwner = new Map<string, string>()
   const idsByVariant = new Map<string, string[]>()
 
@@ -44,7 +44,7 @@ describe('mỗi bài học hiển thị được', () => {
       for (const locale of ['vi', 'en'] as const) {
         it(`${lesson.id} (${instrument}, ${locale})`, async () => {
           const { container } = renderWithProviders(<AppRoutes />, { route: lessonPath(lesson), instrument, locale })
-          // Nội dung bài được tải riêng (lazy): chờ nội dung hiện ra.
+          // Lesson content is lazy-loaded: wait for it to appear.
           await waitFor(() => expect(container.querySelector('article')?.textContent?.length ?? 0).toBeGreaterThan(100), { timeout: 10_000 })
           expect(screen.getByRole('heading', { level: 1, name: lessonMeta(lesson, locale).title })).toBeInTheDocument()
           expect(screen.queryByRole('note'), 'bài chưa được dịch').not.toBeInTheDocument()

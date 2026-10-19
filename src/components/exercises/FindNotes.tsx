@@ -12,9 +12,9 @@ import { buttonClass } from './styles'
 interface FindNotesProps {
   id: string
   prompt: string
-  /** Các nốt cần tìm, cách nhau bởi khoảng trắng: "D F A". */
+  /** Notes to find, space-separated: "D F A". */
   targets: string
-  /** Guitar: chỉ được chọn trên dây này. */
+  /** Guitar: only allow picking on this string. */
   string?: number
   frets?: number
 }
@@ -22,8 +22,8 @@ interface FindNotesProps {
 type Selection = { midi: number; position?: StringFret }
 
 /**
- * Bài tập "bấm trên đàn": người học chọn các nốt trên đàn ảo rồi bấm Kiểm tra.
- * Chấm theo tên nốt (bấm ở quãng tám nào cũng được).
+ * "Play it on the instrument" exercise: the learner selects notes on the virtual instrument, then presses Check.
+ * Graded by note name (any octave counts).
  */
 export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotesProps) {
   const { progress, recordQuiz } = useProgress()
@@ -48,7 +48,7 @@ export function FindNotes({ id, prompt, targets, string, frets = 12 }: FindNotes
     setSelected((sel) => (sel.some((s) => sameSelection(s, item)) ? sel.filter((s) => !sameSelection(s, item)) : [...sel, item]))
   }
 
-  // Nốt chơi trên đàn thật được thêm vào lựa chọn (không bỏ chọn khi chơi lại).
+  // Notes played on a real instrument are added to the selection (playing again does not deselect).
   useLiveNote((m) => {
     const p = instrument === 'guitar' ? positionForMidi(tuning('standard'), m, frets, string) : null
     if (instrument === 'guitar' && !p) return

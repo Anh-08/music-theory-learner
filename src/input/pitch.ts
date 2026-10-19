@@ -1,6 +1,6 @@
 /**
- * Nhận diện cao độ một nốt đơn bằng phương pháp McLeod (NSDF — normalized square difference function).
- * Trả về tần số (Hz) và độ rõ (0–1); null nếu không tìm được chu kỳ rõ ràng.
+ * Single-note pitch detection using the McLeod method (NSDF — normalized square difference function).
+ * Returns the frequency (Hz) and clarity (0–1); null when no clear period is found.
  */
 export function detectPitch(buf: Float32Array, sampleRate: number, minFreq = 40, maxFreq = 1500): { freq: number; clarity: number } | null {
   const n = buf.length
@@ -17,10 +17,10 @@ export function detectPitch(buf: Float32Array, sampleRate: number, minFreq = 40,
     nsdf[tau] = m > 0 ? (2 * acf) / m : 0
   }
 
-  // Tìm các đỉnh dương giữa các lần cắt 0 đi xuống; chọn đỉnh đầu tiên đạt ≥ 90% đỉnh cao nhất.
+  // Find the positive peaks between downward zero crossings; take the first peak reaching ≥ 90% of the highest.
   const peaks: number[] = []
   let tau = minLag
-  while (tau < maxLag && nsdf[tau] > 0) tau++ // bỏ đoạn dương đầu (quanh lag 0)
+  while (tau < maxLag && nsdf[tau] > 0) tau++ // skip the initial positive lobe (around lag 0)
   while (tau < maxLag) {
     while (tau < maxLag && nsdf[tau] <= 0) tau++
     let best = tau
@@ -34,7 +34,7 @@ export function detectPitch(buf: Float32Array, sampleRate: number, minFreq = 40,
   const highest = Math.max(...peaks.map((p) => nsdf[p]))
   const chosen = peaks.find((p) => nsdf[p] >= 0.9 * highest)!
 
-  // Nội suy parabol quanh đỉnh để có chu kỳ lẻ.
+  // Parabolic interpolation around the peak for a fractional period.
   const a = nsdf[chosen - 1] ?? nsdf[chosen]
   const b = nsdf[chosen]
   const c = nsdf[chosen + 1] ?? nsdf[chosen]
@@ -44,7 +44,7 @@ export function detectPitch(buf: Float32Array, sampleRate: number, minFreq = 40,
   return { freq: sampleRate / period, clarity: b }
 }
 
-/** Tần số → số midi gần nhất và độ lệch cent. */
+/** Frequency → nearest midi number and cent offset. */
 export function freqToMidi(freq: number): { midi: number; cents: number } {
   const exact = 69 + 12 * Math.log2(freq / 440)
   const midi = Math.round(exact)
@@ -58,15 +58,15 @@ export function rms(buf: Float32Array): number {
 }
 
 /**
- * Bộ dò "nốt mới bắt đầu" (onset) theo năng lượng: báo khi âm lượng tăng vọt so với mức trung bình gần đây.
- * Gọi `push(level, time)` cho mỗi khung phân tích; trả về true nếu khung này là một onset.
+ * Energy-based "new note started" (onset) detector: fires when the level jumps above the recent average.
+ * Call `push(level, time)` for every analysis frame; returns true if this frame is an onset.
  */
 export function createOnsetDetector({ ratio = 1.8, minLevel = 0.02, minGap = 0.09 } = {}) {
   let avg = 0
   let prev = 0
   let last = -Infinity
   return (level: number, time: number): boolean => {
-    // Phải đang tăng so với khung trước — tránh báo nhầm khi một nốt đang tắt dần.
+    // Must be rising compared with the previous frame — avoids false onsets while a note decays.
     const onset = level > minLevel && level > avg * ratio && level > prev * 1.3 && time - last >= minGap
     avg = avg * 0.85 + level * 0.15
     prev = level

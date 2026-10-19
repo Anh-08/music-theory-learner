@@ -1,5 +1,5 @@
 export function pick<T>(items: readonly T[], random: () => number = Math.random): T {
-  if (items.length === 0) throw new Error('Không có gì để chọn')
+  if (items.length === 0) throw new Error('Nothing to pick from')
   return items[Math.floor(random() * items.length)]
 }
 

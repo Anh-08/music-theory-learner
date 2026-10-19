@@ -11,14 +11,14 @@ function read<T>(key: string, fallback: T): T {
   }
 }
 
-/** useState có lưu vào localStorage (bỏ qua lỗi nếu trình duyệt chặn bộ nhớ). */
+/** useState persisted to localStorage (ignores errors when the browser blocks storage). */
 export function usePersistentState<T>(key: string, fallback: T) {
   const [value, setValue] = useState<T>(() => read(key, fallback))
   useEffect(() => {
     try {
       localStorage.setItem(PREFIX + key, JSON.stringify(value))
     } catch {
-      // Không lưu được thì thôi — cài đặt chỉ là tiện ích.
+      // If it cannot be saved, never mind — settings are only a convenience.
     }
   }, [key, value])
   return [value, setValue] as const

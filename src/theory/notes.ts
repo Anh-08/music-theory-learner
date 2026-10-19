@@ -1,10 +1,10 @@
 import { Note } from 'tonal'
 import type { Locale } from '../i18n/locale'
 
-/** Số nửa cung tính từ C (0–11), không phụ thuộc quãng tám. */
+/** Semitones from C (0–11), independent of octave. */
 export type Chroma = number
 
-/** Hai cách viết tên cho 12 nốt: theo dấu thăng và theo dấu giáng. */
+/** Two spellings for the 12 notes: with sharps and with flats. */
 const SHARP_NAMES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 const FLAT_NAMES = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B']
 
@@ -17,13 +17,13 @@ export const CHROMAS: Chroma[] = Array.from({ length: 12 }, (_, i) => i)
 
 export function chroma(note: string): Chroma {
   const c = Note.chroma(note)
-  if (c === undefined || Number.isNaN(c)) throw new Error(`Nốt không hợp lệ: ${note}`)
+  if (c === undefined || Number.isNaN(c)) throw new Error(`Invalid note: ${note}`)
   return c
 }
 
 export function midi(note: string): number {
   const m = Note.midi(note)
-  if (m === null) throw new Error(`Nốt không có cao độ: ${note}`)
+  if (m === null) throw new Error(`Note has no pitch: ${note}`)
   return m
 }
 
@@ -31,7 +31,7 @@ export function chromaOfMidi(m: number): Chroma {
   return ((m % 12) + 12) % 12
 }
 
-/** Các cách viết có thể có của một chroma (1 hoặc 2 tên). */
+/** Possible spellings of a chroma (1 or 2 names). */
 export function spellingsOf(c: Chroma): string[] {
   const sharp = SHARP_NAMES[c]
   const flat = FLAT_NAMES[c]
@@ -42,12 +42,12 @@ export function noteFromMidi(m: number, preferFlats = false): string {
   return preferFlats ? Note.fromMidi(m) : Note.fromMidiSharps(m)
 }
 
-/** Số dấu hóa trong một tên nốt (♭♭ tính là 2). */
+/** Number of accidentals in a note name (♭♭ counts as 2). */
 export function accidentalCount(note: string): number {
   return Note.get(note).acc.length
 }
 
-/** Hiển thị ♯/♭ thay vì #/b: "Bb" → "B♭". */
+/** Show ♯/♭ instead of #/b: "Bb" → "B♭". */
 export function displayNote(note: string): string {
   const { letter, acc } = Note.get(note)
   if (!letter) return note
@@ -63,9 +63,9 @@ export function solfege(c: Chroma, locale: Locale = 'vi'): string {
 }
 
 /**
- * Chọn cách viết chủ âm sao cho tập nốt sinh ra có ít dấu hóa nhất
- * (ví dụ giọng có 5 nốt ♯ chủ âm C♯ sẽ chọn D♭ trưởng thay vì C♯ trưởng).
- * Hòa thì ưu tiên dấu thăng.
+ * Picks the root spelling whose resulting notes have the fewest accidentals
+ * (e.g. a key with 5 sharps on C♯ becomes D♭ major instead of C♯ major).
+ * Ties prefer sharps.
  */
 export function bestRootSpelling(c: Chroma, build: (root: string) => string[]): string {
   let best = spellingsOf(c)[0]

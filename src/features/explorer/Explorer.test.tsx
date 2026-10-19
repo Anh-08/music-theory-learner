@@ -5,14 +5,14 @@ import { Explorer } from './Explorer'
 describe('Explorer', () => {
   beforeEach(() => localStorage.clear())
 
-  it('mặc định hiển thị C trưởng trên guitar', () => {
+  it('shows C major on guitar by default', () => {
     render(<Explorer />)
     expect(screen.getByRole('heading', { name: 'C Trưởng' })).toBeInTheDocument()
     expect(screen.getByRole('group', { name: /Cần đàn guitar/ })).toBeInTheDocument()
     expect(screen.queryByRole('group', { name: /Bàn phím piano/ })).not.toBeInTheDocument()
   })
 
-  it('đổi chủ âm và loại scale', () => {
+  it('changes the root and the scale type', () => {
     render(<Explorer />)
     fireEvent.change(screen.getByLabelText('Chủ âm'), { target: { value: '9' } })
     fireEvent.change(screen.getByLabelText('Loại scale'), { target: { value: 'minor pentatonic' } })
@@ -21,7 +21,7 @@ describe('Explorer', () => {
     expect(notes).toHaveTextContent('ACDEG')
   })
 
-  it('chuyển sang hợp âm và piano', () => {
+  it('switches to chords and piano', () => {
     render(<Explorer />)
     fireEvent.click(screen.getByRole('radio', { name: 'Hợp âm' }))
     fireEvent.change(screen.getByLabelText('Loại hợp âm'), { target: { value: 'maj7' } })
@@ -31,7 +31,7 @@ describe('Explorer', () => {
     expect(screen.queryByLabelText('Tuning')).not.toBeInTheDocument()
   })
 
-  it('nhớ lựa chọn sau khi tải lại', () => {
+  it('remembers the selection after a reload', () => {
     const { unmount } = render(<Explorer />)
     fireEvent.change(screen.getByLabelText('Chủ âm'), { target: { value: '7' } })
     unmount()

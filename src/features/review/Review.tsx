@@ -13,7 +13,7 @@ interface Session {
   index: number
   correct: number
   answered: number
-  /** Thẻ đã trả lời sai trong lượt này — được hỏi lại một lần ở cuối. */
+  /** Cards answered wrong in this session — asked again once at the end. */
   retried: string[]
 }
 

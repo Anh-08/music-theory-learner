@@ -3,26 +3,26 @@ import type { ChordShape } from '../../theory'
 
 interface ChordDiagramProps {
   shape: ChordShape
-  /** Tên hợp âm hiện trên sơ đồ. */
+  /** Chord name shown on the diagram. */
   name?: string
-  /** Nhãn từng dây (dây 6 → 1), ví dụ quãng "1 3 5"; bỏ trống thì hiện số ngón. */
+  /** Label per string (string 6 → 1), e.g. intervals "1 3 5"; empty shows finger numbers. */
   labels?: (string | null)[]
-  /** Dây nốt gốc (dây 6 → 1) để tô đỏ. */
+  /** Strings holding the root (string 6 → 1), drawn in red. */
   rootStrings?: boolean[]
   size?: number
-  /** Không vẽ tên trên sơ đồ (tên đã hiện bên ngoài) — tên vẫn dùng cho trình đọc màn hình. */
+  /** Do not draw the name on the diagram (it is shown outside) — the name is still used for screen readers. */
   hideName?: boolean
 }
 
 const STRINGS = 6
 const FRETS = 5
 
-/** Sơ đồ hợp âm dạng ô dọc như sách hợp âm: dây dọc, phím ngang, chấm ghi số ngón; x / o ở trên. */
+/** Vertical chord-book style diagram: strings vertical, frets horizontal, dots with finger numbers; x / o on top. */
 export function ChordDiagram({ shape, name, labels, rootStrings, size = 150, hideName = false }: ChordDiagramProps) {
   const { t } = useT()
   const fretted = shape.frets.filter((f): f is number => f !== null && f > 0)
   const maxF = fretted.length ? Math.max(...fretted) : 0
-  // Thế thấp (vừa trong 5 phím đầu) vẽ từ đầu đàn; thế cao vẽ từ phím thấp nhất, ghi "Nfr".
+  // Low shapes (within the first 5 frets) are drawn from the nut; higher shapes from their lowest fret, marked "Nfr".
   const base = maxF <= FRETS ? 1 : Math.min(...fretted)
   const W = 100
   const H = 120

@@ -10,7 +10,7 @@ interface SegmentedProps<T extends string> {
   onChange: (value: T) => void
 }
 
-/** Nhóm nút chọn một trong vài lựa chọn. */
+/** Button group for picking one of a few options. */
 export function Segmented<T extends string>({ label, value, options, onChange }: SegmentedProps<T>) {
   return (
     <div>

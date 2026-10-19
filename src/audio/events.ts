@@ -1,18 +1,18 @@
-/** Một lần phát: các nốt (midi) cùng vang lên tại thời điểm `at` (giây, tính từ lúc bắt đầu). */
+/** One playback event: the notes (midi) sounding together at `at` (seconds from the start). */
 export interface PlayEvent {
   midis: number[]
   at: number
   duration: number
 }
 
-/** Các nốt lần lượt từng nốt một. */
+/** Notes one at a time. */
 export function sequenceEvents(midis: number[], step = 0.35, duration = step * 1.6): PlayEvent[] {
   return midis.map((m, i) => ({ midis: [m], at: i * step, duration }))
 }
 
 /**
- * Hợp âm. `roll` > 0 rải các nốt từ trầm lên cao cách nhau `roll` giây
- * (giống tiếng quạt xuống trên guitar); 0 là bấm cùng lúc.
+ * A chord. `roll` > 0 rolls the notes from low to high, `roll` seconds apart
+ * (like a guitar downstroke); 0 strikes them together.
  */
 export function chordEvents(midis: number[], roll = 0, duration = 2): PlayEvent[] {
   const sorted = [...midis].sort((a, b) => a - b)
@@ -20,7 +20,7 @@ export function chordEvents(midis: number[], roll = 0, duration = 2): PlayEvent[
   return sorted.map((m, i) => ({ midis: [m], at: i * roll, duration: duration - i * roll }))
 }
 
-/** Rải hợp âm từng nốt rồi đánh cả hợp âm. */
+/** Arpeggiate the chord note by note, then strike the whole chord. */
 export function arpeggioThenChord(midis: number[], step = 0.3, roll = 0): PlayEvent[] {
   const arp = sequenceEvents(midis, step)
   const start = midis.length * step + 0.2

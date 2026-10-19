@@ -7,28 +7,28 @@ export type StepListener = (midis: number[] | null) => void
 let session = 0
 let stopCurrent: (() => void) | null = null
 
-/** Được gọi khi chủ khác (chuỗi nốt mới, hoặc Jam) lấy Transport: kết thúc chuỗi đang phát. */
+/** Called when another owner (a new note sequence, or the Jam) takes the Transport: ends the current sequence. */
 function release() {
   stopCurrent?.()
   stopCurrent = null
 }
 
-/** Phát ngay một nốt (khi bấm vào đàn ảo); không làm dừng chuỗi đang phát. */
+/** Plays one note immediately (when clicking the virtual instrument); does not stop the current sequence. */
 export async function playNote(instrument: InstrumentId, midi: number, duration = 1.2): Promise<void> {
   const [T, voice] = await Promise.all([getTone(), getVoice(instrument)])
   voice.play([midi], T.now(), duration)
 }
 
 /**
- * Phát một chuỗi sự kiện qua Transport (dừng được giữa chừng).
- * `onStep` được gọi đúng lúc từng nhóm nốt vang lên — dùng để tô sáng trên đàn — và với `null` khi kết thúc.
- * Promise hoàn thành khi phát xong hoặc khi bị dừng.
+ * Plays a sequence of events through the Transport (can be stopped midway).
+ * `onStep` fires exactly when each group of notes sounds — used for highlighting on the instrument — and with `null` at the end.
+ * The promise resolves when playback finishes or is stopped.
  */
 export async function playEvents(instrument: InstrumentId, events: PlayEvent[], onStep?: StepListener): Promise<void> {
   const id = ++session
   const [T, voice] = await Promise.all([getTone(), getVoice(instrument)])
   if (id !== session) return
-  // Chuỗi trước (hoặc Jam) bị thay thế: báo cho nó kết thúc.
+  // The previous sequence (or the Jam) is replaced: tell it to finish.
   release()
   claimTransport(release)
   const transport = T.getTransport()
@@ -47,7 +47,7 @@ export async function playEvents(instrument: InstrumentId, events: PlayEvent[], 
   await new Promise<void>((resolve) => {
     const end = totalDuration(events)
     transport.schedule((time) => {
-      // Không dùng Draw ở đây: Draw chạy theo requestAnimationFrame, bị dừng khi tab bị ẩn.
+      // No Draw here: Draw runs on requestAnimationFrame, which stops when the tab is hidden.
       setTimeout(
         () => {
           if (id === session && ownsTransport(release)) {
@@ -71,7 +71,7 @@ export async function playEvents(instrument: InstrumentId, events: PlayEvent[], 
 
 export async function stopPlayback(): Promise<void> {
   session++
-  // Không đụng tới Transport nếu nó đang thuộc về Jam.
+  // Leave the Transport alone if it belongs to the Jam.
   if (!isToneLoaded() || !ownsTransport(release)) return
   const T = await getTone()
   const transport = T.getTransport()

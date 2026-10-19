@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useT } from '../../i18n/useT'
 
 interface ExerciseCardProps {
-  /** Id bài tập — cũng dùng làm khóa lưu tiến độ, phải duy nhất trong toàn bộ bài học. */
+  /** Exercise id — also the progress storage key, must be unique across all lessons. */
   id: string
   kind: string
   done?: boolean
@@ -10,7 +10,7 @@ interface ExerciseCardProps {
   children: ReactNode
 }
 
-/** Khung chung cho mọi bài tập trong bài học. */
+/** Shared frame for every exercise in a lesson. */
 export function ExerciseCard({ id, kind, done, doneLabel, children }: ExerciseCardProps) {
   const { t } = useT()
   return (

@@ -15,5 +15,5 @@ import { JamPlayer } from '../features/jam/JamPlayer'
 import { RhythmTrainer } from '../features/rhythm/RhythmTrainer'
 import { ChordReflex } from '../features/reflex/ChordReflex'
 
-/** Các component dùng được trực tiếp trong file bài học .mdx mà không cần import. */
+/** Components usable directly in .mdx lesson files without importing. */
 export const mdxComponents = { Show, Play, PlayChords, OnlyFor, Callout, CircleOfFifths, Quiz, FindNotes, EarQuiz, NoteDrill, Jam: JamPlayer, RhythmPlayer: RhythmTrainer, RhythmQuiz, PatternView, ChordShapes, ChordReflex }

@@ -6,7 +6,7 @@ import { renderWithProviders } from '../test/renderWithProviders'
 describe('Key Explorer', () => {
   beforeEach(() => localStorage.clear())
 
-  it('hiện hợp âm thuận giọng và đổi giọng trên vòng quãng năm', () => {
+  it('shows diatonic chords and changes key on the circle of fifths', () => {
     renderWithProviders(<AppRoutes />, { route: '/keys' })
     expect(screen.getByRole('heading', { level: 2, name: 'C trưởng' })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Nghe tiến trình Dm' })).toBeInTheDocument()
@@ -20,20 +20,20 @@ describe('Key Explorer', () => {
   })
 })
 
-describe('Nhận diện hợp âm', () => {
+describe('Chord identifier', () => {
   beforeEach(() => localStorage.clear())
 
-  it('guitar: bấm thế C mở thì ra hợp âm C, mỗi dây một nốt', () => {
+  it('guitar: fretting an open C shape gives a C chord, one note per string', () => {
     renderWithProviders(<AppRoutes />, { route: '/identify', instrument: 'guitar' })
     for (const label of ['Dây 5, phím 3: C', 'Dây 4, phím 2: E', 'Dây 3, buông: G', 'Dây 2, phím 1: C', 'Dây 1, buông: E']) fireEvent.click(screen.getByLabelText(label))
     const region = screen.getByText('Có thể là').parentElement!
     expect(within(region).getByText('C')).toBeInTheDocument()
-    // Bấm phím khác trên cùng dây thì thay nốt cũ: dây 4 phím 2 (E) → phím 1 (D#)… thành C+/C aug? kiểm tra nốt được thay.
+    // Another fret on the same string replaces the old note: string 4 fret 2 (E) → fret 1 (D#); check the note was replaced.
     fireEvent.click(screen.getByLabelText('Dây 4, phím 1: D♯ / E♭'))
     expect(screen.getByText(/C – D♯ – G – C – E|C – E♭ – G – C – E/)).toBeInTheDocument()
   })
 
-  it('piano: chưa đủ 3 nốt thì nhắc', () => {
+  it('piano: prompts when there are fewer than 3 notes', () => {
     renderWithProviders(<AppRoutes />, { route: '/identify', instrument: 'piano' })
     fireEvent.click(screen.getByLabelText('Phím A quãng tám 3'))
     fireEvent.click(screen.getByLabelText('Phím C quãng tám 4'))
@@ -43,10 +43,10 @@ describe('Nhận diện hợp âm', () => {
   })
 })
 
-describe('Ôn tập', () => {
+describe('Review', () => {
   beforeEach(() => localStorage.clear())
 
-  it('một lượt ôn: trả lời, ghi lịch ôn, kết thúc', () => {
+  it('one review session: answer, schedule the review, finish', () => {
     localStorage.setItem('mtl:review.decks', JSON.stringify(['key-sig']))
     renderWithProviders(<AppRoutes />, { route: '/review' })
     fireEvent.click(screen.getByRole('button', { name: /Bắt đầu ôn \(12 thẻ\)/ }))
@@ -61,10 +61,10 @@ describe('Ôn tập', () => {
   })
 })
 
-describe('Nhận diện hợp âm — bấm nhanh', () => {
+describe('Chord identifier — quick clicks', () => {
   beforeEach(() => localStorage.clear())
 
-  it('bấm liên tiếp nhiều nốt trong cùng một lượt vẫn giữ đủ nốt', () => {
+  it('several notes clicked in the same tick are all kept', () => {
     renderWithProviders(<AppRoutes />, { route: '/identify', instrument: 'guitar' })
     act(() => {
       for (const label of ['Dây 6, phím 3: G', 'Dây 5, phím 2: B', 'Dây 4, buông: D', 'Dây 1, phím 1: F']) {

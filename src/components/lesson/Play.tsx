@@ -7,14 +7,14 @@ import { useSettings } from '../../store/settingsContext'
 import { midi } from '../../theory'
 
 interface PlayProps {
-  /** Nốt có số quãng tám, cách nhau bởi khoảng trắng: "C4 E4". */
+  /** Notes with octave numbers, space-separated: "C4 E4". */
   notes: string
-  /** "sequence": lần lượt (mặc định), "chord": cùng lúc, "both": lần lượt rồi cùng lúc. */
+  /** "sequence": one by one (default), "chord": together, "both": one by one then together. */
   as?: 'sequence' | 'chord' | 'both'
   children?: ReactNode
 }
 
-/** Nút nghe nhỏ đặt giữa đoạn văn. */
+/** Small inline listen button inside a paragraph. */
 export function Play({ notes, as = 'sequence', children }: PlayProps) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)

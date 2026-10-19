@@ -9,15 +9,15 @@ import { shapeCaption, shapeIntervalLabels } from './shapeLabels'
 interface ChordShapeGridProps {
   root: string
   intervals: string[]
-  /** Tên hiển thị, ví dụ "Cmaj7". */
+  /** Display name, e.g. "Cmaj7". */
   name: string
-  /** Khóa duy nhất của hợp âm (dùng làm khóa bộ nhớ đệm), ví dụ "Cmaj7". */
+  /** Unique chord key (used as the cache key), e.g. "Cmaj7". */
   symbol: string
   labels?: 'fingers' | 'intervals'
   max?: number
 }
 
-/** Lưới sơ đồ các thế bấm của một hợp âm, mỗi thế có nút nghe. */
+/** Grid of diagrams for every shape of a chord, each with a listen button. */
 export function ChordShapeGrid({ root, intervals, name, symbol, labels = 'fingers', max = 8 }: ChordShapeGridProps) {
   const { t } = useT()
   const { play } = usePlayer('guitar')

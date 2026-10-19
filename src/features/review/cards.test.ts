@@ -8,8 +8,8 @@ function seeded(seed: number) {
   }
 }
 
-describe('thẻ ôn tập', () => {
-  it('mọi thẻ dựng được câu hỏi 4 lựa chọn khác nhau, đáp án nằm trong lựa chọn', () => {
+describe('review cards', () => {
+  it('every card builds a question with 4 distinct options, the answer among them', () => {
     const random = seeded(42)
     for (const id of cardIds(DECKS.map((d) => d.id))) {
       for (const locale of ['vi', 'en'] as const) {
@@ -21,7 +21,7 @@ describe('thẻ ôn tập', () => {
     }
   })
 
-  it('câu hỏi đúng nội dung', () => {
+  it('questions have the right content', () => {
     const r = seeded(7)
     const q = buildQuestion('chord-spell:m7', 'vi', r)
     expect(q.params.chord).toMatch(/m7$/)
@@ -33,7 +33,7 @@ describe('thẻ ôn tập', () => {
     expect(ear.options[ear.answer]).toBe('Quãng 5 đúng')
   })
 
-  it('câu đọc nốt hợp âm không có dấu hóa kép', () => {
+  it('chord note-reading questions have no double accidentals', () => {
     const r = seeded(3)
     for (let i = 0; i < 200; i++) {
       const q = buildQuestion(`chord-spell:${['M', 'm', 'dim', 'aug', 'maj7', '7', 'm7', 'm7b5'][i % 8]}`, 'vi', r)
@@ -41,7 +41,7 @@ describe('thẻ ôn tập', () => {
     }
   })
 
-  it('chọn thẻ đến hạn trước rồi tới thẻ mới', () => {
+  it('picks due cards first, then new cards', () => {
     const srs = { 'key-sig:G': { box: 2, due: 50 }, 'key-sig:D': { box: 1, due: 10 }, 'key-sig:A': { box: 3, due: 999 } }
     const s = pickSession(srs, ['key-sig'], 100, 5, seeded(1))
     expect(s.slice(0, 2)).toEqual(['key-sig:D', 'key-sig:G'])
@@ -49,7 +49,7 @@ describe('thẻ ôn tập', () => {
     expect(s).toHaveLength(5)
   })
 
-  it('thống kê bộ thẻ', () => {
+  it('deck statistics', () => {
     const srs = { 'diatonic:0': { box: 5, due: 999 }, 'diatonic:1': { box: 0, due: 0 } }
     expect(deckStats(srs, 'diatonic', 100)).toEqual({ total: 7, due: 1, fresh: 5, learned: 1 })
   })

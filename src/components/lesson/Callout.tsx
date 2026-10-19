@@ -6,7 +6,7 @@ const STYLES = {
   practice: { icon: '🎸', box: 'border-rose-300 bg-rose-50 dark:border-rose-800 dark:bg-rose-950/40' },
 }
 
-/** Hộp ghi chú trong bài học. `practice` là phần "cầm đàn lên tập". */
+/** Note box in a lesson. `practice` is the "pick up your instrument and practise" section. */
 export function Callout({ type = 'note', title, children }: { type?: keyof typeof STYLES; title?: string; children: ReactNode }) {
   const s = STYLES[type]
   return (

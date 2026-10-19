@@ -1,20 +1,20 @@
-/** Nốt bass tính theo hợp âm hiện tại: các bậc của hợp âm, hoặc một quãng cụ thể từ nốt gốc ("6M"). */
+/** Bass note relative to the current chord: a chord degree, or a specific interval from the root ("6M"). */
 export type BassNote = 'root' | 'third' | 'fifth' | 'seventh' | 'octave' | string
 
-/** Mô tả từng nhịp nằm trong bản dịch giao diện, khóa "groove.<id>". */
+/** Each groove's description lives in the UI translations, key "groove.<id>". */
 export interface Groove {
   id: 'pop' | 'ballad' | 'rock' | 'blues' | 'bossa' | 'slowrock' | 'waltz'
   name: string
-  /** Số phách trong ô nhịp. */
+  /** Beats per bar. */
   beatsPerBar: 3 | 4
-  /** Số bước trong một ô nhịp: 16 (4/4, móc kép), 12 (4/4 chùm ba), 6 (3/4, móc đơn). */
+  /** Steps per bar: 16 (4/4, sixteenths), 12 (4/4, triplets), 6 (3/4, eighths). */
   stepsPerBar: 16 | 12 | 6
   defaultTempo: number
   kick: number[]
   snare: number[]
   hat: number[]
   bass: { step: number; note: BassNote; len: number }[]
-  /** Nhịp đệm hợp âm. `tones` = chỉ số các nốt trong cách xếp hợp âm (rải); bỏ trống = đánh cả hợp âm. */
+  /** Chord comping rhythm. `tones` = indices of notes in the chord voicing (arpeggiated); empty = whole chord. */
   comp: { step: number; len: number; tones?: number[] }[]
 }
 

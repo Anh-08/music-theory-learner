@@ -1,12 +1,12 @@
 import { useEffect, useMemo, type ReactNode } from 'react'
 import type { InstrumentId } from '../audio/instruments'
-import type { Locale } from '../i18n/locale'
+import { browserLocale, type Locale } from '../i18n/locale'
 import { SettingsContext } from './settingsContext'
 import { usePersistentState } from './usePersistentState'
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [instrument, setInstrument] = usePersistentState<InstrumentId>('instrument', 'guitar')
-  const [locale, setLocale] = usePersistentState<Locale>('locale', 'vi')
+  const [locale, setLocale] = usePersistentState<Locale>('locale', browserLocale())
   useEffect(() => {
     document.documentElement.lang = locale
   }, [locale])

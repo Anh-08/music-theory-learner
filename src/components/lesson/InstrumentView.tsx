@@ -9,19 +9,19 @@ export interface InstrumentViewProps {
   highlights: HighlightMap
   activeMidis?: ReadonlySet<number>
   onPick?: (midi: number, position?: FretPosition) => void
-  /** Guitar: chỉ tô các vị trí này. */
+  /** Guitar: highlight only these positions. */
   only?: StringFret[]
-  /** Piano: chỉ tô các phím này. */
+  /** Piano: highlight only these keys. */
   onlyMidis?: ReadonlySet<number>
   fretCount?: number
   pianoRange?: [number, number]
-  /** Bỏ qua nhạc cụ trong cài đặt. */
+  /** Override the instrument from settings. */
   instrument?: InstrumentId
 }
 
 const STANDARD = tuning('standard')
 
-/** Cần đàn hoặc bàn phím, tùy nhạc cụ người học đã chọn. */
+/** Fretboard or keyboard, depending on the learner's chosen instrument. */
 export function InstrumentView({ highlights, activeMidis, onPick, only, onlyMidis, fretCount = 12, pianoRange, instrument }: InstrumentViewProps) {
   const settings = useSettings()
   const which = instrument ?? settings.instrument

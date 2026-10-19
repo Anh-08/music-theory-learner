@@ -11,7 +11,7 @@ interface ShowProps extends ShowSpec {
   frets?: number
 }
 
-/** Hiển thị scale / hợp âm / nhóm nốt trên nhạc cụ của người học, kèm nút nghe. Dùng trong bài học MDX. */
+/** Shows a scale / chord / group of notes on the learner's instrument, with a listen button. Used in MDX lessons. */
 export function Show({ caption, frets, root, scale, chord, notes, shape, positions, labels, play: playMode }: ShowProps) {
   const { instrument } = useSettings()
   const { t, locale } = useT()

@@ -33,7 +33,7 @@ export function Layout() {
   const tools = useRef<HTMLDetailsElement>(null)
   const inTools = TOOLS.some((x) => location.pathname.startsWith(x.to))
 
-  // Đóng menu Công cụ khi chuyển trang.
+  // Close the Tools menu on navigation.
   useEffect(() => {
     if (tools.current) tools.current.open = false
   }, [location.pathname])

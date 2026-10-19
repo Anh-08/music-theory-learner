@@ -1,7 +1,7 @@
 import type { Groove } from '../../audio/grooves'
 import { parsePattern, type Rhythm } from '../../audio/rhythms'
 
-/** Điệu người dùng tự tạo, lưu trong trình duyệt. */
+/** User-created rhythms, stored in the browser. */
 export interface CustomRhythm {
   id: string
   name: string
@@ -33,7 +33,7 @@ export function timeSignature(r: Pick<Rhythm, 'beatsPerBar' | 'stepsPerBeat'>): 
   return r.stepsPerBeat === 3 ? '12/8' : '4/4'
 }
 
-/** Id mới không trùng: "custom-1", "custom-2"… */
+/** A new unique id: "custom-1", "custom-2"… */
 export function nextCustomId(existing: CustomRhythm[]): string {
   let n = existing.length + 1
   while (existing.some((c) => c.id === `custom-${n}`)) n++

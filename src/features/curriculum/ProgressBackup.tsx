@@ -3,7 +3,7 @@ import { useT } from '../../i18n/useT'
 import { emptyProgress, parseProgress } from '../../store/progress'
 import { useProgress } from '../../store/progressContext'
 
-/** Xuất / nhập / xóa tiến độ (tiến độ chỉ nằm trong trình duyệt này). */
+/** Export / import / clear progress (progress only lives in this browser). */
 export function ProgressBackup() {
   const { progress, replace } = useProgress()
   const { t } = useT()

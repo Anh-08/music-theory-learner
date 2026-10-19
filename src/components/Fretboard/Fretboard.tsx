@@ -17,10 +17,10 @@ export interface FretboardProps {
   tuning: Tuning
   fretCount: number
   highlights: HighlightMap
-  /** Các nốt đang vang (midi) — được nhấn mạnh thêm. */
+  /** Sounding notes (midi) — given extra emphasis. */
   activeMidis?: ReadonlySet<number>
   onNoteClick?: (position: FretPosition) => void
-  /** Nếu có: chỉ tô sáng đúng các vị trí này (ví dụ một thế bấm), thay vì mọi vị trí cùng tên nốt. */
+  /** If given: highlight only these positions (e.g. a chord shape) instead of every position with the same note name. */
   only?: ReadonlyArray<{ string: number; fret: number }>
 }
 
@@ -40,7 +40,7 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
 
   const lineX = (fret: number) => NUT_X + fretX(fret, fretCount) * boardWidth
   const noteX = (fret: number) => (fret === 0 ? NUT_X - 22 : (lineX(fret - 1) + lineX(fret)) / 2)
-  // Dây 1 (cao nhất) nằm trên cùng, như khi nhìn xuống cần đàn hoặc đọc tab.
+  // String 1 (highest) is on top, as when looking down at the neck or reading tab.
   const stringY = (string: number) => TOP + (string - 1) * STRING_GAP
   const midY = TOP + boardHeight / 2
 

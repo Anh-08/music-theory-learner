@@ -10,7 +10,7 @@ const storedProgress = () => JSON.parse(localStorage.getItem('mtl:progress') ?? 
 describe('Quiz', () => {
   beforeEach(() => localStorage.clear())
 
-  it('chọn sai thì báo thử lại, chọn đúng thì hiện giải thích và lưu tiến độ', () => {
+  it('a wrong pick says try again, the right pick shows the explanation and saves progress', () => {
     renderWithProviders(<Quiz id="q" question="1 + 1?" options={['1', '2']} answer={1} explain="Vì vậy." />)
     fireEvent.click(screen.getByRole('button', { name: '1' }))
     expect(screen.getByRole('status')).toHaveTextContent('thử lại')
@@ -24,8 +24,8 @@ describe('Quiz', () => {
 describe('FindNotes', () => {
   beforeEach(() => localStorage.clear())
 
-  it('guitar: chấm đúng khi chọn đủ các nốt', () => {
-    renderWithProviders(<FindNotes id="f" prompt="Tìm C và E" targets="C E" />, { instrument: 'guitar' })
+  it('guitar: correct once every note is selected', () => {
+    renderWithProviders(<FindNotes id="f" prompt="Find C and E" targets="C E" />, { instrument: 'guitar' })
     fireEvent.click(screen.getByLabelText('Dây 5, phím 3: C'))
     fireEvent.click(screen.getByRole('button', { name: 'Kiểm tra' }))
     expect(screen.getByRole('status')).toHaveTextContent('Chưa đúng')
@@ -35,8 +35,8 @@ describe('FindNotes', () => {
     expect(storedProgress().quizzes.f).toEqual({ correct: true, attempts: 2 })
   })
 
-  it('guitar: bỏ qua nốt bấm ngoài dây được yêu cầu', () => {
-    renderWithProviders(<FindNotes id="f2" prompt="Trên dây 5, bấm D" targets="D" string={5} />, { instrument: 'guitar' })
+  it('guitar: ignores notes clicked outside the requested string', () => {
+    renderWithProviders(<FindNotes id="f2" prompt="On string 5, play D" targets="D" string={5} />, { instrument: 'guitar' })
     fireEvent.click(screen.getByLabelText('Dây 4, buông: D'))
     expect(screen.getByRole('button', { name: 'Kiểm tra' })).toBeDisabled()
     fireEvent.click(screen.getByLabelText('Dây 5, phím 5: D'))
@@ -44,8 +44,8 @@ describe('FindNotes', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Chính xác')
   })
 
-  it('piano: chọn sai nốt thì báo sai', () => {
-    renderWithProviders(<FindNotes id="f3" prompt="Bấm F♯" targets="F#" />, { instrument: 'piano' })
+  it('piano: a wrong note is marked wrong', () => {
+    renderWithProviders(<FindNotes id="f3" prompt="Play F♯" targets="F#" />, { instrument: 'piano' })
     fireEvent.click(screen.getByLabelText('Phím G quãng tám 3'))
     fireEvent.click(screen.getByRole('button', { name: 'Kiểm tra' }))
     expect(screen.getByRole('status')).toHaveTextContent('Chưa đúng')
@@ -55,10 +55,10 @@ describe('FindNotes', () => {
 describe('NoteDrill', () => {
   beforeEach(() => localStorage.clear())
 
-  it('hỏi một nốt và chấm câu trả lời', () => {
+  it('asks for a note and grades the answer', () => {
     renderWithProviders(<NoteDrill id="d" naturalsOnly strings="6" maxFret={0} />, { instrument: 'guitar' })
     fireEvent.click(screen.getByRole('button', { name: 'Bắt đầu' }))
-    // Chỉ có một vị trí hợp lệ: dây 6 buông = E.
+    // Only one valid position: open string 6 = E.
     expect(screen.getByLabelText('Dây 6, buông: E')).toHaveAttribute('data-highlighted')
     const options = screen.getAllByRole('button').filter((b) => /^[A-G]$/.test(b.textContent ?? ''))
     expect(options).toHaveLength(7)

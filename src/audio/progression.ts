@@ -2,10 +2,10 @@ import { Chord } from 'tonal'
 import { chroma, rootMidiAtOrAbove, stackIntervals } from '../theory'
 import { chordEvents, type PlayEvent } from './events'
 
-/** Đọc ký hiệu hợp âm ("Am", "F#m", "Bb", "Bdim") thành chủ âm + quãng. */
+/** Parses a chord symbol ("Am", "F#m", "Bb", "Bdim") into a root + intervals. */
 export function parseChordSymbol(symbol: string): { tonic: string; intervals: string[] } {
   const c = Chord.get(symbol)
-  if (c.empty || !c.tonic) throw new Error(`Ký hiệu hợp âm không hợp lệ: ${symbol}`)
+  if (c.empty || !c.tonic) throw new Error(`Invalid chord symbol: ${symbol}`)
   return { tonic: c.tonic, intervals: c.intervals }
 }
 

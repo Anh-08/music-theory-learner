@@ -2,22 +2,22 @@ import type * as ToneNs from 'tone'
 
 export type InstrumentId = 'piano' | 'guitar'
 
-/** Nốt thấp nhất (midi) để bắt đầu khi phát scale / hợp âm: guitar thấp hơn piano một quãng tám, như khi chơi thật. */
+/** Lowest note (midi) to start from when playing a scale / chord: guitar sits an octave below piano, as in real life. */
 export const PLAY_RANGE: Record<InstrumentId, { scale: number; chord: number }> = {
   guitar: { scale: 48, chord: 40 },
   piano: { scale: 60, chord: 48 },
 }
 
 export interface Voice {
-  /** Phát các nốt tại `time` (giờ AudioContext) trong `duration` giây, độ mạnh 0–1. */
+  /** Play notes at `time` (AudioContext time) for `duration` seconds, velocity 0–1. */
   play(midis: number[], time: number, duration: number, velocity?: number): void
-  /** Tắt mọi nốt đang vang (tại `time` nếu có — dùng cho tiếng chặn dây). */
+  /** Release every sounding note (at `time` if given — used for muted strums). */
   releaseAll(time?: number): void
 }
 
 type Tone = typeof ToneNs
 
-// Sample Salamander Grand Piano (CC-BY 3.0) do Tone.js lưu trữ; nạp lúc chạy, không đóng gói vào repo.
+// Salamander Grand Piano samples (CC-BY 3.0) hosted by Tone.js; loaded at runtime, not bundled in the repo.
 const SALAMANDER_URL = 'https://tonejs.github.io/audio/salamander/'
 
 function salamanderUrls(): Record<string, string> {
@@ -46,7 +46,7 @@ async function createPiano(T: Tone): Promise<Voice> {
       releaseAll: (time) => sampler.releaseAll(time),
     }
   } catch {
-    // Không tải được sample (mất mạng…): dùng synth thay thế để vẫn nghe được.
+    // Samples failed to load (offline…): fall back to a synth so there is still sound.
     const synth = new T.PolySynth(T.Synth, { envelope: { attack: 0.005, decay: 0.3, sustain: 0.3, release: 1 } }).toDestination()
     synth.volume.value = -8
     return {
@@ -56,9 +56,9 @@ async function createPiano(T: Tone): Promise<Voice> {
   }
 }
 
-/** Guitar mô phỏng bằng thuật toán Karplus-Strong (PluckSynth) — không cần sample. */
+/** Guitar modelled with the Karplus-Strong algorithm (PluckSynth) — no samples needed. */
 function createGuitar(T: Tone): Voice {
-  // Đủ cho một tiếng quạt 6 dây chồng lên phần ngân của tiếng trước.
+  // Enough for a 6-string strum layered over the ringing tail of the previous one.
   const POLYPHONY = 12
   const filter = new T.Filter(3500, 'lowpass').toDestination()
   const voices = Array.from({ length: POLYPHONY }, () => {
@@ -72,7 +72,7 @@ function createGuitar(T: Tone): Voice {
       for (const m of midis) {
         const v = voices[next]
         next = (next + 1) % POLYPHONY
-        // PluckSynth không nhận velocity: đổi âm lượng của giọng này ngay trước khi gảy.
+        // PluckSynth ignores velocity: set this voice's volume right before plucking.
         v.volume.setValueAtTime(2 + 20 * Math.log10(Math.max(0.05, velocity)), time)
         v.triggerAttack(toFreq(T)(m), time)
         v.triggerRelease(time + duration)
@@ -89,7 +89,7 @@ function toFreq(T: Tone) {
 let tonePromise: Promise<Tone> | null = null
 const voices = new Map<InstrumentId, Promise<Voice>>()
 
-/** Nạp Tone.js khi cần (giữ bundle ban đầu nhỏ) và mở AudioContext — phải gọi sau một thao tác của người dùng. */
+/** Load Tone.js on demand (keeps the initial bundle small) and start the AudioContext — must follow a user gesture. */
 export async function getTone(): Promise<Tone> {
   tonePromise ??= import('tone')
   const T = await tonePromise
@@ -97,7 +97,7 @@ export async function getTone(): Promise<Tone> {
   return T
 }
 
-/** Các giọng đã được tạo (không tạo mới, không mở AudioContext). */
+/** Voices created so far (creates nothing, does not start the AudioContext). */
 export function existingVoices(): Promise<Voice>[] {
   return [...voices.values()]
 }

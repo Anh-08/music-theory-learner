@@ -15,7 +15,7 @@ export function Home() {
   const done = new Set(progress.completedLessons)
   const nextLesson = LESSONS.find((l) => !done.has(l.id))
   const doneCount = LESSONS.filter((l) => done.has(l.id)).length
-  // Chỉ nhắc ôn tập khi người học đã bắt đầu ôn (có thẻ trong lịch) và có thẻ đến hạn.
+  // Only remind about review once the learner has started reviewing (cards scheduled) and some cards are due.
   const srs = progress.srs ?? {}
   const dueCount = Object.keys(srs).length ? pickSession(srs, DECKS.map((d) => d.id), now, 99).filter((id) => srs[id]).length : 0
 

@@ -1,6 +1,6 @@
 import type { Highlight } from '../theory'
 
-/** Lớp Tailwind cho màu nền của vòng đánh dấu nốt (dùng chung cho Fretboard và Piano). */
+/** Tailwind classes for the note marker background (shared by Fretboard and Piano). */
 export function markerFill(h: Highlight): string {
   switch (h.color) {
     case 'correct':

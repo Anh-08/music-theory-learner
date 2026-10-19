@@ -26,13 +26,13 @@ function fromPicks(notes: PickNote[]): Step {
 }
 
 /**
- * Đổi một bước khi người dùng bấm vào ô của hàng `row`:
- * hàng Quạt đổi vòng nghỉ → ↓ → ↑ → ↓nhẹ → ↑nhẹ → ✕ (xóa nốt móc); hàng Bass đổi không → B → B′;
- * hàng dây bật / tắt nốt móc (xóa tiếng quạt nếu có).
+ * Changes one step when the user clicks a cell in row `row`:
+ * the Strum row cycles rest → ↓ → ↑ → light ↓ → light ↑ → ✕ (clearing picked notes); the Bass row cycles none → B → B′;
+ * string rows toggle a picked note (clearing any strum).
  */
 export function toggleCell(step: Step, row: GridRow): Step {
   if (row === 'strum') {
-    // Bước đang là nốt móc được coi như "nghỉ": bấm lần đầu thành quạt xuống.
+    // A step holding picked notes counts as a "rest": the first click turns it into a downstroke.
     const i = Math.max(0, STRUM_CYCLE.findIndex((s) => sameStrum(s, step)))
     return STRUM_CYCLE[(i + 1) % STRUM_CYCLE.length]
   }
@@ -46,7 +46,7 @@ export function toggleCell(step: Step, row: GridRow): Step {
   return fromPicks(notes.includes(row) ? notes.filter((n) => n !== row) : [...notes, row])
 }
 
-/** Các hàng cần hiện: hàng nào có dùng tới (luôn hiện đủ khi đang sửa). */
+/** Rows to show: the ones in use (all of them while editing). */
 export function visibleRows(steps: Step[], editing: boolean): GridRow[] {
   if (editing) return ['strum', 'bass', 1, 2, 3, 4]
   const rows: GridRow[] = []
@@ -54,11 +54,11 @@ export function visibleRows(steps: Step[], editing: boolean): GridRow[] {
   const all = steps.flatMap(picks)
   if (all.some((n) => n === 'B' || n === "B'")) rows.push('bass')
   for (const n of [1, 2, 3, 4] as const) if (all.includes(n)) rows.push(n)
-  // Dây cao nhất ở trên, như tab.
+  // Highest string on top, as in tab.
   return [...rows.filter((r) => typeof r === 'string'), ...rows.filter((r): r is 1 | 2 | 3 | 4 => typeof r === 'number').sort((a, b) => a - b)]
 }
 
-/** Nhãn đếm phách cho từng bước: "1 & 2 &", "1 e & a", hoặc "1 · ·" cho chùm ba. */
+/** Beat count label for each step: "1 & 2 &", "1 e & a", or "1 · ·" for triplets. */
 export function countLabels(beatsPerBar: number, stepsPerBeat: number): string[] {
   const sub = stepsPerBeat === 2 ? ['&'] : stepsPerBeat === 4 ? ['e', '&', 'a'] : ['·', '·']
   return Array.from({ length: beatsPerBar }, (_, b) => [String(b + 1), ...sub]).flat()

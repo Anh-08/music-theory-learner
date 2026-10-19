@@ -1,20 +1,20 @@
-/** Tiến độ học, lưu trong localStorage và xuất/nhập được dưới dạng JSON. */
+/** Learning progress, stored in localStorage and exportable/importable as JSON. */
 export interface Progress {
   version: 1
   completedLessons: string[]
-  /** Kết quả câu hỏi theo id: đã từng trả lời đúng chưa, đã thử bao nhiêu lần. */
+  /** Question results by id: whether it was ever answered correctly, and how many attempts. */
   quizzes: Record<string, { correct: boolean; attempts: number }>
-  /** Bài luyện lặp lại (luyện tai, tìm nốt…): chuỗi đúng liên tiếp tốt nhất và tổng số câu đúng. */
+  /** Repeating drills (ear training, find the notes…): best streak of consecutive correct answers and total correct. */
   drills: Record<string, { best: number; total: number }>
-  /** Thẻ ôn tập lặp lại ngắt quãng: hộp Leitner (0–6) và thời điểm đến hạn (ms). Có thể thiếu ở dữ liệu cũ. */
+  /** Spaced-repetition cards: Leitner box (0–6) and due time (ms). May be missing in old data. */
   srs?: Record<string, { box: number; due: number }>
 }
 
-/** Khoảng cách ôn theo hộp Leitner, tính bằng ngày. */
+/** Review interval per Leitner box, in days. */
 export const SRS_DAYS = [0, 1, 2, 4, 8, 16, 32]
 const DAY = 86_400_000
 
-/** Ghi kết quả một thẻ: đúng thì lên hộp và giãn lịch ôn; sai thì về hộp 0, ôn lại sau 10 phút. */
+/** Records a card result: correct moves up a box and spaces out reviews; wrong goes back to box 0, due again in 10 minutes. */
 export function recordCard(p: Progress, cardId: string, correct: boolean, now: number): Progress {
   const prev = p.srs?.[cardId] ?? { box: 0, due: now }
   const box = correct ? Math.min(prev.box + 1, SRS_DAYS.length - 1) : 0
@@ -48,7 +48,7 @@ function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v)
 }
 
-/** Đọc tiến độ từ JSON; trả về null nếu dữ liệu không đúng định dạng. */
+/** Reads progress from JSON; returns null if the data is malformed. */
 export function parseProgress(json: string): Progress | null {
   let data: unknown
   try {

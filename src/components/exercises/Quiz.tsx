@@ -12,15 +12,15 @@ interface QuizProps {
   id: string
   question: string
   options: string[]
-  /** Chỉ số (từ 0) của đáp án đúng. */
+  /** Index (from 0) of the correct answer. */
   answer: number
   explain?: string
-  /** Nốt có quãng tám để phát kèm câu hỏi (câu hỏi nghe): "C4 E4". */
+  /** Notes with octaves to play with the question (listening questions): "C4 E4". */
   play?: string
   playAs?: 'sequence' | 'chord'
 }
 
-/** Câu hỏi trắc nghiệm. Chọn sai thì được chọn lại; chọn đúng thì hiện giải thích. */
+/** Multiple-choice question. A wrong pick lets you try again; the right pick shows the explanation. */
 export function Quiz({ id, question, options, answer, explain, play: playNotes, playAs = 'sequence' }: QuizProps) {
   const { progress, recordQuiz } = useProgress()
   const { t } = useT()

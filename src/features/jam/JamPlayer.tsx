@@ -20,18 +20,18 @@ import { JAM_PRESETS, type JamPreset } from './presets'
 
 export interface JamPlayerProps {
   progression: string
-  /** Giọng ("C", "Am"); bỏ trống thì tự đoán. */
+  /** Key ("C", "Am"); empty means auto-detect. */
   songKey?: string
   groove?: string
   tempo?: number
-  /** Scale gợi ý riêng cho bài (id trong SCALE_TYPES); chủ âm lấy từ `scaleRoot` hoặc giọng. */
+  /** Lesson-specific scale suggestion (id in SCALE_TYPES); the root comes from `scaleRoot` or the key. */
   scale?: string
   scaleRoot?: string
-  /** Trang Jam Room: cho sửa tiến trình, giọng, nhịp. Trong bài học: chỉ phát và chỉnh tempo. */
+  /** Jam Room page: progression, key and groove are editable. In lessons: only play and adjust the tempo. */
   editable?: boolean
 }
 
-// Giọng trưởng viết theo dấu giáng (D♭, E♭…), giọng thứ theo cách viết thông dụng (C♯m, F♯m…).
+// Major keys are spelled with flats (D♭, E♭…), minor keys with their usual spelling (C♯m, F♯m…).
 function keyOptions(t: Translate, locale: Locale) {
   return [
     { value: 'auto', label: t('jam.auto'), group: t('jam.autoGroup') },
@@ -42,7 +42,7 @@ function keyOptions(t: Translate, locale: Locale) {
 
 const MINOR_TONICS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B']
 
-/** Giá trị trong danh sách giọng ứng với một giọng bất kỳ (A#m → "Bbm", C# → "Db"). */
+/** Value in the key list matching any key (A#m → "Bbm", C# → "Db"). */
 function keyValue(key: KeyRef): string {
   const c = chroma(key.tonic)
   return key.mode === 'major' ? spellingsOf(c).at(-1)! : `${MINOR_TONICS.find((t) => chroma(t) === c)}m`
@@ -55,7 +55,7 @@ const TRACKS: { id: JamTrack; label: MessageKey }[] = [
   { id: 'click', label: 'jam.click' },
 ]
 
-/** Lựa chọn scale: gợi ý tự động, hoặc scale riêng của bài học. */
+/** Scale choice: an automatic suggestion, or the lesson's own scale. */
 type ScaleOption = Omit<ScaleSuggestion, 'reason'> & { reason: ScaleSuggestion['reason'] | 'custom' }
 
 
@@ -79,7 +79,7 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
   const [text, setText] = useState(progression)
   const [keyChoice, setKeyChoice] = useState(songKey ?? 'auto')
   const [grooveId, setGrooveId] = useState(groove)
-  // Kiểu đệm: 'default' = phần đệm của groove, hoặc id một điệu guitar cùng số phách.
+  // Comping style: 'default' = the groove's comping, or the id of a guitar rhythm with the same beat count.
   const [compId, setCompId] = useState('default')
   const [tempo, setTempo] = useState(initialTempo ?? getGroove(groove).defaultTempo)
   const [mutes, setMutes] = useState<Record<JamTrack, boolean>>({ drums: false, bass: false, chords: false, click: true })
@@ -89,7 +89,7 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
   const [selected, setSelected] = useState(0)
 
   const parsed = useMemo(() => tryAnalyze(text, keyChoice), [text, keyChoice])
-  // Giữ phân tích hợp lệ gần nhất để vẫn hiển thị khi người dùng đang gõ dở.
+  // Keep the last valid analysis so it still shows while the user is mid-typing.
   const [lastGood, setLastGood] = useState<Analysis | null>(parsed.analysis)
   if (parsed.analysis && parsed.analysis !== lastGood) setLastGood(parsed.analysis)
   const analysis = parsed.analysis ?? lastGood
@@ -122,7 +122,7 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
     if (analysis) play(analysis.chords, grooveId)
   }
 
-  // Đổi tiến trình / nhịp khi đang phát: phát lại ngay với cấu hình mới.
+  // Changing the progression / groove while playing: restart right away with the new settings.
   const changeText = (next: string, key = keyChoice) => {
     setText(next)
     const result = tryAnalyze(next, key)
@@ -133,13 +133,13 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
     if (playing) void updateJam({ tempo, mutes })
   }, [tempo, mutes, playing])
 
-  // Rời trang / gỡ trình phát khi đang phát thì dừng nhạc.
+  // Leaving the page / unmounting the player while playing stops the music.
   useEffect(() => {
     if (!playing) return
     return () => void stopJam(id)
   }, [playing, id])
 
-  // Đổi giọng: dịch luôn các hợp âm trong tiến trình sang giọng mới (số La Mã thì tự theo giọng).
+  // Changing the key also transposes the chords in the progression (Roman numerals follow the key on their own).
   const chooseKey = (v: string) => {
     const from = keyChoice === 'auto' ? parsed.analysis?.key : parseKey(keyChoice)
     const next = v !== 'auto' && from && parsed.analysis ? transposeProgression(text, from, parseKey(v)) : text
@@ -173,7 +173,7 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
     })),
   ].map((o) => ({ group: t('jam.compStyle'), ...o }))
 
-  // Đã chọn giọng thì tiến trình mẫu được dịch sang giọng đó (mẫu giọng thứ dùng giọng thứ song song).
+  // With a key selected, presets are transposed to it (minor presets use the relative minor).
   const choosePreset = (p: JamPreset) => {
     let progression = p.progression
     let key = p.songKey ?? 'auto'

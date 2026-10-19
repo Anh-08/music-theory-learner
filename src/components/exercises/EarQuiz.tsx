@@ -12,9 +12,9 @@ import { useDrill } from './useDrill'
 interface EarQuizProps {
   id: string
   kind: 'interval' | 'chord'
-  /** Các lựa chọn cách nhau bởi khoảng trắng: quãng ("3m 3M 5P") hoặc loại hợp âm ("M m dim aug"). */
+  /** Space-separated choices: intervals ("3m 3M 5P") or chord types ("M m dim aug"). */
   options: string
-  /** Quãng: phát đi lên (mặc định), đi xuống, hoặc cùng lúc. */
+  /** Intervals: play ascending (default), descending, or together. */
   direction?: 'up' | 'down' | 'together'
 }
 
@@ -23,7 +23,7 @@ interface Question {
   answer: string
 }
 
-/** Luyện tai: nghe một quãng / hợp âm ngẫu nhiên và chọn đáp án. */
+/** Ear training: hear a random interval / chord and pick the answer. */
 export function EarQuiz({ id, kind, options, direction = 'up' }: EarQuizProps) {
   const { instrument } = useSettings()
   const { play } = usePlayer(instrument)
@@ -45,7 +45,7 @@ export function EarQuiz({ id, kind, options, direction = 'up' }: EarQuizProps) {
       if (direction === 'together') return chordEvents([q.rootMidi, other], roll)
       return sequenceEvents(direction === 'up' ? [q.rootMidi, other] : [other, q.rootMidi], 0.7, 1)
     }
-    // Công thức quãng không phụ thuộc chủ âm, nên dựng trên C rồi chồng lên nốt gốc ngẫu nhiên.
+    // Interval formulas do not depend on the root, so build on C and then stack on a random root.
     const midis = stackIntervals(q.rootMidi, chordFromRoot('C', q.answer).intervals)
     return [...chordEvents(midis, roll, 1.5), ...sequenceEvents(midis, 0.35).map((e) => ({ ...e, at: e.at + 1.7 }))]
   }

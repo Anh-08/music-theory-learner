@@ -3,10 +3,10 @@ import type { InstrumentId } from '../audio/instruments'
 import type { Locale } from '../i18n/locale'
 
 export interface Settings {
-  /** Nhạc cụ chính của người học — bài học hiển thị và phát âm thanh theo nhạc cụ này. */
+  /** The learner's main instrument — lessons display and play sound for this instrument. */
   instrument: InstrumentId
   setInstrument: (i: InstrumentId) => void
-  /** Ngôn ngữ giao diện và bài học. */
+  /** Language of the interface and lessons. */
   locale: Locale
   setLocale: (l: Locale) => void
 }

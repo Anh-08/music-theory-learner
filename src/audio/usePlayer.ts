@@ -3,7 +3,7 @@ import type { PlayEvent } from './events'
 import type { InstrumentId } from './instruments'
 import { playEvents, playNote, stopPlayback } from './player'
 
-/** Trạng thái phát nhạc cho component: đang phát hay không và các nốt đang vang (để tô sáng). */
+/** Playback state for a component: whether it is playing and which notes are sounding (for highlighting). */
 export function usePlayer(instrument: InstrumentId) {
   const [playing, setPlaying] = useState(false)
   const [activeMidis, setActiveMidis] = useState<ReadonlySet<number>>(new Set())

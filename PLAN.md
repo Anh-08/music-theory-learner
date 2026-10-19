@@ -1,479 +1,480 @@
-# Kế hoạch dự án: Music Theory Learner
+# Project plan: Music Theory Learner
 
-> Ứng dụng web giúp người **đã biết chơi** guitar hoặc piano học nhạc lý một cách thực hành — để hiểu bài nhạc được tạo ra như thế nào và **tự improvise** được.
-
----
-
-## 1. Mục tiêu
-
-### Người dùng là ai?
-- Đã chơi được guitar hoặc piano ở mức cơ bản–trung bình: bấm hợp âm quen thuộc, đánh được vài bài, tìm phím/phím đàn không quá khó khăn.
-- Chưa hiểu (hoặc hiểu rời rạc) *tại sao* các hợp âm đi với nhau, *tại sao* một scale nghe hợp với một bài.
-- Muốn: tự đệm theo bài mới (với guitar: đệm được nhiều điệu, cả móc dây lẫn quạt chả), tự viết tiến trình hợp âm, và solo/ngẫu hứng (improvise) trên một backing track.
-
-### Nguyên tắc thiết kế
-1. **Học trên chính cây đàn của mình.** Mọi khái niệm đều được hiển thị trên cần đàn guitar *và* bàn phím piano; người dùng chọn nhạc cụ chính một lần, ứng dụng ưu tiên hiển thị theo đó.
-2. **Nghe trước, lý thuyết sau.** Mỗi khái niệm đều bấm vào là nghe được. Nhạc lý là để giải thích âm thanh, không phải ngược lại.
-3. **Mỗi bài học kết thúc bằng việc chơi.** Không chỉ quiz: có bài tập "chơi theo backing track" để áp dụng ngay.
-4. **Không bắt đầu từ con số 0.** Bỏ qua phần đọc nốt nhạc trên khuông, nhịp cơ bản… vì người dùng đã chơi được. Tập trung vào quãng → scale → hợp âm → tiến trình → improvise.
-5. **Song ngữ Việt – Anh**, tiếng Việt là bản gốc; trong bản tiếng Việt, thuật ngữ kèm tiếng Anh trong ngoặc, ví dụ: *quãng (interval)*, *điệu thức (mode)* — vì phần lớn tài liệu, video bên ngoài dùng tiếng Anh. Nút VI / EN ở thanh trên đổi cả giao diện lẫn bài học.
-
-### Không làm (ít nhất ở giai đoạn đầu)
-- Không có tài khoản, server, thanh toán. Đây là repo cá nhân, chạy hoàn toàn trên trình duyệt.
-- Không dạy kỹ thuật tay cơ bản (cách cầm pick, tư thế, bấm hợp âm cho rõ tiếng…). Riêng **pattern đệm theo điệu** cho guitar (móc dây, quạt chả) thì có dạy — xem nhánh *Đệm theo điệu* ở mục 4.
-- Không dạy đọc bản nhạc khuông nhạc (có thể thêm sau như một module tùy chọn).
+> A web app that helps people who **can already play** guitar or piano learn music theory hands-on — to understand how songs are put together and to **improvise** on their own.
 
 ---
 
-## 2. Công nghệ
+## 1. Goals
 
-| Thành phần | Lựa chọn | Lý do |
+### Who is it for?
+- People who play guitar or piano at a beginner–intermediate level: they know the common chord shapes, can play a few songs, and can find notes / keys without much trouble.
+- They don't understand (or only partly understand) *why* chords go together, or *why* a scale sounds right over a song.
+- They want to: accompany new songs on their own (on guitar: comp in many rhythm styles, both fingerpicking and strumming with muted chops), write their own chord progressions, and solo / improvise over a backing track.
+
+### Design principles
+1. **Learn on your own instrument.** Every concept is shown on the guitar fretboard *and* the piano keyboard; the user picks a main instrument once and the app displays that one first.
+2. **Listen first, theory second.** Every concept can be heard with one click. Theory explains the sound, not the other way round.
+3. **Every lesson ends with playing.** Not just quizzes: there are "play along with the backing track" exercises to apply the idea right away.
+4. **Don't start from zero.** Skip reading notes on the staff, basic rhythm… since users can already play. Focus on intervals → scales → chords → progressions → improvisation.
+5. **Bilingual Vietnamese – English**, with Vietnamese as the source; in the Vietnamese version, terms carry the English word in parentheses, e.g. *quãng (interval)*, *điệu thức (mode)* — since most outside material and videos are in English. The VI / EN button in the top bar switches both the interface and the lessons.
+
+### Out of scope (at least early on)
+- No accounts, servers or payments. This is a personal repo that runs entirely in the browser.
+- No basic hand technique (holding a pick, posture, fretting chords cleanly…). **Rhythm comping patterns** for guitar (fingerpicking, strumming) are taught though — see the *Rhythm comping* track in section 4.
+- No reading staff notation (could be added later as an optional module).
+
+---
+
+## 2. Technology
+
+| Part | Choice | Why |
 |---|---|---|
-| Ngôn ngữ | **TypeScript** | Logic nhạc lý có nhiều kiểu dữ liệu (nốt, quãng, hợp âm) — type giúp tránh lỗi. |
-| Framework | **React + Vite** | Phổ biến, nhiều tài liệu, build nhanh, xuất ra site tĩnh. |
-| Logic nhạc lý | **[tonal](https://github.com/tonaljs/tonal)** | Thư viện MIT, đã có sẵn nốt, quãng, scale, chord, key, mode, Roman numeral. Không tự viết lại từ đầu. |
-| Âm thanh | **[Tone.js](https://tonejs.github.io/)** + sample piano/guitar | Phát nốt, hợp âm, lên lịch nhịp (Transport) cho backing track và các điệu đệm. |
-| Thế bấm hợp âm guitar | **[chords-db](https://github.com/tombatossals/chords-db)** (MIT) hoặc tự định nghĩa | tonal không có thế bấm; cần biết từng dây chơi nốt gì để phát âm thanh quạt/móc và xác định dây bass. |
-| Đồ họa đàn | **SVG tự vẽ** (React component) | Cần đàn và bàn phím cần tương tác (click, highlight, tô màu theo bậc) — tự vẽ SVG kiểm soát tốt nhất. |
-| Nội dung bài học | **MDX** (Markdown + component) | Viết bài bằng Markdown, nhúng thẳng `<Fretboard />`, `<Piano />`, `<Quiz />` vào giữa bài. |
-| Style | **Tailwind CSS** | Nhanh, gọn, có dark mode. |
-| Lưu tiến độ | **localStorage** | Không cần backend. Có nút xuất/nhập file JSON để sao lưu. |
-| Test | **Vitest** + Testing Library | Đặc biệt test kỹ phần logic nhạc lý (dễ sai, khó phát hiện bằng mắt). |
-| Deploy | **GitHub Pages** qua GitHub Actions | Miễn phí, tự build mỗi lần push lên `main`. |
+| Language | **TypeScript** | Music theory logic has many data types (notes, intervals, chords) — types prevent mistakes. |
+| Framework | **React + Vite** | Popular, well documented, fast builds, outputs a static site. |
+| Theory logic | **[tonal](https://github.com/tonaljs/tonal)** | MIT library that already covers notes, intervals, scales, chords, keys, modes, Roman numerals. No rewriting from scratch. |
+| Audio | **[Tone.js](https://tonejs.github.io/)** + piano/guitar samples | Plays notes and chords, schedules rhythm (Transport) for the backing track and comping patterns. |
+| Guitar chord shapes | **[chords-db](https://github.com/tombatossals/chords-db)** (MIT) or self-defined | tonal has no shapes; we need to know what each string plays to sound strums / picking and to find the bass string. |
+| Instrument graphics | **Hand-drawn SVG** (React components) | The fretboard and keyboard must be interactive (click, highlight, colour by degree) — custom SVG gives the most control. |
+| Lesson content | **MDX** (Markdown + components) | Lessons are written in Markdown, embedding `<Fretboard />`, `<Piano />`, `<Quiz />` right in the text. |
+| Styling | **Tailwind CSS** | Fast, compact, has dark mode. |
+| Progress storage | **localStorage** | No backend needed. Export / import a JSON file for backups. |
+| Tests | **Vitest** + Testing Library | Especially thorough tests for the theory logic (easy to get wrong, hard to spot by eye). |
+| Deploy | **GitHub Pages** via GitHub Actions | Free, builds automatically on every push to `main`. |
 
-### Tính năng tùy chọn (giai đoạn sau)
-- **Web MIDI API**: cắm đàn piano điện/MIDI keyboard vào máy tính → ứng dụng nhận biết nốt người dùng đang bấm để chấm bài.
-- **Nhận diện cao độ qua micro** (thư viện như `pitchy`): cho guitar acoustic — đàn một nốt, ứng dụng biết nốt đó là gì.
-- **PWA**: cài lên điện thoại, dùng offline.
+### Optional features (later phases)
+- **Web MIDI API**: plug a digital piano / MIDI keyboard into the computer → the app knows which notes the user plays, to grade exercises.
+- **Pitch detection through the mic** (a library like `pitchy`): for acoustic guitar — play a note and the app knows what it is.
+- **PWA**: install on a phone, use offline.
 
 ---
 
-## 3. Các thành phần chính của ứng dụng
+## 3. Main parts of the app
 
-### 3.1. Công cụ (Tools) — dùng tự do, không theo bài
+### 3.1. Tools — free use, outside the lessons
 1. **Fretboard / Piano Explorer**
-   - Chọn scale hoặc hợp âm + chủ âm → hiển thị trên cần đàn/bàn phím.
-   - Chế độ hiển thị nhãn: *tên nốt* (C, D, E…), *quãng* (1, ♭3, 5…), *bậc* (1–7).
-   - Guitar: chọn tuning (Standard, Drop D, DADGAD…), số phím, lọc theo vị trí (position) / hệ CAGED / 3-nốt-mỗi-dây.
-   - Click vào nốt để nghe.
-2. **Chord Builder**: chọn chủ âm + loại hợp âm → thấy công thức (1-3-5-♭7…), các thế bấm guitar, cách đặt tay piano (bao gồm thế đảo).
-3. **Chord Identifier**: bấm các nốt trên đàn ảo → ứng dụng cho biết đó là hợp âm gì.
-4. **Key Explorer**: chọn giọng → liệt kê 7 hợp âm thuận giọng (diatonic), chức năng của từng hợp âm, vòng quãng năm (circle of fifths) tương tác.
-5. **Jam Room (Backing Track)** — *công cụ quan trọng nhất cho improvise*
-   - Chọn tiến trình (có sẵn hoặc tự gõ, ví dụ `ii-V-I` hoặc `Am F C G`), giọng, tempo, nhịp điệu (pop, rock, blues shuffle, bossa…).
-   - Ứng dụng phát vòng lặp: trống + bass + hợp âm.
-   - Đồng thời **highlight trên cần đàn/bàn phím**: scale nên dùng, và các **nốt trong hợp âm hiện tại** (chord tones) đổi màu theo từng hợp âm đang phát.
-   - Phần guitar đệm trong backing track chơi theo **điệu** người dùng chọn (dùng chung thư viện điệu với Rhythm Trainer).
-6. **Rhythm Trainer — Đệm theo điệu (guitar)**
-   - Thư viện điệu: chọn điệu (Ballad, Slow Rock, Valse, Bolero, Bossa Nova…) và kiểu chơi (**quạt** hoặc **móc**).
-   - Hiển thị pattern trên **lưới phách**: hàng mũi tên ↓ ↑ / x cho quạt; hàng 6 dây với nốt B, 1, 2, 3 cho móc. Vạch chạy (playhead) theo nhạc, phách đang chơi sáng lên.
-   - Nghe mẫu với âm thanh guitar mô phỏng: quạt xuống phát dây 6→1 lệch nhau vài mili-giây, quạt lên phát 1→6, chặn tiếng là tiếng "chát" tắt.
-   - Chọn tiến trình hợp âm → điệu tự áp vào từng hợp âm (nốt bass tự đổi theo hợp âm, ví dụ C bass dây 5, G bass dây 6).
-   - Chỉnh tempo, metronome, chế độ "chỉ trống + bass" để người dùng tự đệm, chế độ tăng tempo dần sau mỗi vòng.
-   - Tự tạo điệu riêng bằng cách bấm vào lưới và lưu lại.
+   - Pick a scale or chord + root → shown on the fretboard / keyboard.
+   - Label modes: *note names* (C, D, E…), *intervals* (1, ♭3, 5…), *degrees* (1–7).
+   - Guitar: choose the tuning (Standard, Drop D, DADGAD…), number of frets, filter by position / CAGED / 3-notes-per-string.
+   - Click a note to hear it.
+2. **Chord Builder**: pick a root + chord type → see the formula (1-3-5-♭7…), guitar shapes, and piano hand positions (including inversions).
+3. **Chord Identifier**: press notes on the virtual instrument → the app tells you the chord.
+4. **Key Explorer**: pick a key → list the 7 diatonic chords and each chord's function, plus an interactive circle of fifths.
+5. **Jam Room (Backing Track)** — *the most important tool for improvising*
+   - Choose a progression (preset or typed, e.g. `ii-V-I` or `Am F C G`), key, tempo, and groove (pop, rock, blues shuffle, bossa…).
+   - The app plays a loop: drums + bass + chords.
+   - At the same time it **highlights on the fretboard / keyboard** the scale to use and the **notes of the current chord** (chord tones), changing colour with each chord as it plays.
+   - The guitar comping in the backing track follows the **rhythm style** the user picks (sharing the rhythm library with the Rhythm Trainer).
+6. **Rhythm Trainer — rhythm comping (guitar)**
+   - Rhythm library: pick a style (Ballad, Slow Rock, Waltz, Bolero, Bossa Nova…) and a technique (**strumming** or **picking**).
+   - Shows the pattern on a **rhythm grid**: a row of ↓ ↑ / x arrows for strumming; 6 string rows with notes B, 1, 2, 3 for picking. A playhead follows the music and the current beat lights up.
+   - Listen to a demo with simulated guitar sound: downstrokes play strings 6→1 a few milliseconds apart, upstrokes 1→6, mutes are a short dead "chop".
+   - Pick a chord progression → the pattern applies to each chord (the bass note follows the chord, e.g. C bass on string 5, G bass on string 6).
+   - Adjust tempo, metronome, a "drums + bass only" mode so the user comps along, and a mode that raises the tempo after every loop.
+   - Create custom rhythms by clicking the grid and saving them.
 
-### 3.2. Lộ trình học (Curriculum)
-Chia thành các module, mỗi module gồm nhiều bài ngắn (10–15 phút). Mỗi bài có cấu trúc:
+### 3.2. Curriculum
+Split into modules, each with several short lessons (10–15 minutes). Every lesson follows the same structure:
 
-> **Nghe** → **Hiểu** (giải thích + hình minh họa tương tác) → **Thấy trên đàn** → **Luyện tập** (quiz / bài nghe) → **Chơi** (bài tập với Jam Room)
+> **Listen** → **Understand** (explanation + interactive illustration) → **See it on the instrument** → **Practise** (quiz / listening exercise) → **Play** (an exercise in the Jam Room)
 
-### 3.3. Bài tập (Exercises)
-- **Nhận diện trên đàn**: "Bấm nốt F# trên dây 3", "Tìm quãng 3 thứ từ nốt A".
-- **Xây dựng**: "Bấm hợp âm Dm7", "Đánh scale E Dorian".
-- **Luyện tai (ear training)**: nghe và đoán quãng, chất lượng hợp âm (trưởng/thứ/7…), bậc hợp âm trong tiến trình.
-- **Phân tích**: cho tiến trình của một bài quen thuộc → xác định giọng và số La Mã.
-- **Ứng tác có hướng dẫn**: "Solo 8 ô nhịp trên tiến trình này, chỉ dùng nốt 1-3-5 của mỗi hợp âm."
-- **Đệm (guitar)**: nghe và đoán điệu/nhịp; chọn đúng nốt bass cho hợp âm; ghép pattern quạt từ các ô ↓ ↑ x cho khớp đoạn nhạc mẫu; đệm theo tiến trình ở tempo tăng dần.
-- Ôn tập theo **lặp lại ngắt quãng** (spaced repetition) — câu sai sẽ xuất hiện lại sớm hơn.
+### 3.3. Exercises
+- **Find it on the instrument**: "Play F# on string 3", "Find the minor third above A".
+- **Build**: "Play a Dm7 chord", "Play the E Dorian scale".
+- **Ear training**: hear and name intervals, chord qualities (major / minor / 7…), chord degrees in a progression.
+- **Analysis**: given the progression of a familiar song → identify the key and the Roman numerals.
+- **Guided improvisation**: "Solo for 8 bars over this progression using only notes 1-3-5 of each chord."
+- **Comping (guitar)**: hear and name the rhythm / time signature; pick the right bass note for a chord; assemble a strum pattern from ↓ ↑ x cells to match a sample; comp a progression at increasing tempo.
+- Review with **spaced repetition** — wrong answers come back sooner.
 
 ---
 
-## 4. Lộ trình nội dung (Curriculum chi tiết)
+## 4. Content roadmap (detailed curriculum)
 
-### Module 0 — Bản đồ âm thanh
-- 12 nốt nhạc, cung & nửa cung, dấu thăng/giáng, nốt trùng âm (enharmonic).
-- Guitar: tìm tên nốt bất kỳ trên cần đàn (dây 6 & 5 làm mốc, quãng 8 theo hình).
-- Piano: nhóm 2 phím đen / 3 phím đen, các mốc C và F.
+### Module 0 — The map of sound
+- The 12 notes, whole & half steps, sharps / flats, enharmonic notes.
+- Guitar: find any note on the neck (strings 6 & 5 as landmarks, octave shapes).
+- Piano: groups of 2 / 3 black keys, the C and F landmarks.
 
-### Module 1 — Quãng (Intervals): viên gạch của mọi thứ
-- Quãng 2, 3, 4, 5, 6, 7, 8; trưởng/thứ/đúng/tăng/giảm.
-- Hình dạng (shape) của từng quãng trên cần đàn và trên bàn phím.
-- Luyện tai: mỗi quãng gắn với một bài hát quen thuộc để nhớ.
+### Module 1 — Intervals: the building blocks of everything
+- 2nds, 3rds, 4ths, 5ths, 6ths, 7ths, octaves; major / minor / perfect / augmented / diminished.
+- The shape of each interval on the fretboard and on the keyboard.
+- Ear training: each interval tied to a familiar song to remember it.
 
-### Module 2 — Scale trưởng & giọng (Major scale & keys)
-- Công thức cung–nửa cung (W-W-H-W-W-W-H) và cách tự dựng scale từ bất kỳ nốt nào.
-- Bậc của scale (scale degrees) và tên gọi: chủ âm, át âm, hạ át âm…
-- Vòng quãng năm (circle of fifths) và hóa biểu (key signature).
-- Guitar: các thế (pattern) scale trưởng trên cần đàn.
+### Module 2 — Major scale & keys
+- The whole–half step formula (W-W-H-W-W-W-H) and building the scale from any note.
+- Scale degrees and their names: tonic, dominant, subdominant…
+- The circle of fifths and key signatures.
+- Guitar: major scale patterns on the neck.
 
-### Module 3 — Hợp âm ba (Triads)
-- Dựng hợp âm từ quãng 3 chồng lên nhau: trưởng, thứ, giảm, tăng.
-- Thế đảo (inversions) — piano: tay di chuyển ít; guitar: hợp âm trên 3 dây.
-- Hệ thống **CAGED** (guitar): cùng một hợp âm ở 5 vị trí trên cần đàn.
-- **Hợp âm thuận giọng (diatonic chords)**: 7 hợp âm sinh ra từ scale trưởng (I ii iii IV V vi vii°).
+### Module 3 — Triads
+- Building chords by stacking thirds: major, minor, diminished, augmented.
+- Inversions — piano: minimal hand movement; guitar: chords on 3 strings.
+- The **CAGED** system (guitar): one chord in 5 positions along the neck.
+- **Diatonic chords**: the 7 chords built from the major scale (I ii iii IV V vi vii°).
 
-### Module 4 — Tiến trình hợp âm (Chord progressions)
-- Ký hiệu số La Mã và hệ Nashville.
-- Chức năng: Tonic – Subdominant – Dominant; cảm giác "căng" và "giải quyết".
-- Các tiến trình kinh điển: I–IV–V, I–V–vi–IV, vi–IV–I–V, ii–V–I, 12-bar blues, vòng Canon…
-- Phân tích tiến trình của các bài hát quen thuộc (cả nhạc Việt và nhạc quốc tế).
-- Chuyển giọng (transpose) — hiểu bằng số La Mã thì chuyển giọng nào cũng được.
+### Module 4 — Chord progressions
+- Roman numerals and the Nashville number system.
+- Function: Tonic – Subdominant – Dominant; the feeling of "tension" and "resolution".
+- Classic progressions: I–IV–V, I–V–vi–IV, vi–IV–I–V, ii–V–I, 12-bar blues, the Canon progression…
+- Analysing progressions of familiar songs (both Vietnamese and international).
+- Transposing — think in Roman numerals and any key works.
 
-### Module 5 — Ngũ cung & Blues: cửa vào Improvise
-- Pentatonic trưởng và thứ, quan hệ giọng song song/tương đối (relative/parallel).
-- Guitar: 5 hộp (box) pentatonic và cách nối các hộp.
-- Blues scale, "blue note".
-- **Bài tập Jam đầu tiên**: solo bằng pentatonic thứ trên 12-bar blues và trên I–V–vi–IV.
+### Module 5 — Pentatonic & Blues: the doorway to improvisation
+- Major and minor pentatonic, relative / parallel key relationships.
+- Guitar: the 5 pentatonic boxes and how to connect them.
+- The blues scale, the "blue note".
+- **First Jam exercise**: solo with minor pentatonic over a 12-bar blues and over I–V–vi–IV.
 
-### Module 6 — Hợp âm 7 và mở rộng
-- maj7, 7, m7, m7♭5, dim7; công thức và âm sắc.
-- Hợp âm thuận giọng dạng 7 (Imaj7 ii7 iii7 IVmaj7 V7 vi7 viiø7).
-- sus2, sus4, add9, 6, 9, 11, 13 — hiểu "tension" và cách tô màu.
-- Piano: voicing hai tay, shell voicing (1-3-7). Guitar: voicing trên dây 6 và dây 5, voicing drop 2.
+### Module 6 — Seventh and extended chords
+- maj7, 7, m7, m7♭5, dim7; formulas and sound.
+- Diatonic seventh chords (Imaj7 ii7 iii7 IVmaj7 V7 vi7 viiø7).
+- sus2, sus4, add9, 6, 9, 11, 13 — understanding "tension" and colour.
+- Piano: two-hand voicings, shell voicings (1-3-7). Guitar: voicings on strings 6 and 5, drop 2 voicings.
 
-### Module 7 — Improvise theo hợp âm (Chord tones & melody)
-- **Nhắm chord tones**: đặt nốt 1-3-5-7 của hợp âm hiện tại vào phách mạnh.
-- **Guide tones** (nốt 3 và 7) và cách chúng nối mượt giữa các hợp âm.
-- Nốt tiếp cận (approach notes), nốt bao vây (enclosure), nốt chromatic.
-- Phát triển ý nhạc: motif, lặp lại – biến tấu, hỏi–đáp (call & response).
-- Tiết tấu trong solo: khoảng nghỉ, nhịp nghịch (syncopation) — *nốt đúng nhưng nhịp nhàm cũng không hay*.
+### Module 7 — Improvising over the changes (chord tones & melody)
+- **Targeting chord tones**: land notes 1-3-5-7 of the current chord on strong beats.
+- **Guide tones** (the 3rd and 7th) and how they connect smoothly between chords.
+- Approach notes, enclosures, chromatic notes.
+- Developing ideas: motifs, repetition – variation, call & response.
+- Rhythm in a solo: space, syncopation — *right notes with boring rhythm still sound dull*.
 
-### Module 8 — Điệu thức (Modes)
-- 7 điệu thức của scale trưởng: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian.
-- Hiểu mode theo **"màu sắc"** (nốt đặc trưng) thay vì chỉ "bắt đầu từ bậc khác".
-- Chord–scale: hợp âm nào thì dùng mode nào (m7 → Dorian, 7 → Mixolydian…).
-- Jam: các vamp một/hai hợp âm để cảm nhận từng mode.
+### Module 8 — Modes
+- The 7 modes of the major scale: Ionian, Dorian, Phrygian, Lydian, Mixolydian, Aeolian, Locrian.
+- Understanding modes by their **"colour"** (characteristic note) rather than just "starting on a different degree".
+- Chord–scale: which mode fits which chord (m7 → Dorian, 7 → Mixolydian…).
+- Jam: one- and two-chord vamps to feel each mode.
 
-### Module 9 — Mở rộng hòa âm
-- Giọng thứ: thứ tự nhiên, thứ hòa âm (harmonic minor), thứ giai điệu (melodic minor); tại sao V trong giọng thứ thường là hợp âm trưởng.
-- Át phụ (secondary dominants): V/V, V/vi…
-- Hợp âm mượn (modal interchange / borrowed chords): ♭VI, ♭VII, iv trong giọng trưởng.
-- Thay thế tritone (tritone substitution), hợp âm giảm chuyển tiếp.
-- Chuyển giọng trong bài (modulation).
+### Module 9 — Expanding the harmony
+- Minor keys: natural, harmonic and melodic minor; why V in a minor key is usually a major chord.
+- Secondary dominants: V/V, V/vi…
+- Modal interchange / borrowed chords: ♭VI, ♭VII, iv in a major key.
+- Tritone substitution, passing diminished chords.
+- Modulation within a song.
 
-### Module 10 — Sáng tác một bài hoàn chỉnh
-- Cấu trúc bài: intro, verse, pre-chorus, chorus, bridge.
-- Viết tiến trình cho từng đoạn, tạo tương phản.
-- Viết giai điệu trên tiến trình (dùng kiến thức chord tone ở Module 7).
-- Dự án cuối: tự viết một đoạn 16 ô nhịp + solo trên đó.
+### Module 10 — Writing a complete song
+- Song structure: intro, verse, pre-chorus, chorus, bridge.
+- Writing a progression for each section, creating contrast.
+- Writing a melody over the progression (using the chord-tone ideas from Module 7).
+- Final project: write a 16-bar section + a solo over it.
 
-> Thứ tự module có chủ ý: người dùng được **chơi improvise từ Module 5**, sớm nhất có thể, rồi mới đào sâu. Mỗi module sau đều quay lại Jam Room với kiến thức mới.
+> The module order is deliberate: users get to **improvise from Module 5**, as early as possible, before going deeper. Every later module returns to the Jam Room with new knowledge.
 
-### Nhánh riêng cho guitar — Đệm theo điệu (móc dây & quạt chả)
+### Guitar-only track — Rhythm comping (fingerpicking & strumming)
 
-Một nhánh học **song song** với lộ trình chính, mở khóa sau Module 3 (khi đã biết hợp âm ba và hợp âm thuận giọng). Mục tiêu: cầm một tờ hợp âm của bài bất kỳ là đệm hát được, chọn đúng điệu, chuyển hợp âm không mất nhịp.
+A track that runs **in parallel** with the main curriculum, unlocked after Module 3 (once triads and diatonic chords are known). Goal: pick up the chord sheet of any song and accompany singing, choose the right rhythm, and change chords without losing the beat.
 
-**Đ1 — Nhịp và cách đếm**
-- Phách, ô nhịp, nhịp 2/4, 3/4, 4/4, 6/8, 12/8.
-- Chia phách: nốt đen, móc đơn, móc kép, chùm ba (triplet), cảm giác swing/shuffle.
-- Đếm thành tiếng "1 & 2 &", "1 e & a"; phách mạnh/phách yếu, đảo phách (syncopation).
+**R1 — Time and counting**
+- Beats, bars, 2/4, 3/4, 4/4, 6/8, 12/8 time.
+- Subdivisions: quarter notes, eighths, sixteenths, triplets, swing / shuffle feel.
+- Counting out loud "1 & 2 &", "1 e & a"; strong / weak beats, syncopation.
 
-**Đ2 — Đọc ký hiệu điệu**
-- Quạt: ↓ (quạt xuống), ↑ (quạt lên), **chặn/chả** (x – chặn tiếng bằng lòng bàn tay), nhấn (accent), quạt câm (ghost strum — tay vẫn đưa nhưng không chạm dây).
-- Móc: **B** (nốt bass), **B'** (bass luân phiên), số dây 1-2-3 cho các nốt treble.
-- **Nốt bass của từng hợp âm**: hợp âm nào bass ở dây 6, dây 5 hay dây 4; bass luân phiên giữa chủ âm và bậc 5 (alternating bass).
+**R2 — Reading rhythm notation**
+- Strumming: ↓ (downstroke), ↑ (upstroke), **mute / chop** (x – deaden the strings with the palm), accents, ghost strums (the hand moves but misses the strings).
+- Picking: **B** (bass note), **B'** (alternate bass), string numbers 1-2-3 for treble notes.
+- **The bass note of each chord**: whether a chord's bass is on string 6, 5 or 4; alternating between the root and the 5th (alternating bass).
 
-**Đ3 — Các điệu quạt**
-| Điệu | Nhịp | Ghi chú |
+**R3 — Strumming rhythms**
+| Rhythm | Time | Notes |
 |---|---|---|
-| Ballad / Pop | 4/4 | Điệu cơ bản nhất, nhiều biến thể |
-| Slow | 4/4 | Chậm, nhẹ |
-| Slow Rock | 12/8 | Cảm giác chùm ba |
-| Rock / Pop Rock | 4/4 | Quạt móc đơn đều, nhấn phách 2 & 4 |
-| Disco | 4/4 | Chặn tiếng ở phách 2 & 4 |
-| Fox (Fox Trot) | 4/4 | Bass + chặn luân phiên |
-| Blues / Shuffle | 4/4 (swing) | Cảm giác "lắc" |
-| Valse | 3/4 | Bass – chả – chả |
-| Boston | 3/4 | Valse chậm, có biến thể |
-| Bolero | 4/4 | Có cả kiểu quạt và kiểu móc |
-| Chachacha | 4/4 | Nhịp "cha-cha-cha" đặc trưng |
-| Rumba | 4/4 | Nhấn phách lệch |
-| Bossa Nova | 4/4 | Đánh bằng ngón, bass và hợp âm so le |
-| Tango | 2/4 hoặc 4/4 | Dứt khoát, chặn tiếng |
-| Surf | 4/4 | Sôi động |
-| Reggae | 4/4 | Chặn tiếng ở phách yếu |
+| Ballad / Pop | 4/4 | The most basic pattern, many variants |
+| Slow | 4/4 | Slow, gentle |
+| Slow Rock | 12/8 | Triplet feel |
+| Rock / Pop Rock | 4/4 | Steady eighth-note strums, accents on 2 & 4 |
+| Disco | 4/4 | Mutes on beats 2 & 4 |
+| Fox (Foxtrot) | 4/4 | Alternating bass + chop |
+| Blues / Shuffle | 4/4 (swing) | A "swaying" feel |
+| Waltz (Valse) | 3/4 | Bass – chop – chop |
+| Boston | 3/4 | A slow waltz, with variants |
+| Bolero | 4/4 | Both strummed and picked versions |
+| Cha-cha | 4/4 | The signature "cha-cha-cha" rhythm |
+| Rumba | 4/4 | Off-beat accents |
+| Bossa Nova | 4/4 | Fingerstyle, bass and chord offset |
+| Tango | 2/4 or 4/4 | Crisp, muted |
+| Surf | 4/4 | Energetic |
+| Reggae | 4/4 | Mutes on the weak beats |
 
-**Đ4 — Các điệu móc (fingerpicking / arpeggio)**
-- Móc Ballad cơ bản (B-3-2-3-1-3-2-3) và các biến thể.
-- Móc Slow, Slow Rock (12/8), Valse/Boston (3/4), Bolero.
-- **Travis picking**: ngón cái giữ bass luân phiên đều, các ngón còn lại chơi giai điệu/hợp âm.
-- Rải hợp âm lên – xuống (arpeggio) cho intro/outro.
+**R4 — Picking patterns (fingerpicking / arpeggio)**
+- Basic ballad picking (B-3-2-3-1-3-2-3) and its variants.
+- Slow, Slow Rock (12/8), Waltz/Boston (3/4), Bolero picking.
+- **Travis picking**: the thumb keeps a steady alternating bass while the other fingers play melody / chord notes.
+- Up–down arpeggios for intros / outros.
 
-**Đ5 — Kết hợp và làm cho tiếng đệm "sống"**
-- Chuyển hợp âm không mất nhịp: thay đổi ở phách nào, quạt dây buông lúc chuyển.
-- Câu bass nối giữa các hợp âm (bass walk-up / walk-down), ví dụ C → Am qua nốt B.
-- Thêm nốt tô màu (sus2, sus4, add9) vào trong điệu móc — áp dụng Module 6.
-- Phối theo đoạn: verse móc nhẹ → chorus quạt mạnh; đoạn dạo (intro), đoạn kết (outro), break.
+**R5 — Putting it together and making the comping "breathe"**
+- Changing chords without losing the beat: which beat to change on, strumming open strings during the change.
+- Bass runs between chords (walk-up / walk-down), e.g. C → Am via B.
+- Adding colour notes (sus2, sus4, add9) inside picking patterns — applying Module 6.
+- Arranging by section: light picking in the verse → strong strumming in the chorus; intros, outros, breaks.
 
-**Đ6 — Chọn điệu cho bài hát**
-- Nghe bài và nhận diện nhịp (3/4 hay 4/4, đều hay swing) và tempo.
-- Một bài có thể đệm bằng nhiều điệu — thử cùng một tiến trình với các điệu khác nhau.
-- Mỗi điệu kèm vài bài hát quen thuộc làm ví dụ (chỉ ghi tên bài và tiến trình hợp âm).
+**R6 — Choosing a rhythm for a song**
+- Listen and identify the time signature (3/4 or 4/4, straight or swing) and tempo.
+- A song can be comped with several rhythms — try the same progression with different rhythms.
+- Each rhythm comes with a few familiar songs as examples (song title and chord progression only).
 
-**Mỗi bài điệu có cấu trúc:**
-> **Nghe mẫu** (tempo thật) → **Xem pattern** trên lưới phách, có vạch chạy theo nhạc → **Tập chậm** (tempo 50–60%, metronome) trên 1 hợp âm → **Tập chuyển hợp âm** trên tiến trình 2–4 hợp âm → **Đệm cả vòng** cùng trống + bass của Jam Room, tăng tempo dần.
+**Every rhythm lesson follows this structure:**
+> **Hear the demo** (real tempo) → **See the pattern** on the rhythm grid with a playhead following the music → **Practise slowly** (50–60% tempo, metronome) on 1 chord → **Practise chord changes** on a 2–4 chord progression → **Comp the whole loop** with the Jam Room's drums + bass, raising the tempo gradually.
 
 ---
 
-## 5. Cấu trúc thư mục dự kiến
+## 5. Planned folder structure
 
 ```
 music-theory-learner/
 ├── public/
-│   └── samples/              # sample âm thanh piano, guitar, trống
+│   └── samples/              # piano, guitar, drum samples
 ├── src/
-│   ├── theory/               # logic nhạc lý thuần (không phụ thuộc React)
+│   ├── theory/               # pure music theory logic (no React dependency)
 │   │   ├── notes.ts
 │   │   ├── intervals.ts
 │   │   ├── scales.ts
 │   │   ├── chords.ts
 │   │   ├── progressions.ts
-│   │   ├── fretboard.ts      # tính vị trí nốt theo tuning
-│   │   ├── rhythm.ts         # nhịp, chia phách, kiểu dữ liệu cho điệu đệm
+│   │   ├── fretboard.ts      # note positions for a tuning
+│   │   ├── rhythm.ts         # time, subdivisions, data types for comping patterns
 │   │   └── __tests__/
-│   ├── audio/                # Tone.js: phát nốt, hợp âm, backing track
+│   ├── audio/                # Tone.js: notes, chords, backing track
 │   │   ├── instruments.ts
 │   │   ├── player.ts
-│   │   ├── grooves/          # các kiểu nhịp trống + bass: pop, rock, blues, bossa…
-│   │   └── strum.ts          # mô phỏng tiếng quạt/móc từ thế bấm hợp âm
+│   │   ├── grooves/          # drum + bass grooves: pop, rock, blues, bossa…
+│   │   └── strum.ts          # simulated strumming / picking from chord shapes
 │   ├── components/
 │   │   ├── Fretboard/
 │   │   ├── Piano/
 │   │   ├── ChordDiagram/
 │   │   ├── CircleOfFifths/
-│   │   ├── RhythmGrid/       # lưới phách hiển thị pattern quạt/móc
+│   │   ├── RhythmGrid/       # rhythm grid showing strum / picking patterns
 │   │   └── Quiz/
 │   ├── features/
 │   │   ├── explorer/         # Fretboard/Piano Explorer
 │   │   ├── chord-builder/
 │   │   ├── key-explorer/
 │   │   ├── jam-room/
-│   │   ├── rhythm-trainer/   # tập đệm theo điệu (guitar)
+│   │   ├── rhythm-trainer/   # rhythm comping practice (guitar)
 │   │   └── exercises/
-│   ├── lessons/              # nội dung bài học dạng MDX
+│   ├── lessons/              # MDX lesson content
 │   │   ├── 00-ban-do-am-thanh/
 │   │   ├── 01-quang/
 │   │   ├── ...
-│   │   └── dem-guitar/       # nhánh Đệm theo điệu (Đ1–Đ6)
+│   │   └── dem-guitar/       # Rhythm comping track (R1–R6)
 │   ├── data/
-│   │   ├── rhythms/          # định nghĩa từng điệu (quạt & móc) dạng JSON/TS
-│   │   └── chord-shapes/     # thế bấm hợp âm guitar
-│   ├── store/                # tiến độ học, cài đặt (localStorage)
+│   │   ├── rhythms/          # definitions of each rhythm (strum & pick) as JSON/TS
+│   │   └── chord-shapes/     # guitar chord shapes
+│   ├── store/                # learning progress, settings (localStorage)
 │   └── App.tsx
 ├── .github/workflows/deploy.yml
-├── PLAN.md                   # file này
+├── PLAN.md                   # this file
 ├── README.md
 └── package.json
 ```
 
-Nguyên tắc: thư mục `theory/` **không import React hay Tone.js** — chỉ là hàm thuần, dễ test. Giao diện và âm thanh chỉ gọi vào đó.
+Rule: the `theory/` folder **never imports React or Tone.js** — it is plain functions, easy to test. The UI and audio only call into it.
 
 ---
 
-## 6. Các giai đoạn thực hiện
+## 6. Phases
 
-### Giai đoạn 0 — Khởi tạo (≈ 1 buổi)
-- [x] Tạo project Vite + React + TypeScript + Tailwind + Vitest.
-- [x] `git init`, tạo repo GitHub, viết README ngắn.
-- [x] GitHub Actions deploy lên GitHub Pages (deploy ngay trang "Hello" để chắc pipeline chạy).
+### Phase 0 — Setup (≈ 1 session)
+- [x] Create the Vite + React + TypeScript + Tailwind + Vitest project.
+- [x] `git init`, create the GitHub repo, write a short README.
+- [x] GitHub Actions deploy to GitHub Pages (deploy a "Hello" page right away to make sure the pipeline works).
 
-### Giai đoạn 1 — Nền móng nhạc lý + đàn ảo
-- [x] Lớp `theory/` bọc quanh tonal: nốt, quãng, scale, chord, tính vị trí trên cần đàn. Viết test.
-- [x] Component `<Fretboard />` (SVG): tuning, số phím, highlight nốt, nhãn nốt/quãng/bậc, click để nghe.
-- [x] Component `<Piano />` (SVG): số quãng tám tùy chỉnh, highlight, click để nghe.
-- [x] Âm thanh: phát nốt đơn và hợp âm (piano + guitar).
-- [x] Trang **Explorer** (scale & chord trên cả hai nhạc cụ).
+### Phase 1 — Theory foundation + virtual instruments
+- [x] A `theory/` layer around tonal: notes, intervals, scales, chords, fretboard positions. With tests.
+- [x] `<Fretboard />` component (SVG): tuning, fret count, note highlighting, note / interval / degree labels, click to hear.
+- [x] `<Piano />` component (SVG): configurable octaves, highlighting, click to hear.
+- [x] Audio: single notes and chords (piano + guitar).
+- [x] **Explorer** page (scales & chords on both instruments).
 
-> Ghi chú: piano dùng sample Salamander nạp lúc chạy (dự phòng bằng synth khi mất mạng); guitar tạm dùng PluckSynth (tổng hợp Karplus-Strong, không cần sample). Thay bằng sample guitar thật khi làm Giai đoạn 4 (đệm theo điệu) nếu cần tiếng hay hơn.
+> Note: piano uses Salamander samples loaded at runtime (falling back to a synth when offline); guitar uses PluckSynth for now (Karplus-Strong synthesis, no samples). Swap in real guitar samples during Phase 4 (rhythm comping) if a better sound is needed.
 
-✅ *Kết quả: đã là một công cụ tra cứu scale/hợp âm dùng được.*
+✅ *Result: already a usable scale / chord reference tool.*
 
-### Giai đoạn 2 — Hệ thống bài học (MVP)
-- [x] Cấu hình MDX, layout bài học, mục lục, nút "bài trước/bài sau".
-- [x] Component `<Quiz />` và các dạng bài tập cơ bản (chọn đáp án, bấm nốt trên đàn ảo, nghe & đoán).
-- [x] Lưu tiến độ trong localStorage.
-- [x] Viết nội dung **Module 0 → 3**.
+### Phase 2 — Lesson system (MVP)
+- [x] MDX setup, lesson layout, table of contents, "previous / next lesson" buttons.
+- [x] `<Quiz />` component and the basic exercise types (multiple choice, find notes on the virtual instrument, listen & guess).
+- [x] Progress saved in localStorage.
+- [x] Write content for **Modules 0 → 3**.
 
-> Cách viết bài học: mỗi bài là một file `src/lessons/<module>/<NN-ten-bai>.mdx` có `export const meta = { title, description, minutes }`. Dùng được trực tiếp các component `<Show>`, `<Play>`, `<PlayChords>`, `<OnlyFor>`, `<Callout>`, `<CircleOfFifths>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`, `<NoteDrill>` (xem `src/lessons/mdxComponents.ts`). Mỗi bài tập cần `id` duy nhất — test sẽ báo nếu trùng. Bản tiếng Anh là file `<NN-ten-bai>.en.mdx` cạnh bản tiếng Việt, dùng **đúng cùng các `id`** để tiến độ dùng chung (test kiểm tra). Chuỗi giao diện nằm ở `src/i18n/messages.ts`.
+> Writing lessons: each lesson is a file `src/lessons/<module>/<NN-lesson-name>.mdx` with `export const meta = { title, description, minutes }`. The components `<Show>`, `<Play>`, `<PlayChords>`, `<OnlyFor>`, `<Callout>`, `<CircleOfFifths>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`, `<NoteDrill>` can be used directly (see `src/lessons/mdxComponents.ts`). Every exercise needs a unique `id` — the tests flag duplicates. The English version is a `<NN-lesson-name>.en.mdx` file next to the Vietnamese one, using **exactly the same `id`s** so progress is shared (checked by tests). UI strings live in `src/i18n/messages.ts`.
 
-✅ *Kết quả: MVP — học được từ đầu đến hợp âm thuận giọng.*
+✅ *Result: MVP — learn from scratch up to diatonic chords.*
 
-### Giai đoạn 3 — Jam Room
-- [x] Bộ phân tích tiến trình (nhập `ii-V-I` hoặc `Dm7 G7 Cmaj7`).
-- [x] Sequencer bằng Tone.Transport: trống + bass + hợp âm, chỉnh tempo, lặp vòng.
-- [x] Highlight chord tones đổi theo thời gian thực trên đàn ảo.
-- [x] Gợi ý scale phù hợp cho tiến trình.
-- [x] Viết nội dung **Module 4 → 5**, gắn bài tập Jam.
+### Phase 3 — Jam Room
+- [x] Progression parser (type `ii-V-I` or `Dm7 G7 Cmaj7`).
+- [x] Sequencer on Tone.Transport: drums + bass + chords, tempo control, looping.
+- [x] Real-time chord tone highlighting on the virtual instrument.
+- [x] Scale suggestions for the progression.
+- [x] Write content for **Modules 4 → 5**, with Jam exercises.
 
-> Ghi chú: trang `#/jam` nhận tham số `?p=<tiến trình>&key=<giọng>&groove=<pop|ballad|rock|blues|bossa>&tempo=<bpm>`. Trong bài học dùng `<Jam progression="..." songKey="..." groove="..." scale="..." />`. Các mẫu nhịp nằm ở `src/audio/grooves.ts` — Giai đoạn 4 (đệm guitar theo điệu) có thể mở rộng từ đây. Hiện chỉ hỗ trợ nhịp 4/4; Valse/Boston (3/4) cần bổ sung khi làm Giai đoạn 4.
+> Note: the `#/jam` page accepts `?p=<progression>&key=<key>&groove=<pop|ballad|rock|blues|bossa>&tempo=<bpm>`. In lessons use `<Jam progression="..." songKey="..." groove="..." scale="..." />`. Groove patterns live in `src/audio/grooves.ts` — Phase 4 (guitar rhythm comping) can build on them. Only 4/4 is supported for now; Waltz/Boston (3/4) need adding in Phase 4.
 
-✅ *Kết quả: người dùng có thể bắt đầu improvise thật sự.*
+✅ *Result: users can really start improvising.*
 
-### Giai đoạn 4 — Đệm guitar theo điệu
-- [x] Định dạng dữ liệu cho điệu: mỗi bước trên lưới phách là quạt xuống/lên, chặn tiếng, nghỉ, hoặc danh sách dây cần móc (B, B', 1, 2, 3…).
-- [x] Dữ liệu thế bấm hợp âm guitar → suy ra dây bass và bass luân phiên cho từng hợp âm.
-- [x] Mô phỏng âm thanh quạt (lệch thời gian giữa các dây, lực nhấn) và móc; tiếng chặn dây.
-- [x] Component `<RhythmGrid />` có playhead chạy theo Tone.Transport.
-- [x] Trang **Rhythm Trainer**: chọn điệu, tiến trình, tempo, metronome, tăng tempo dần, tự tạo điệu.
-- [x] Nhập khoảng 15 điệu quạt + 8 điệu móc ở mục 4.
-- [x] Gắn điệu vào phần guitar đệm của Jam Room.
-- [x] Viết nội dung nhánh **Đ1 → Đ6**.
+### Phase 4 — Guitar rhythm comping
+- [x] Data format for rhythms: each step on the grid is a down / up strum, a mute, a rest, or a list of strings to pick (B, B', 1, 2, 3…).
+- [x] Guitar chord shape data → derive the bass string and alternate bass for each chord.
+- [x] Simulated strumming (timing offset between strings, velocity) and picking; muted chops.
+- [x] `<RhythmGrid />` component with a playhead driven by Tone.Transport.
+- [x] **Rhythm Trainer** page: pick a rhythm, progression, tempo, metronome, gradual tempo increase, custom rhythms.
+- [x] Enter about 15 strumming + 8 picking rhythms from section 4.
+- [x] Use the rhythms for the Jam Room's guitar comping.
+- [x] Write content for the **R1 → R6** track.
 
-> Ghi chú: điệu nằm ở `src/audio/rhythms.ts` (15 điệu quạt + 9 điệu móc, có cả nhịp 3/4 và 12/8), thế bấm ở `src/theory/guitarVoicing.ts`. Trang `#/rhythm?r=<id điệu>&p=<tiến trình>`. Trong bài học: `<RhythmPlayer rhythm="..." progression="..." />`, `<RhythmQuiz options="..." />`, `<PatternView pattern="..." />`. Nhánh guitar nằm sau Module 5 trong lộ trình. Âm thanh guitar vẫn là PluckSynth.
+> Note: rhythms live in `src/audio/rhythms.ts` (15 strumming + 9 picking, including 3/4 and 12/8), shapes in `src/theory/guitarVoicing.ts`. Page `#/rhythm?r=<rhythm id>&p=<progression>`. In lessons: `<RhythmPlayer rhythm="..." progression="..." />`, `<RhythmQuiz options="..." />`, `<PatternView pattern="..." />`. The guitar track sits after Module 5 in the curriculum. Guitar sound is still PluckSynth.
 
-✅ *Kết quả: cầm tờ hợp âm là đệm hát được với nhiều điệu.*
+✅ *Result: pick up a chord sheet and accompany singing in many rhythm styles.*
 
-### Giai đoạn 5 — Nội dung nâng cao
-- [x] Module 6 → 10.
-- [x] Luyện tai nâng cao, spaced repetition.
-- [x] Key Explorer + vòng quãng năm tương tác, Chord Identifier.
+### Phase 5 — Advanced content
+- [x] Modules 6 → 10.
+- [x] Advanced ear training, spaced repetition.
+- [x] Key Explorer + interactive circle of fifths, Chord Identifier.
 
-> Ghi chú: trang Ôn tập (`#/review`) có 7 bộ thẻ sinh câu hỏi ngẫu nhiên (gọi tên quãng, đọc nốt hợp âm, hóa biểu, hợp âm thuận giọng, nghe quãng, nghe loại hợp âm kể cả hợp âm 7, nghe tiến trình), lịch ôn theo hộp Leitner lưu trong tiến độ. Key Explorer ở `#/keys`, nhận diện hợp âm ở `#/identify` (cả hai nằm trong menu Công cụ). Nội dung bài học được tải riêng từng bài (plugin `lesson-meta` trong `vite.config.ts`).
+> Note: the Review page (`#/review`) has 7 decks generating random questions (naming intervals, reading chord notes, key signatures, diatonic chords, hearing intervals, hearing chord types including sevenths, hearing progressions), scheduled with Leitner boxes stored in the progress data. Key Explorer is at `#/keys`, the chord identifier at `#/identify` (both in the Tools menu). Lesson content is loaded per lesson (the `lesson-meta` plugin in `vite.config.ts`).
 
-### Giai đoạn 6 — Tùy chọn / mở rộng
-- [x] Web MIDI input (piano điện).
-- [x] Nhận diện cao độ qua micro (guitar).
-- [x] Nghe micro để chấm độ đều tay khi đệm (phát hiện thời điểm quạt/móc so với phách).
-- [x] PWA dùng offline.
-- [x] Giao diện và bài học tiếng Anh (i18n).
-- [x] Thêm nhạc cụ khác (bass, ukulele — chỉ cần đổi tuning của `<Fretboard />`).
+### Phase 6 — Optional / extensions
+- [x] Web MIDI input (digital piano).
+- [x] Pitch detection through the mic (guitar).
+- [x] Listening through the mic to score steadiness while comping (detecting strum / pick timing against the beat).
+- [x] Offline PWA.
+- [x] English interface and lessons (i18n).
+- [x] More instruments (bass, ukulele — only the `<Fretboard />` tuning changes).
 
-> Ghi chú: trang `#/connect` (menu Công cụ) kết nối đàn MIDI hoặc micro; nhận diện cao độ bằng phương pháp McLeod tự viết (`src/input/pitch.ts`), không gửi âm thanh đi đâu. Đàn thật dùng được trong bài luyện tên nốt, bài "bấm trên đàn", nhận diện hợp âm, Explorer và chấm nhịp ở trang Đệm guitar. PWA qua `vite-plugin-pwa`: cài được lên điện thoại, dùng offline (sample piano được lưu sau lần nghe đầu). Explorer có thêm tuning bass 4/5 dây, ukulele, ukulele baritone, mandolin.
+> Note: the `#/connect` page (Tools menu) connects a MIDI instrument or the mic; pitch detection uses a hand-written McLeod method (`src/input/pitch.ts`) and sends no audio anywhere. Real instruments work in the note-name drill, the "find it on the instrument" exercises, the chord identifier, the Explorer and timing scores on the Guitar comping page. PWA via `vite-plugin-pwa`: installable on phones, works offline (piano samples are cached after the first listen). The Explorer also has 4/5-string bass, ukulele, baritone ukulele and mandolin tunings.
 
-### Giai đoạn 7 — Luyện phản xạ hợp âm (guitar)
+### Phase 7 — Chord reflex training (guitar)
 
-Mục tiêu: hợp âm hiện lên **liên tục theo metronome**, người dùng phải đổi tay kịp; nhờ các hợp âm nối nhau **mượt** nên luyện lâu không thấy khó chịu, và tai tự quen cách hợp âm đi với nhau. Khác Rhythm Trainer ở chỗ tiến trình **không lặp cố định** mà luôn thay đổi, nên không học thuộc được — phải đọc và phản xạ.
+Goal: chords appear **continuously with the metronome** and the user has to change in time; because the chords connect **smoothly**, long practice never feels grating, and the ear gets used to how chords move. Unlike the Rhythm Trainer, the progression **never loops in a fixed way** — it keeps changing, so it cannot be memorised; you have to read and react.
 
-Đã chốt: chỉ cho guitar; **không dùng micro, không chấm điểm** — người dùng tự tập theo metronome; màn hình **chỉ có hợp âm**, không hiện số La Mã hay lời giải thích.
+Decided: guitar only; **no mic, no scoring** — users practise along with the metronome; the screen **shows only chords**, no Roman numerals or explanations.
 
-**Màn hình** (trang mới `#/reflex/chords`, menu *Luyện phản xạ*):
-- Một "băng chạy" ngang: hợp âm **hiện tại** to ở giữa kèm thế bấm, 1–2 hợp âm **sắp tới** mờ hơn bên phải (để chuẩn bị tay), đèn phách nháy theo metronome. Đếm ngược 1 ô nhịp trước khi bắt đầu.
-- Thế bấm lấy từ `chordShapes` (`src/theory/guitarShapes.ts`), ưu tiên thế **gần thế trước** để tay ít phải nhảy.
-- Âm thanh: chỉ metronome (phách 1 nhấn mạnh). Tùy chọn bật tiếng hợp âm mẫu, mặc định tắt.
+**Screen** (new page `#/reflex/chords`, *Reflex* menu):
+- A horizontal "tape": the **current** chord large in the middle with its shape, 1–2 **upcoming** chords dimmer on the right (to prepare the hand), a beat light flashing with the metronome. One bar of count-in before starting.
+- Shapes come from `chordShapes` (`src/theory/guitarShapes.ts`), preferring the shape **closest to the previous one** so the hand moves less.
+- Sound: metronome only (beat 1 accented). Optional demo chord sound, off by default.
 
-**Cách đánh — 2 kiểu:**
-1. **Quạt theo phách**: mỗi phách metronome quạt xuống 1 lần; mỗi hợp âm giữ N phách (4 → 2 → 1).
-2. **Một lượt điệu**: mỗi hợp âm chơi đúng **1 lượt điệu** (1 ô nhịp) của điệu đã chọn trong `src/audio/rhythms.ts`, hiện pattern nhỏ dưới hợp âm bằng `<PatternView />`; số phách theo nhịp của điệu (3/4, 4/4, 12/8).
+**Playing — 2 modes:**
+1. **Strum on the beat**: one downstroke per metronome beat; each chord lasts N beats (4 → 2 → 1).
+2. **One rhythm pass**: each chord gets exactly **1 pass** (1 bar) of the chosen rhythm from `src/audio/rhythms.ts`, with the pattern shown small under the chord using `<PatternView />`; beats follow the rhythm's time signature (3/4, 4/4, 12/8).
 
-**Nguồn hợp âm — làm sao cho mượt:**
-- **Nối vòng**: các tiến trình quen tai (I–V–vi–IV, vi–IV–I–V, I–vi–IV–V, ii–V–I, vòng Canon…), mỗi vòng chơi 1–2 lần rồi nối sang vòng khác **cùng giọng**, ở ranh giới ô nhịp; chỉ nối khi hợp âm cuối vòng trước đi tự nhiên sang hợp âm đầu vòng sau (ví dụ kết ở V thì vòng sau bắt đầu bằng I hoặc vi).
-- **Tự sinh**: "đồ thị hòa âm" trong giọng — nút là các hợp âm thuận giọng, cạnh có trọng số theo thói quen nhạc phổ thông (I → bất kỳ; ii → V; iii → vi, IV; IV → V, I, ii; V → I, vi; vi → ii, IV). Ưu tiên bước chuyển có **nốt chung** và bước nhảy gốc quãng 4/5; câu 4 hoặc 8 ô nhịp, luôn **kết bằng cadence** (V–I, IV–I) để nghe tròn câu. Bỏ vii° ở mức dễ (khó bấm, nghe gắt).
-- **Tránh khó chịu**: không đổi giọng đột ngột. Chỉ khi bật tùy chọn mới đổi giọng, và chỉ sang giọng gần (giọng tương đối, giọng cách một dấu hóa) qua **hợp âm chung** (pivot chord).
-- **Tự nhập**: gõ vài tiến trình (dùng `parseProgression`), app nối chúng theo quy tắc trên.
-- Bộ sinh ngẫu nhiên có seed để chia sẻ qua URL (`?seed=`).
+**Chord source — keeping it smooth:**
+- **Chained loops**: familiar progressions (I–V–vi–IV, vi–IV–I–V, I–vi–IV–V, ii–V–I, the Canon progression…), each played 1–2 times, then joined to another loop **in the same key** at a bar boundary; only joined when the last chord of one loop leads naturally into the first chord of the next (e.g. ending on V, the next loop starts on I or vi).
+- **Generated**: a "harmonic graph" within the key — nodes are diatonic chords, edges weighted by pop-music habits (I → anything; ii → V; iii → vi, IV; IV → V, I, ii; V → I, vi; vi → ii, IV). Prefer moves with **common tones** and root motion by 4ths/5ths; 4- or 8-bar phrases that always **end with a cadence** (V–I, IV–I) so the phrase feels complete. Drop vii° at the easy level (hard to fret, sounds harsh).
+- **Avoid jarring moves**: no sudden key changes. Only when the option is on, and only to close keys (relative key, one accidental away) via a **pivot chord**.
+- **Custom**: type a few progressions (using `parseProgression`) and the app chains them by the rules above.
+- Seeded random generator so a stream can be shared via URL (`?seed=`).
 
-**Mức khó** (chỉnh riêng từng cái, hoặc chọn sẵn Dễ / Vừa / Khó):
-- Số phách mỗi hợp âm (kiểu quạt theo phách), tempo, tùy chọn tự tăng tempo sau mỗi câu.
-- Ẩn thế bấm (chỉ còn tên hợp âm).
-- Giọng: chọn trong 14 giọng hay gặp khi đệm hát (C, G, D, A, E, F, B♭, Am, Em, Dm, Bm, F♯m, Gm, Cm).
-- Loại hợp âm: hợp âm ba → thêm 7 (V7, ii7…) → thêm sus/add9.
+**Difficulty** (each adjustable, or Easy / Medium / Hard presets):
+- Beats per chord (strum-on-the-beat mode), tempo, optional automatic tempo increase after each phrase.
+- Hide shapes (chord name only).
+- Key: one of the 14 keys most common when accompanying singing (C, G, D, A, E, F, B♭, Am, Em, Dm, Bm, F♯m, Gm, Cm).
+- Chord types: triads → add sevenths (V7, ii7…) → add sus/add9.
 
-**Việc cần làm:**
-- [x] `src/theory/chordFlow.ts`: đồ thị chức năng có trọng số "mượt", sinh câu có cadence, nối vòng, đổi giọng qua pivot, seed. Test kỹ (mọi bước chuyển nằm trong danh sách cho phép, câu luôn kết đúng, cùng seed ra cùng chuỗi).
-- [x] Chọn thế bấm gần nhau cho cả chuỗi hợp âm.
-- [x] Component băng chạy hợp âm + trang `#/reflex/chords`, metronome và chế độ một lượt điệu (dùng lại lịch phát của Rhythm Trainer).
-- [x] Bài học song ngữ ngắn ở nhánh guitar, nhúng `<ChordReflex />`; chuỗi giao diện trong `src/i18n/messages.ts`.
+**Tasks:**
+- [x] `src/theory/chordFlow.ts`: a weighted "smooth" function graph, phrases with cadences, chained loops, pivot-chord key changes, seeds. Thorough tests (every move is in the allowed list, phrases always end correctly, the same seed gives the same stream).
+- [x] Pick nearby shapes for the whole chord stream.
+- [x] Chord tape component + `#/reflex/chords` page, metronome and one-rhythm-pass mode (reusing the Rhythm Trainer's scheduling).
+- [x] A short bilingual lesson in the guitar track embedding `<ChordReflex />`; UI strings in `src/i18n/messages.ts`.
 
-> Ghi chú: trang `#/reflex/chords` (mục *Phản xạ hợp âm* trên thanh chính, nhận `?seed=` để chia sẻ đúng một chuỗi). Bộ sinh ở `src/theory/chordFlow.ts`, lịch phát riêng ở `src/audio/reflex.ts` (Transport `scheduleRepeat` mỗi phách, chuỗi vô hạn — không dùng vòng lặp cố định của Jam Room), giao diện ở `src/features/reflex/`. Mức Dễ / Vừa / Khó là bộ cài đặt sẵn. Trong bài học: `<ChordReflex level="easy" source="loops" songKey="G" />`; bài Đ8 "Đổi hợp âm theo phản xạ".
+> Note: the `#/reflex/chords` page (*Chord reflex* in the main bar, accepts `?seed=` to share an exact stream). The generator is in `src/theory/chordFlow.ts`, its own scheduler in `src/audio/reflex.ts` (Transport `scheduleRepeat` every beat, an endless stream — not the Jam Room's fixed loop), the UI in `src/features/reflex/`. Easy / Medium / Hard are setting presets. In lessons: `<ChordReflex level="easy" source="loops" songKey="G" />`; lesson R8 "Changing chords by reflex".
 
-✅ *Kết quả: hợp âm chạy liên tục theo metronome, không học thuộc được, nối nhau mượt.*
+✅ *Result: chords run continuously with the metronome, cannot be memorised, and connect smoothly.*
 
-### Giai đoạn 8 — Luyện phản xạ nốt trên cần đàn guitar (làm từ 19/10/2026)
+### Phase 8 — Fretboard note reflex training (guitar) (from 2026-10-19)
 
-Mục tiêu: thấy tên nốt là bấm được ngay, không phải đếm ngăn. Nốt hiện lên liên tục theo thời gian giới hạn (hoặc theo metronome), giống Giai đoạn 7 nhưng với từng nốt.
+Goal: see a note name and fret it immediately, without counting frets. Notes appear continuously against a time limit (or with the metronome), like Phase 7 but with single notes.
 
-**Cách chỉ nốt cần tìm — theo vùng cần đàn (mặc định).** Trên một dây, nốt cùng tên lặp lại sau 12 ngăn, nên chia cần đàn thành 2 vùng: **ngăn 0–11** và **ngăn 12–22**. Trong mỗi vùng, mỗi tên nốt chỉ có **đúng một vị trí** trên một dây. Màn hình hiện tên nốt (Mi) kèm một **cần đàn thu nhỏ**, vùng cần tìm được tô sáng; không cần biết quãng tám hay ký hiệu gì thêm.
+**How the target note is indicated — by neck zone (default).** On one string the same note name repeats every 12 frets, so the neck is split into 2 zones: **frets 0–11** and **frets 12–22**. Within a zone, each note name has **exactly one position** on a string. The screen shows the note name (E) with a **mini fretboard** highlighting the zone to search; no octave numbers or other notation needed.
 
 ```
-        Dây 6
-         Mi
+       String 6
+          E
   ┌────────────┬──────────┐
-  │░░░░░░░░░░░░│██████████│   ← vùng tô sáng = nơi cần tìm
+  │░░░░░░░░░░░░│██████████│   ← highlighted zone = where to look
   └────────────┴──────────┘
-   0          11 12        22    (đáp án: ngăn 12)
+   0          11 12        22    (answer: fret 12)
 ```
 
-**Tên có quãng tám — chế độ nâng cao** (bật trong cài đặt của trang, dành cho người đã vững nhạc lý): dùng ký hiệu cao độ khoa học theo cao độ thật — dây 6 buông là **E2**, ngăn 12 dây 6 là **E3**, dây 1 buông là **E4**; bản tiếng Việt hiện *Mi3 (E3)*. Khi bật thì ẩn cần đàn thu nhỏ. Không dùng "Mi thấp / Mi cao" vì cả cần đàn có tới 4 nốt Mi khác cao độ (E2–E5).
+**Names with octaves — advanced mode** (toggled in the page settings, for users solid on theory): scientific pitch notation at real pitch — open string 6 is **E2**, string 6 fret 12 is **E3**, open string 1 is **E4**; the Vietnamese version shows *Mi3 (E3)*. When on, the mini fretboard is hidden. No "low E / high E", since the neck has 4 different-pitch Es (E2–E5).
 
-**Phần 1 — Trên một dây**
-- Chọn một dây (hoặc để app đổi dây sau mỗi N nốt).
-- **Cấp 1 — một vùng cố định**: chỉ luyện trong ngăn 0–11 (hoặc chỉ 12–22). Vùng không đổi nên chỉ cần nhớ tên nốt. Đây là cách vào dễ nhất.
-- **Cấp 2 — cả dây**: mỗi lượt app chọn ngẫu nhiên vùng, cần đàn thu nhỏ cho biết vùng nào; người dùng phải bấm **đúng nốt trong vùng đó**.
-- **Cấp 3 — nâng cao**: như cấp 2 nhưng chỉ hiện tên có quãng tám (E2 / E3), không có cần đàn thu nhỏ.
-- Về ý "bấm tất cả nốt Mi trên dây": trên một dây hai nốt cùng tên luôn cách nhau đúng 12 ngăn, nên tìm được một nốt là suy ra nốt kia — đúng như lo ngại, người dùng sẽ "cộng 12" thay vì nhớ. Vì vậy **không dùng** chế độ "tìm tất cả" cho một dây; dùng cấp 1 + cấp 2 ở trên. Chế độ "tìm tất cả" chỉ có ý nghĩa trên nhiều dây (xem dưới).
+**Part 1 — On one string**
+- Pick a string (or let the app switch strings every N notes).
+- **Level 1 — one fixed zone**: practise only frets 0–11 (or only 12–22). The zone never changes, so only the note names need remembering. The easiest way in.
+- **Level 2 — the whole string**: each round the app picks a random zone, shown on the mini fretboard; the user must play **the right note in that zone**.
+- **Level 3 — advanced**: like level 2 but only the octave name is shown (E2 / E3), no mini fretboard.
+- On the idea of "play every E on the string": on one string two notes with the same name are always exactly 12 frets apart, so finding one gives away the other — as feared, users would "add 12" instead of remembering. So there is **no** "find all" mode for a single string; use levels 1 + 2 above. "Find all" only makes sense across several strings (see below).
 
-**Phần 2 — Trên nhiều dây**
-- **Tên nốt + dây**: "Fa♯ — dây 3", dây chọn ngẫu nhiên trong các dây được bật; cần đàn thu nhỏ tô sáng dây và vùng cần tìm. Có cấp 1–3 như phần 1.
-- **Tìm tất cả trên cần đàn**: "Tìm mọi nốt Fa♯ từ ngăn 0 đến 12" — bấm hết các vị trí trên mọi dây. Ở đây không có mẹo "cộng 12" vì các dây lệch nhau quãng 4 (riêng dây 3–2 là quãng 3 trưởng), nên người dùng học được **hình quãng tám** giữa các dây. Có giới hạn thời gian cho cả lượt.
-- **Cao độ chính xác** (chỉ có ở chế độ nâng cao, vì cần tên có quãng tám): "Tìm mọi vị trí của G3" — cùng một cao độ có ở nhiều dây (dây 6 ngăn 15, dây 5 ngăn 10, dây 4 ngăn 5, dây 3 buông). Rất có ích khi solo: biết chơi một câu ở nhiều vị trí.
-- **Theo thế (position)**: giới hạn trong một khung 4–5 ngăn (ví dụ ngăn 5–8), mọi dây — đúng cách nghĩ khi improvise trong một hộp scale.
+**Part 2 — Across several strings**
+- **Note name + string**: "F♯ — string 3", the string chosen at random among the enabled strings; the mini fretboard highlights the string and zone. Levels 1–3 as in part 1.
+- **Find all on the neck**: "Find every F♯ from fret 0 to 12" — play every position on every string. There is no "add 12" trick here because strings are a 4th apart (strings 3–2 a major 3rd), so users learn the **octave shapes** across strings. Time limit for the whole round.
+- **Exact pitch** (advanced mode only, since it needs octave names): "Find every position of G3" — the same pitch exists on several strings (string 6 fret 15, string 5 fret 10, string 4 fret 5, open string 3). Very useful for soloing: knowing how to play a line in several positions.
+- **By position**: limited to a 4–5 fret window (e.g. frets 5–8), all strings — exactly how you think when improvising inside a scale box.
 
-**Cơ chế phản xạ (dùng chung cho mọi chế độ):**
-- Mỗi nốt có thời gian giới hạn (ví dụ 5 giây → 1,5 giây), hoặc nốt đổi theo metronome (1 nốt mỗi ô nhịp → mỗi phách).
-- Sau khi bấm: phát tiếng nốt đó (gắn tai với vị trí), tô xanh/đỏ, hiện vị trí đúng nếu sai hoặc hết giờ.
-- Nốt yếu (sai nhiều, phản ứng chậm) xuất hiện thường hơn; lưu theo từng **vị trí dây/ngăn** vào lịch Leitner (`note-pos:3:11`).
-- **Bản đồ nhiệt** cần đàn cuối buổi: ô nào chậm/sai nhiều tô đậm — thấy ngay "vùng mù" (thường là ngăn 6–11 trên dây 3, 4).
-- Kỷ lục cá nhân: số nốt đúng / phút, thời gian phản ứng trung bình.
-- Chế độ ngược (đã có một phần ở `NoteDrill`): app chỉ một vị trí → người dùng gọi tên nốt.
+**Reflex mechanics (shared by every mode):**
+- Each note has a time limit (e.g. 5 seconds → 1.5 seconds), or notes change with the metronome (1 note per bar → per beat).
+- After answering: play that note (tying the ear to the position), colour green / red, show the right position when wrong or out of time.
+- Weak notes (often wrong, slow reaction) appear more often; stored per **string/fret position** in the Leitner schedule (`note-pos:3:11`).
+- End-of-session **heat map** of the neck: slow / often-wrong cells are darker — instantly showing "blind spots" (usually frets 6–11 on strings 3 and 4).
+- Personal records: correct notes per minute, average reaction time.
+- Reverse mode (partly exists in `NoteDrill`): the app shows a position → the user names the note.
 
-**Cách nhận câu trả lời:**
-- **Bấm trên đàn ảo** (`<Fretboard />` với `onNoteClick`) — cách mặc định: biết chính xác dây + ngăn.
-- **Đàn thật qua micro** (tùy chọn): nhận cao độ đúng đến quãng tám (đủ cho cấp 2 và chế độ cao độ chính xác), nhưng **không phân biệt được dây** — E3 ở dây 6 ngăn 12 và dây 4 ngăn 2 nghe như nhau. Với chế độ "tên nốt + dây" thì chấp nhận đúng cao độ (người dùng tự giữ đúng dây). Với "tìm tất cả", người dùng đánh lần lượt từng vị trí, app đếm số cao độ khác nhau đã nghe.
-- Tuning lấy theo cài đặt (Standard, Drop D…), nên dùng được cho bass/ukulele luôn.
+**How answers are received:**
+- **Clicking the virtual fretboard** (`<Fretboard />` with `onNoteClick`) — the default: exact string + fret.
+- **Real guitar through the mic** (optional): detects pitch down to the octave (enough for level 2 and exact-pitch mode), but **cannot tell strings apart** — E3 on string 6 fret 12 and string 4 fret 2 sound the same. In "note name + string" mode the right pitch is accepted (users keep to the right string themselves). In "find all", users play each position in turn and the app counts the distinct pitches heard.
+- The tuning follows the settings (Standard, Drop D…), so it works for bass / ukulele too.
 
-**Việc cần làm:**
-- [ ] `src/theory/fretTargets.ts`: sinh mục tiêu theo chế độ/dây/vùng/tuning (đảm bảo mỗi tên nốt chỉ có một vị trí trong vùng trên một dây), kiểm tra câu trả lời (vị trí hoặc cao độ), chọn nốt theo trọng số yếu. Dùng `fretboardPositions` / `positionForMidi` trong `src/theory/fretboard.ts`. Test kỹ.
-- [ ] Component cần đàn thu nhỏ chỉ vùng/dây; trang `#/reflex/notes`: thanh chọn chế độ, công tắc chế độ nâng cao, đếm giờ/metronome, đàn ảo, phản hồi.
-- [ ] Nối micro (cao độ có quãng tám) + MIDI.
-- [ ] Bản đồ nhiệt, kỷ lục, lịch ôn theo vị trí.
-- [ ] Bài học song ngữ ngắn ở Module 0 ("Thuộc cần đàn"), nhúng `<FretReflex mode="..." />`.
+**Tasks:**
+- [ ] `src/theory/fretTargets.ts`: generate targets by mode / string / zone / tuning (ensuring each note name has only one position in a zone on a string), check answers (position or pitch), pick notes weighted by weakness. Use `fretboardPositions` / `positionForMidi` in `src/theory/fretboard.ts`. Thorough tests.
+- [ ] Mini fretboard component showing the zone / string; `#/reflex/notes` page: mode bar, advanced-mode switch, timer / metronome, virtual fretboard, feedback.
+- [ ] Hook up the mic (pitch with octave) + MIDI.
+- [ ] Heat map, records, per-position review schedule.
+- [ ] A short bilingual lesson in Module 0 ("Learning the neck"), embedding `<FretReflex mode="..." />`.
 
-**Đã chốt với người dùng (18/10/2026):**
-1. Phản xạ hợp âm chỉ cho guitar, không dùng micro, không chấm điểm.
-2. Hợp âm đổi theo metronome: quạt 1 lần mỗi phách, hoặc chơi 1 lượt điệu cho mỗi hợp âm.
-3. Màn hình chỉ hiện hợp âm, không giải thích; ưu tiên chuyển hợp âm mượt.
-4. Luyện nốt: mặc định chỉ nốt bằng **vùng cần đàn**; tên E2/E3 là chế độ nâng cao cho người đã vững nhạc lý.
+**Agreed with the user (2026-10-18):**
+1. Chord reflex is guitar only, no mic, no scoring.
+2. Chords change with the metronome: one strum per beat, or one rhythm pass per chord.
+3. The screen shows only chords, no explanations; smooth chord changes come first.
+4. Note practice: by default notes are indicated by **neck zone**; E2/E3 names are an advanced mode for users solid on theory.
 
-## 10. Trạng thái (18/10/2026)
+## 10. Status (2026-10-18)
 
-Đã xong toàn bộ 6 giai đoạn: 48 bài học song ngữ (Module 0–10 và nhánh guitar), Explorer, Key Explorer, nhận diện hợp âm, Jam Room, trang tập đệm, ôn tập lặp lại ngắt quãng, kết nối đàn thật, PWA.
+All 6 original phases are done: 48 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
-Giai đoạn 7 (luyện phản xạ hợp âm) xong ngày 18/10/2026; Giai đoạn 8 (phản xạ nốt trên cần đàn) bắt đầu từ 19/10/2026.
+Phase 7 (chord reflex training) was finished on 2026-10-18; Phase 8 (fretboard note reflex) starts on 2026-10-19.
 
-Bổ sung sau: trang **Thế bấm hợp âm** (`#/chords`, menu Công cụ) — bộ tìm thế bấm tự động (`src/theory/guitarShapes.ts`) cho 31 loại hợp âm (thêm m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) ở nhiều vị trí, có số ngón và chặn; đổi thế bấm của từng hợp âm ngay trong trang Đệm guitar; bài Đ7 "Thế bấm hợp âm".
+Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key.
 
-Ý tưởng cho sau này:
-- Sample guitar thật thay cho PluckSynth (cần nguồn sample có giấy phép rõ ràng).
-- Hiển thị khuông nhạc (VexFlow / abcjs) cho người học piano.
-- Thêm ví dụ phân tích từ các bài hát Việt Nam (chỉ tiến trình hợp âm).
-- Nhánh đệm tương tự cho piano (tay trái, comping).
-- Phụ thuộc `@tailwindcss/typography` kéo theo `postcss-selector-parser` có cảnh báo bảo mật mức trung bình (chỉ dùng lúc build) — cập nhật khi có bản sửa.
-
----
-
-## 7. Quy ước
-
-- **Commit**: theo Conventional Commits (`feat:`, `fix:`, `content:`, `docs:`…) để lịch sử dễ đọc.
-- **Nhánh**: làm việc trực tiếp trên `main` là được (repo cá nhân); tách nhánh khi thử nghiệm lớn.
-- **Tên nốt**: mặc định hệ chữ cái (C D E F G A B) — phổ biến trong cộng đồng guitar/piano Việt Nam qua hợp âm. Có tùy chọn hiển thị Đô Rê Mi.
-- **Thăng/giáng**: hiển thị đúng theo giọng (giọng F dùng B♭, không dùng A#) — tonal đã xử lý việc này.
-- **Bản quyền**:
-  - Mã nguồn: giấy phép **MIT**.
-  - Sample âm thanh: chỉ dùng sample miễn phí có giấy phép rõ ràng (ví dụ Salamander Grand Piano – CC-BY), ghi nguồn trong README.
-  - Ví dụ bài hát: chỉ dùng **tiến trình hợp âm** để phân tích (không chép lời hay bản nhạc đầy đủ).
+Ideas for later:
+- Real guitar samples instead of PluckSynth (needs a sample source with a clear licence).
+- Staff notation (VexFlow / abcjs) for piano learners.
+- More analysis examples from Vietnamese songs (chord progressions only).
+- A similar comping track for piano (left hand, comping).
+- The `@tailwindcss/typography` dependency pulls in `postcss-selector-parser`, which has a moderate security advisory (build time only) — update when a fix is released.
 
 ---
 
-## 8. Câu hỏi còn để ngỏ
+## 7. Conventions
 
-Những điều có thể quyết định dần trong lúc làm:
-1. Có muốn hiển thị khuông nhạc (sheet music) cho piano không? Nếu có, dùng thư viện **VexFlow** hoặc **abcjs**.
-2. Giao diện có cần tối ưu cho điện thoại ngay từ đầu không, hay ưu tiên máy tính (cần đàn ảo rộng)?
-3. Nhạc Việt nào sẽ được dùng làm ví dụ phân tích tiến trình trong Module 4 và làm ví dụ cho từng điệu đệm?
-4. Có làm nhánh đệm tương tự cho piano (đệm tay trái, các kiểu rải hợp âm, comping) không?
+- **Commits**: Conventional Commits (`feat:`, `fix:`, `content:`, `docs:`…) in English, so the history is easy to read.
+- **Code**: comments, test names and docs in English. Vietnamese appears only in user-facing content (UI strings in `src/i18n/messages.ts`, `.mdx` lessons, localized data such as `{ vi, en }` names).
+- **Branches**: working directly on `main` is fine (personal repo); branch off for big experiments.
+- **Note names**: letter names by default (C D E F G A B) — common among Vietnamese guitar/piano players through chord charts. Do-Re-Mi display is optional.
+- **Sharps / flats**: spelled for the key (F major uses B♭, not A#) — tonal handles this.
+- **Licensing**:
+  - Source code: **MIT** licence.
+  - Audio samples: only free samples with a clear licence (e.g. Salamander Grand Piano – CC-BY), credited in the README.
+  - Song examples: only **chord progressions** for analysis (no lyrics or full scores).
 
 ---
 
-## 9. Bước tiếp theo
+## 8. Open questions
 
-Bắt đầu **Giai đoạn 0**: khởi tạo project, `git init`, tạo repo GitHub và cấu hình deploy GitHub Pages.
+Things that can be decided along the way:
+1. Show staff notation (sheet music) for piano? If so, use **VexFlow** or **abcjs**.
+2. Optimise the UI for phones from the start, or prioritise desktop (the virtual fretboard is wide)?
+3. Which Vietnamese songs to use as progression analysis examples in Module 4 and as examples for each comping rhythm?
+4. Build a similar comping track for piano (left-hand comping, arpeggio patterns, comping)?
+
+---
+
+## 9. Next step
+
+Start **Phase 0**: set up the project, `git init`, create the GitHub repo and configure GitHub Pages deployment.

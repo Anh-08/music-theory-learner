@@ -11,11 +11,11 @@ import { useDrill } from './useDrill'
 
 interface NoteDrillProps {
   id: string
-  /** Chỉ hỏi các nốt tự nhiên (không thăng/giáng). */
+  /** Only ask natural notes (no sharps/flats). */
   naturalsOnly?: boolean
-  /** Guitar: phím cao nhất được hỏi. */
+  /** Guitar: highest fret to ask about. */
   maxFret?: number
-  /** Guitar: chỉ hỏi trên các dây này, ví dụ "6 5". */
+  /** Guitar: only ask on these strings, e.g. "6 5". */
   strings?: string
 }
 
@@ -27,7 +27,7 @@ interface Question {
   position?: StringFret
 }
 
-/** Luyện đọc tên nốt: một vị trí trên đàn được đánh dấu, người học chọn tên nốt. */
+/** Note-reading drill: a position on the instrument is marked and the learner picks its name. */
 export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: NoteDrillProps) {
   const { instrument } = useSettings()
   const { streak, best, answer } = useDrill(id)
@@ -51,7 +51,7 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
 
   const next = () => {
     let q = pick(pool)
-    // Tránh hỏi lại đúng vị trí vừa hỏi.
+    // Avoid asking the exact same position twice in a row.
     if (question && pool.length > 1) while (q.midi === question.midi && q.position?.string === question.position?.string) q = pick(pool)
     setQuestion(q)
     setPicked(null)
@@ -63,7 +63,7 @@ export function NoteDrill({ id, naturalsOnly = false, maxFret = 12, strings }: N
     answer(c === question.midi % 12)
   }
 
-  // Trả lời bằng cách chơi nốt trên đàn thật (MIDI / micro).
+  // Answer by playing the note on a real instrument (MIDI / mic).
   useLiveNote((m) => choose(m % 12), live.status === 'on')
 
   const highlights: HighlightMap = new Map()

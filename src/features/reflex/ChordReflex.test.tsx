@@ -10,13 +10,13 @@ const strip = () =>
     .map((li) => li.querySelector('span')!.textContent)
 
 describe('reflexModel', () => {
-  it('mức Dễ / Vừa / Khó được nhận ra từ cài đặt', () => {
+  it('Easy / Medium / Hard levels are recognised from the settings', () => {
     expect(levelOf(DEFAULT_REFLEX)).toBe('easy')
     expect(levelOf({ ...DEFAULT_REFLEX, ...LEVELS.hard })).toBe('hard')
     expect(levelOf({ ...DEFAULT_REFLEX, tempo: 93 })).toBeNull()
   })
 
-  it('số phách: theo phách đã chọn, hoặc một ô nhịp của điệu; hợp âm "C*2" giữ gấp đôi', () => {
+  it('beat count: the chosen beats, or one bar of the rhythm; a "C*2" chord lasts twice as long', () => {
     const custom = parseCustomLoops('C*2 G', 'C').loops
     const beats = reflexSource({ ...DEFAULT_REFLEX, source: 'custom', beatsPerChord: 2 }, 1, 4, custom)
     expect([beats(), beats()].map((s) => [s.chord.symbol, s.beats])).toEqual([
@@ -27,21 +27,21 @@ describe('reflexModel', () => {
     expect(rhythm().beats).toBe(6)
   })
 
-  it('vòng tự nhập: số La Mã theo giọng, báo lỗi khi gõ sai', () => {
+  it('custom loops: Roman numerals follow the key, errors on bad input', () => {
     expect(parseCustomLoops('I V vi IV\nii V I', 'G').loops.map((l) => l.map((c) => c.symbol).join(' '))).toEqual(['G D Em C', 'Am D G'])
     expect(parseCustomLoops('C Xyz', 'C').error).not.toBeNull()
   })
 
-  it('thế bấm gần nhau: luôn có thế cho mọi hợp âm', () => {
+  it('nearby shapes: every chord always gets a shape', () => {
     const next = reflexSource({ ...DEFAULT_REFLEX, ...LEVELS.hard, nearShapes: true, source: 'generate' }, 3, 4)
     for (let i = 0; i < 40; i++) expect(next().shape).toBeDefined()
   })
 })
 
-describe('trang luyện phản xạ hợp âm', () => {
+describe('chord reflex page', () => {
   beforeEach(() => localStorage.clear())
 
-  it('hiện hợp âm đầu (chủ âm) và hai hợp âm sắp tới, cùng seed ra cùng chuỗi', () => {
+  it('shows the first chord (tonic) and the next two; the same seed gives the same stream', () => {
     renderWithProviders(<AppRoutes />, { route: '/reflex/chords?seed=12345' })
     expect(screen.getByRole('heading', { level: 1, name: 'Luyện phản xạ hợp âm' })).toBeInTheDocument()
     const first = strip()
@@ -52,7 +52,7 @@ describe('trang luyện phản xạ hợp âm', () => {
     expect(strip()[0]).toBe('C')
   })
 
-  it('đổi giọng, ẩn thế bấm, tự nhập vòng hợp âm', () => {
+  it('changes key, hides shapes, enters custom loops', () => {
     renderWithProviders(<AppRoutes />, { route: '/reflex/chords?seed=7' })
     fireEvent.change(screen.getByRole('combobox', { name: 'Giọng' }), { target: { value: 'Am' } })
     expect(strip()[0]).toBe('Am')
@@ -69,7 +69,7 @@ describe('trang luyện phản xạ hợp âm', () => {
     expect(screen.getByRole('alert')).toBeInTheDocument()
   })
 
-  it('chọn mức Khó: 2 phách mỗi hợp âm, ẩn thế bấm; cài đặt được lưu lại', () => {
+  it('Hard level: 2 beats per chord, shapes hidden; settings are saved', () => {
     renderWithProviders(<AppRoutes />, { route: '/reflex/chords' })
     fireEvent.click(screen.getByRole('radio', { name: 'Khó' }))
     expect(screen.getByRole('radio', { name: 'Khó' })).toHaveAttribute('aria-checked', 'true')
@@ -78,7 +78,7 @@ describe('trang luyện phản xạ hợp âm', () => {
     expect(JSON.parse(localStorage.getItem('mtl:reflex.chords')!).hideShapes).toBe(true)
   })
 
-  it('chế độ một lượt điệu: hiện lưới phách của điệu', () => {
+  it('one-rhythm-pass mode: shows the rhythm grid', () => {
     renderWithProviders(<AppRoutes />, { route: '/reflex/chords' })
     fireEvent.click(screen.getByRole('radio', { name: 'Một lượt điệu' }))
     expect(screen.getByRole('combobox', { name: 'Điệu' })).toHaveValue('ballad')

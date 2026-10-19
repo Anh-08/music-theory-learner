@@ -11,22 +11,22 @@ export interface KeyRef {
 }
 
 export interface ProgressionChord {
-  /** Ký hiệu như người dùng viết sau khi chuẩn hóa: "Am7", "G/B". */
+  /** Symbol as the user wrote it, after normalisation: "Am7", "G/B". */
   symbol: string
   root: string
-  /** Hậu tố loại hợp âm: "", "m", "7", "maj7"… */
+  /** Chord type suffix: "", "m", "7", "maj7"… */
   suffix: string
   intervals: string[]
   notes: string[]
-  /** Nốt bass nếu là hợp âm có dấu "/" (C/E). */
+  /** Bass note for slash chords (C/E). */
   bass?: string
-  /** Số ô nhịp hợp âm này kéo dài. */
+  /** Number of bars this chord lasts. */
   bars: number
 }
 
 export type TheoryErrorCode = 'empty' | 'badChord' | 'badBass' | 'repeatFirst' | 'badBars' | 'badKey'
 
-/** Lỗi do người dùng nhập sai; giao diện dịch theo `code` + `params`, `message` là bản tiếng Việt. */
+/** User input error; the UI translates it from `code` + `params`, `message` is an English fallback. */
 export class TheoryError extends Error {
   readonly code: TheoryErrorCode
   readonly params: Record<string, string>
@@ -49,12 +49,12 @@ export function keyScale(key: KeyRef): string[] {
   return Scale.get(`${key.tonic} ${key.mode === 'major' ? 'major' : 'aeolian'}`).notes
 }
 
-/** Đọc tên giọng: "C", "F#", "Am", "Bbm". */
+/** Parses a key name: "C", "F#", "Am", "Bbm". */
 export function parseKey(text: string): KeyRef {
   const t = normalizeAccidentals(text.trim())
   const minor = /m$/.test(t)
   const tonic = minor ? t.slice(0, -1) : t
-  if (!/^[A-G][#b]?$/.test(tonic)) throw new TheoryError(`Giọng không hợp lệ: ${text}`, 'badKey', { key: text })
+  if (!/^[A-G][#b]?$/.test(tonic)) throw new TheoryError(`Invalid key: ${text}`, 'badKey', { key: text })
   return { tonic, mode: minor ? 'minor' : 'major' }
 }
 
@@ -71,7 +71,7 @@ function flatten(n: string): string {
   return n.endsWith('#') ? n.slice(0, -1) : `${n}b`
 }
 
-/** Hậu tố loại hợp âm từ phần đuôi của số La Mã ("", "7", "°", "ø7", "maj7"…). */
+/** Chord type suffix from the tail of a Roman numeral ("", "7", "°", "ø7", "maj7"…). */
 function romanSuffix(rest: string, lower: boolean): string {
   const r = rest.replace(/^o/, '°')
   if (r === '°') return 'dim'
@@ -85,14 +85,14 @@ function romanSuffix(rest: string, lower: boolean): string {
 }
 
 function chordFromSymbol(symbol: string, bars: number): ProgressionChord {
-  // "C6/9" là tên hợp âm, không phải hợp âm có bass riêng — chỉ coi "/" là bass khi sau nó là tên nốt.
+  // "C6/9" is a chord name, not a slash chord — "/" only means a bass note when a note name follows it.
   const slash = symbol.match(/^(.*)\/([A-G][#b]?)$/)
   const [main, bassPart] = slash ? [slash[1], slash[2]] : symbol.includes('/') && /\/\d/.test(symbol) ? [symbol, undefined] : symbol.split('/')
   const c = Chord.get(main)
-  if (c.empty || !c.tonic) throw new TheoryError(`Không hiểu hợp âm "${symbol}"`, 'badChord', { symbol })
+  if (c.empty || !c.tonic) throw new TheoryError(`Unknown chord "${symbol}"`, 'badChord', { symbol })
   let bass: string | undefined
   if (bassPart !== undefined) {
-    if (!/^[A-G][#b]?$/.test(bassPart)) throw new TheoryError(`Nốt bass không hợp lệ trong "${symbol}"`, 'badBass', { symbol })
+    if (!/^[A-G][#b]?$/.test(bassPart)) throw new TheoryError(`Invalid bass note in "${symbol}"`, 'badBass', { symbol })
     bass = bassPart
   }
   return { symbol, root: c.tonic, suffix: main.slice(c.tonic.length), intervals: c.intervals, notes: c.notes, bass, bars }
@@ -110,43 +110,43 @@ function romanToSymbol(token: string, key: KeyRef): string {
 }
 
 /**
- * Đọc tiến trình hợp âm. Mỗi hợp âm là một ô nhịp; ngăn cách bằng khoảng trắng, "-", "|" hoặc ",".
- * Chấp nhận ký hiệu hợp âm ("Dm7 G7 Cmaj7", "C G/B Am") hoặc số La Mã theo giọng ("ii V I", "I-V-vi-IV", "bVII").
- * "C*2" là hai ô nhịp C; "%" lặp lại hợp âm trước.
+ * Parses a chord progression. Each chord is one bar; separate with spaces, "-", "|" or ",".
+ * Accepts chord symbols ("Dm7 G7 Cmaj7", "C G/B Am") or Roman numerals relative to the key ("ii V I", "I-V-vi-IV", "bVII").
+ * "C*2" is two bars of C; "%" repeats the previous chord.
  */
 export function parseProgression(text: string, key: KeyRef = { tonic: 'C', mode: 'major' }): ProgressionChord[] {
   const tokens = normalizeAccidentals(text)
     .split(/[\s|,–-]+/)
     .filter(Boolean)
-  if (tokens.length === 0) throw new TheoryError('Chưa có hợp âm nào', 'empty')
+  if (tokens.length === 0) throw new TheoryError('No chords yet', 'empty')
   const out: ProgressionChord[] = []
   for (const raw of tokens) {
     if (raw === '%') {
-      if (!out.length) throw new TheoryError('"%" phải đứng sau một hợp âm', 'repeatFirst')
+      if (!out.length) throw new TheoryError('"%" must follow a chord', 'repeatFirst')
       out[out.length - 1] = { ...out[out.length - 1], bars: out[out.length - 1].bars + 1 }
       continue
     }
     const [body, times] = raw.split('*')
     const bars = times === undefined ? 1 : Number(times)
-    if (!Number.isInteger(bars) || bars < 1 || bars > 16) throw new TheoryError(`Số ô nhịp không hợp lệ trong "${raw}"`, 'badBars', { token: raw })
+    if (!Number.isInteger(bars) || bars < 1 || bars > 16) throw new TheoryError(`Invalid bar count in "${raw}"`, 'badBars', { token: raw })
     const symbol = ROMAN_RE.test(body) ? romanToSymbol(body, key) : body
     out.push(chordFromSymbol(symbol, bars))
   }
   return out
 }
 
-/** Danh sách hợp âm theo từng ô nhịp (hợp âm kéo dài nhiều ô được lặp lại). */
+/** Chords bar by bar (a chord lasting several bars is repeated). */
 export function chordsPerBar(chords: ProgressionChord[]): ProgressionChord[] {
   return chords.flatMap((c) => Array.from({ length: c.bars }, () => c))
 }
 
-/** Id loại hợp âm trong CHORD_TYPES khớp với tập quãng, nếu có. */
+/** Chord type id in CHORD_TYPES matching an interval set, if any. */
 export function chordTypeId(intervals: string[]): string | undefined {
   const key = intervals.join(' ')
   return CHORD_TYPES.find((t) => chordFromRoot('C', t.id).intervals.join(' ') === key)?.id
 }
 
-/** Ký hiệu La Mã của hợp âm trong một giọng: G7 trong C → "V7", Bb trong C → "♭VII", Bm7b5 → "viiø7". */
+/** Roman numeral of a chord in a key: G7 in C → "V7", Bb in C → "♭VII", Bm7b5 → "viiø7". */
 export function romanNumeral(chord: ProgressionChord, key: KeyRef): string {
   const scale = keyScale(key).map(chroma)
   const c = chroma(chord.root)
@@ -197,14 +197,14 @@ export function romanNumeral(chord: ProgressionChord, key: KeyRef): string {
   return `${acc}${numeral}${suffix}${chord.bass ? `/${displayNote(chord.bass)}` : ''}`
 }
 
-/** Hợp âm có phải toàn hợp âm 7 át (kiểu blues) không. */
+/** Whether every chord is a dominant 7th (blues style). */
 export function isBluesLike(chords: ProgressionChord[]): boolean {
   return chords.length >= 3 && chords.every((c) => chordTypeId(c.intervals) === '7' || chordTypeId(c.intervals) === '9')
 }
 
 /**
- * Đoán giọng của tiến trình: chấm điểm 24 giọng theo số nốt hợp âm nằm trong scale,
- * cộng điểm nếu hợp âm đầu / cuối là hợp âm chủ.
+ * Guesses the key of a progression: scores all 24 keys by how many chord notes fall in the scale,
+ * with a bonus when the first / last chord is the tonic chord.
  */
 export function detectKey(chords: ProgressionChord[]): KeyRef {
   if (isBluesLike(chords)) return { tonic: chords[0].root, mode: 'major' }

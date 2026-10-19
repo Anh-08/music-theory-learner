@@ -34,8 +34,8 @@ export interface Analysis {
 }
 
 /**
- * Phân tích tiến trình người dùng nhập. `keyText` là giọng chọn tay ("C", "Am") hoặc null để tự đoán.
- * Số La Mã luôn cần một giọng: không chọn thì mặc định C trưởng.
+ * Analyses the progression the user typed. `keyText` is a manually chosen key ("C", "Am") or null to auto-detect.
+ * Roman numerals always need a key: without one, C major is assumed.
  */
 export function analyze(text: string, keyText: string | null): Analysis {
   const chosen = keyText ? parseKey(keyText) : null
@@ -45,7 +45,7 @@ export function analyze(text: string, keyText: string | null): Analysis {
   return { chords, key, romans: chords.map((c) => romanNumeral(c, key)), suggestions: suggestScales(chords, key) }
 }
 
-/** Chủ âm giọng trưởng tương ứng: giọng thứ đổi sang giọng trưởng song song (Am → C). */
+/** Tonic of the matching major key: a minor key maps to its relative major (Am → C). */
 function majorTonic(key: KeyRef): string {
   return key.mode === 'major' ? key.tonic : Note.transpose(key.tonic, '3m')
 }
@@ -56,9 +56,9 @@ function transposeNote(note: string, interval: string): string {
 }
 
 /**
- * Dịch giọng tiến trình người dùng nhập từ giọng `from` sang giọng `to`, giữ nguyên cách viết
- * (dấu ngăn cách, "*2", "%"). Số La Mã giữ nguyên vì đã tự theo giọng. Khác thể (trưởng ↔ thứ) thì
- * dịch theo giọng song song, nên C → Am giữ nguyên hợp âm. Ký hiệu không hiểu được để nguyên.
+ * Transposes a user-typed progression from key `from` to key `to`, keeping its formatting
+ * (separators, "*2", "%"). Roman numerals are left as they are since they already follow the key. Across modes (major ↔ minor)
+ * it transposes via the relative major, so C → Am keeps the same chords. Unrecognised symbols are left untouched.
  */
 export function transposeProgression(text: string, from: KeyRef, to: KeyRef): string {
   const interval = Interval.distance(majorTonic(from), majorTonic(to))
@@ -84,7 +84,7 @@ export function scaleLabel(s: { root: string; typeId: string }, locale: Locale =
   return `${displayNote(s.root)} ${scaleTypeName(scaleType(s.typeId), locale)}`
 }
 
-/** Chỉ số hợp âm đang vang ở ô nhịp `bar`. */
+/** Index of the chord sounding at bar `bar`. */
 export function chordIndexAtBar(chords: ProgressionChord[], bar: number): number {
   let acc = 0
   for (let i = 0; i < chords.length; i++) {
@@ -95,8 +95,8 @@ export function chordIndexAtBar(chords: ProgressionChord[], bar: number): number
 }
 
 /**
- * Tô sáng cho Jam: nốt của hợp âm hiện tại (màu thường, chủ âm hợp âm màu đỏ)
- * và các nốt còn lại của scale đang chọn (màu xám). Nhãn quãng tính từ nốt gốc của hợp âm.
+ * Jam highlights: the current chord's notes (regular colour, chord root in red)
+ * plus the remaining notes of the selected scale (grey). Interval labels are measured from the chord root.
  */
 export function jamHighlights(chord: ProgressionChord, scale: { root: string; typeId: string } | null, labels: 'note' | 'interval'): HighlightMap {
   const chordLabels = chord.intervals.map(intervalLabel)

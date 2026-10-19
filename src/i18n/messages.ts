@@ -1,4 +1,4 @@
-/** Chuỗi giao diện. Bản tiếng Việt là gốc; bản tiếng Anh phải có đủ mọi khóa (TypeScript kiểm tra). */
+/** UI strings. Vietnamese is the source; the English version must have every key (checked by TypeScript). */
 export const vi = {
   'common.play': '▶ Nghe',
   'common.stop': '■ Dừng',

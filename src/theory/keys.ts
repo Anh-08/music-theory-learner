@@ -5,12 +5,12 @@ import { chordTypeId, keyScale, type KeyRef } from './progression'
 export type ChordFunction = 'T' | 'S' | 'D'
 
 export interface DiatonicChord {
-  /** Bậc 0–6. */
+  /** Degree 0–6. */
   degree: number
-  /** Số La Mã: "ii", "V7", "viiø7"… */
+  /** Roman numeral: "ii", "V7", "viiø7"… */
   roman: string
   root: string
-  /** Id loại hợp âm trong CHORD_TYPES. */
+  /** Chord type id in CHORD_TYPES. */
   typeId: string
   symbol: string
   notes: string[]
@@ -25,7 +25,7 @@ const MINOR_FUNCTIONS: ChordFunction[] = ['T', 'S', 'T', 'S', 'D', 'S', 'D']
 
 const ROMAN_TAIL: Record<string, string> = { M: '', m: '', dim: '°', aug: '+', maj7: 'maj7', '7': '7', m7: '7', m7b5: 'ø7', dim7: '°7' }
 
-/** Bảy hợp âm thuận giọng (ba nốt hoặc bảy), dựng bằng cách chồng quãng 3 trong scale của giọng. */
+/** The seven diatonic chords (triads or sevenths), built by stacking thirds within the key's scale. */
 export function diatonicChords(key: KeyRef, sevenths = false): DiatonicChord[] {
   const scale = keyScale(key)
   return scale.map((root, degree) => {
@@ -58,13 +58,13 @@ export interface KeySignature {
 const SHARP_ORDER = ['F#', 'C#', 'G#', 'D#', 'A#', 'E#', 'B#']
 const FLAT_ORDER = ['Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb', 'Fb']
 
-/** Hóa biểu của giọng, theo đúng thứ tự viết (F C G D A E B / B E A D G C F). */
+/** Key signature, in written order (F C G D A E B / B E A D G C F). */
 export function keySignature(key: KeyRef): KeySignature {
   const notes = new Set(keyScale(key))
   return { sharps: SHARP_ORDER.filter((n) => notes.has(n)), flats: FLAT_ORDER.filter((n) => notes.has(n)) }
 }
 
-/** Giọng tương ứng (cùng hóa biểu, khác chủ âm) và giọng cùng tên (cùng chủ âm, khác trưởng/thứ). */
+/** Relative key (same signature, different tonic) and parallel key (same tonic, major ↔ minor). */
 export function relatedKeys(key: KeyRef): { relative: KeyRef; parallel: KeyRef } {
   const scale = keyScale(key)
   return {

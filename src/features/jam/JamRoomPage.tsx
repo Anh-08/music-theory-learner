@@ -13,7 +13,7 @@ export function JamRoomPage() {
         <p className="mt-2 text-stone-600 dark:text-stone-400">{t('jam.intro')}</p>
       </header>
       <JamPlayer
-        // Đổi link (ví dụ từ bài học) thì tạo lại trình phát với cấu hình mới.
+        // A new link (e.g. from a lesson) recreates the player with the new settings.
         key={params.toString()}
         editable
         progression={params.get('p') ?? 'C G Am F'}

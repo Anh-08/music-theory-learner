@@ -17,7 +17,7 @@ import { timeSignature } from '../rhythm/customRhythms'
 import { DEFAULT_REFLEX, LEVELS, REFLEX_KEYS, levelOf, newSeed, parseCustomLoops, reflexSource, type ReflexLevel, type ReflexSettings } from './reflexModel'
 
 export interface ChordReflexProps {
-  /** Trang luyện phản xạ: lưu cài đặt, đủ mọi tùy chọn. Trong bài học: cài đặt riêng, gọn hơn. */
+  /** Reflex page: settings are saved, every option available. In lessons: separate, more compact settings. */
   page?: boolean
   source?: ReflexSettings['source']
   songKey?: string
@@ -70,7 +70,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
   const initial: ReflexSettings = { ...DEFAULT_REFLEX, ...(level ? LEVELS[level] : {}), ...(source ? { source } : {}), ...(songKey ? { key: songKey } : {}) }
   const [saved, setSaved] = usePersistentState<ReflexSettings>('reflex.chords', initial)
   const [local, setLocal] = useState<ReflexSettings>(initial)
-  // Cài đặt cũ đã lưu có thể thiếu khóa mới: trộn với mặc định.
+  // Older saved settings may lack new keys: merge with the defaults.
   const settings: ReflexSettings = useMemo(() => (page ? { ...DEFAULT_REFLEX, ...saved } : local), [page, saved, local])
   const setSettings = page ? setSaved : setLocal
   const [seed, setSeed] = useState(() => initialSeed ?? newSeed())
@@ -96,7 +96,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
     })
   }
 
-  /** Đổi cài đặt; nếu đang chơi và thay đổi ảnh hưởng tới chuỗi hợp âm thì chơi lại từ đầu. */
+  /** Change a setting; if playing and the change affects the chord stream, restart from the beginning. */
   const update = (patch: Partial<ReflexSettings>) => {
     const next = { ...settings, ...patch }
     setSettings(next)
@@ -117,7 +117,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
     return () => void stopReflex(id)
   }, [playing, id])
 
-  // Khi chưa chơi: xem trước các hợp âm đầu của chuỗi (đúng chuỗi sẽ chơi).
+  // Before playing: preview the first chords of the stream (exactly the stream that will play).
   const preview = useMemo(() => {
     const next = reflexSource(settings, seed, beatsPerBar, custom.loops)
     return Array.from({ length: PREVIEW + 1 }, next)

@@ -3,7 +3,7 @@ import { chroma, displayNote, solfege, type Chroma } from './notes'
 
 export type LabelMode = 'note' | 'interval' | 'solfege'
 
-/** Màu đánh dấu đặc biệt (dùng trong bài tập); mặc định là màu chủ âm / nốt thường. */
+/** Special highlight colour (used in exercises); the default is the root / regular note colour. */
 export type MarkerColor = 'correct' | 'wrong' | 'question' | 'neutral'
 
 export interface Highlight {
@@ -12,12 +12,12 @@ export interface Highlight {
   color?: MarkerColor
 }
 
-/** Nốt cần tô sáng trên đàn, đánh chỉ mục theo chroma để dùng chung cho mọi quãng tám. */
+/** Notes to highlight on an instrument, indexed by chroma so every octave shares them. */
 export type HighlightMap = Map<Chroma, Highlight>
 
 /**
- * Tạo bản đồ tô sáng từ danh sách nốt và nhãn quãng tương ứng
- * (nốt đầu tiên là chủ âm).
+ * Builds a highlight map from a list of notes and their interval labels
+ * (the first note is the root).
  */
 export function makeHighlights(notes: string[], intervalLabels: string[], mode: LabelMode, locale: Locale = 'vi'): HighlightMap {
   const map: HighlightMap = new Map()

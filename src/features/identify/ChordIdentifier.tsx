@@ -11,11 +11,11 @@ export function ChordIdentifier() {
   const { t } = useT()
   const { instrument } = useSettings()
   const { play, playNote, activeMidis } = usePlayer(instrument)
-  // Guitar: mỗi dây tối đa một nốt (như bấm thật). Piano: tập phím bất kỳ.
+  // Guitar: at most one note per string (as when actually fretting). Piano: any set of keys.
   const [frets, setFrets] = useState<Map<number, { fret: number; midi: number }>>(new Map())
   const [keys, setKeys] = useState<Set<number>>(new Set())
 
-  // Đàn MIDI: các phím đang giữ thay cho lựa chọn bằng chuột (nhận được cả hợp âm).
+  // MIDI keyboard: held keys replace the mouse selection (whole chords are recognised).
   const live = useLiveInput()
   const liveChord = live.source === 'midi' && live.held.length ? live.held : null
   const selectedMidis = useMemo(
@@ -26,7 +26,7 @@ export function ChordIdentifier() {
   const matches = useMemo(() => identifyChord(midis), [midis])
   const distinct = new Set(midis.map(chromaOfMidi)).size
 
-  // Cập nhật dạng hàm để hai lần bấm liên tiếp thật nhanh không làm mất nốt.
+  // Functional update so two very quick clicks in a row do not lose a note.
   const onPick = (m: number, p?: FretPosition) => {
     playNote(m)
     if (instrument === 'guitar' && p) {
@@ -46,7 +46,7 @@ export function ChordIdentifier() {
     }
   }
 
-  // Micro chỉ nghe nốt đơn: mỗi nốt nghe được thêm vào lựa chọn.
+  // The mic only hears single notes: each note heard is added to the selection.
   useLiveNote((m) => {
     if (instrument === 'guitar') {
       const p = positionForMidi(tuning('standard'), m, 12)

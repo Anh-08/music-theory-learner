@@ -3,7 +3,7 @@ import type { InstrumentId } from '../../audio/instruments'
 import { useT } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
 
-/** Nội dung chỉ dành cho người học một nhạc cụ; người học nhạc cụ kia thấy một dòng thông báo thu gọn. */
+/** Content for learners of one instrument only; learners of the other see a collapsed one-line notice. */
 export function OnlyFor({ instrument, children }: { instrument: InstrumentId; children: ReactNode }) {
   const settings = useSettings()
   const { t } = useT()

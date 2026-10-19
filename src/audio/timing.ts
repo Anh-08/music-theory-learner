@@ -1,15 +1,15 @@
 export interface TimingStats {
-  /** Số tiếng gảy khớp được với một nhịp của điệu. */
+  /** Number of strums matched to a beat of the rhythm. */
   matched: number
-  /** Lệch trung bình (ms): dương = muộn, âm = sớm. */
+  /** Mean offset (ms): positive = late, negative = early. */
   meanMs: number
-  /** Phần trăm tiếng gảy nằm trong ±`tolerance`. */
+  /** Percentage of strums within ±`tolerance`. */
   onTimePct: number
 }
 
 /**
- * So tiếng gảy nghe được (`onsets`) với thời điểm các nhịp của điệu (`expected`), cùng đơn vị giây.
- * Mỗi tiếng gảy khớp với nhịp gần nhất trong cửa sổ ±`window`; mỗi nhịp chỉ khớp một lần.
+ * Compares detected strums (`onsets`) with the rhythm's beat times (`expected`), both in seconds.
+ * Each strum matches the nearest beat within ±`window`; each beat matches only once.
  */
 export function scoreTiming(expected: number[], onsets: number[], window = 0.15, tolerance = 0.05): TimingStats {
   const used = new Set<number>()

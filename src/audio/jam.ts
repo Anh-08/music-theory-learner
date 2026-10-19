@@ -16,11 +16,11 @@ export interface JamOptions {
   tempo: number
   instrument: InstrumentId
   mutes: Record<JamTrack, boolean>
-  /** Điệu guitar thay cho phần đệm hợp âm mặc định của groove. */
+  /** Guitar rhythm replacing the groove's default chord comping. */
   rhythm?: Rhythm
-  /** Tăng tempo thêm 5 bpm sau mỗi vòng cho tới tempo này. */
+  /** Raise the tempo by 5 bpm after every loop, up to this tempo. */
   rampTo?: number
-  /** Thế bấm guitar đã chọn cho từng hợp âm (theo ký hiệu). */
+  /** Guitar shape chosen for each chord (by symbol). */
   shapes?: Record<string, (number | null)[]>
 }
 
@@ -53,7 +53,7 @@ function createKit(T: Tone): Kit {
   bass.volume.value = -9
   const click = new T.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 } }).toDestination()
   click.volume.value = -14
-  // Tiếng "chặn" dây: tiếng gõ ngắn, đục.
+  // Muted "chop": a short, dull knock.
   const chopFilter = new T.Filter(1400, 'bandpass').toDestination()
   const chop = new T.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).connect(chopFilter)
   chop.volume.value = -4
@@ -64,8 +64,8 @@ let part: ToneNs.Part | null = null
 const hitListeners = new Set<(time: number) => void>()
 
 /**
- * Nghe thời điểm từng nhịp đánh của điệu guitar (quạt / móc / chặn), kể cả khi phần Guitar bị tắt —
- * dùng để chấm độ đều tay. Thời điểm đã cộng độ trễ đầu ra của thiết bị (lúc người chơi thực sự nghe thấy).
+ * Hears the timing of every hit in the guitar rhythm (strum / pick / chop), even when the Guitar part is muted —
+ * used to score steadiness. Times include the device output latency (when the player actually hears it).
  */
 export function onRhythmHit(l: (time: number) => void): () => void {
   hitListeners.add(l)
@@ -79,12 +79,12 @@ function release() {
   jamStore.set({ ownerId: null, bar: 0, step: -1 })
 }
 
-/** Gọi `fn` đúng lúc `time` (giờ AudioContext) bằng hẹn giờ — Draw dừng khi tab bị ẩn. */
+/** Calls `fn` exactly at `time` (AudioContext time) using a timer — Draw stops when the tab is hidden. */
 function at(T: Tone, time: number, fn: () => void) {
   setTimeout(fn, Math.max(0, (time - T.now()) * 1000))
 }
 
-/** Phát vòng lặp tiến trình với trống, bass và đệm hợp âm. Gọi lại khi đang phát sẽ phát lại từ đầu với cấu hình mới. */
+/** Plays the progression loop with drums, bass and chord comping. Calling again while playing restarts with the new settings. */
 export async function startJam(opts: JamOptions): Promise<void> {
   const T = await getTone()
   kitPromise ??= Promise.resolve(createKit(T))
@@ -164,7 +164,7 @@ export async function startJam(opts: JamOptions): Promise<void> {
   transport.start('+0.1')
 }
 
-/** Đổi tempo / tắt bật từng phần mà không dừng nhạc. */
+/** Change tempo / mute parts without stopping the music. */
 export async function updateJam(next: { tempo?: number; mutes?: Record<JamTrack, boolean> }): Promise<void> {
   if (next.mutes) mutes = { ...next.mutes }
   if (next.tempo !== undefined && part) {
@@ -174,7 +174,7 @@ export async function updateJam(next: { tempo?: number; mutes?: Record<JamTrack,
   }
 }
 
-/** Dừng Jam. Có `ownerId` thì chỉ dừng nếu đúng trình phát đó đang phát. */
+/** Stops the Jam. With `ownerId`, only stops if that player is the one playing. */
 export async function stopJam(ownerId?: string): Promise<void> {
   if (!ownsTransport(release)) return
   if (ownerId !== undefined && jamStore.get().ownerId !== ownerId) return

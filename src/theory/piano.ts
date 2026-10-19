@@ -10,11 +10,11 @@ export interface PianoKey {
   midi: number
   chroma: Chroma
   black: boolean
-  /** Phím trắng: thứ tự phím trắng. Phím đen: thứ tự phím trắng nằm bên trái nó. */
+  /** White key: its index among white keys. Black key: index of the white key to its left. */
   whiteIndex: number
 }
 
-/** Các phím từ `startMidi` đến `endMidi` (tính cả hai đầu). Nên bắt đầu và kết thúc bằng phím trắng. */
+/** Keys from `startMidi` to `endMidi` (inclusive). Should start and end on white keys. */
 export function pianoKeys(startMidi: number, endMidi: number): PianoKey[] {
   const keys: PianoKey[] = []
   let whiteIndex = -1

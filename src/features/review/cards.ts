@@ -23,7 +23,7 @@ export type DeckId = 'interval-name' | 'interval-ear' | 'chord-ear' | 'chord-spe
 export interface Deck {
   id: DeckId
   items: string[]
-  /** Bộ luyện tai (cần nghe). */
+  /** Ear-training deck (needs audio). */
   ear: boolean
 }
 
@@ -77,7 +77,7 @@ function shuffle<T>(items: T[], random: Random): T[] {
   return a
 }
 
-/** 4 lựa chọn: đáp án + 3 phương án nhiễu khác nhau, xáo trộn. */
+/** 4 options: the answer + 3 distinct distractors, shuffled. */
 function withDistractors(answer: string, pool: string[], random: Random): { options: string[]; answer: number } {
   const others = shuffle([...new Set(pool.filter((p) => p !== answer))], random).slice(0, 3)
   const options = shuffle([answer, ...others], random)
@@ -99,7 +99,7 @@ function sigText(tonic: string): string {
   return '0'
 }
 
-/** Dựng câu hỏi cho một thẻ "<bộ>:<mục>". Câu hỏi được dựng ngẫu nhiên mỗi lần (chủ âm, giọng…). */
+/** Builds the question for a card "<deck>:<item>". Questions are randomised each time (root, key…). */
 export function buildQuestion(cardId: string, locale: Locale, random: Random = Math.random): Question {
   const [deckId, item] = cardId.split(/:(.*)/s) as [DeckId, string]
   const d = deck(deckId)
@@ -123,7 +123,7 @@ export function buildQuestion(cardId: string, locale: Locale, random: Random = M
       return { prompt: 'review.q.chordEar', params: {}, options, answer, events: [...chordEvents(midis, 0, 1.4), ...arpeggioThenChord(midis, 0.3).slice(0, midis.length).map((e) => ({ ...e, at: e.at + 1.6 }))] }
     }
     case 'chord-spell': {
-      // Chỉ chọn chủ âm mà mọi phương án đều không cần dấu hóa kép (E♭♭, F𝄪…) — dễ đọc với người học.
+      // Only pick roots where no option needs a double accidental (E♭♭, F𝄪…) — easier for learners to read.
       const root = pick(SPELL_ROOTS, random)
       const spell = (id: string) => chordFromRoot(root, id).notes.map(displayNote).join(' ')
       const { options, answer } = withDistractors(spell(item), d.items.map(spell), random)
@@ -158,8 +158,8 @@ export function buildQuestion(cardId: string, locale: Locale, random: Random = M
 }
 
 /**
- * Chọn thẻ cho một lượt ôn: thẻ đến hạn trước (đến hạn sớm nhất trước), rồi thẻ mới chưa học,
- * tối đa `size` thẻ.
+ * Picks cards for a review session: due cards first (earliest due first), then new unseen cards,
+ * up to `size` cards.
  */
 export function pickSession(
   srs: Record<string, { box: number; due: number }>,

@@ -6,10 +6,10 @@ import { jamStore } from '../../audio/jamStore'
 import { renderWithProviders } from '../../test/renderWithProviders'
 import { RhythmTrainer } from '../rhythm/RhythmTrainer'
 
-describe('Thế bấm hợp âm', () => {
+describe('Chord shapes', () => {
   beforeEach(() => localStorage.clear())
 
-  it('hiện nhiều thế bấm cho hợp âm đã chọn, kể cả hợp âm mở rộng', () => {
+  it('shows several shapes for the selected chord, extended chords included', () => {
     renderWithProviders(<AppRoutes />, { route: '/chords' })
     expect(screen.getByRole('img', { name: 'Sơ đồ hợp âm C: x 3 2 0 1 0' })).toBeInTheDocument()
     expect(screen.getAllByRole('img', { name: /^Sơ đồ hợp âm C:/ }).length).toBeGreaterThanOrEqual(5)
@@ -22,14 +22,14 @@ describe('Thế bấm hợp âm', () => {
   })
 })
 
-describe('Đổi thế bấm trong trang Đệm guitar', () => {
+describe('Changing shapes on the Guitar comping page', () => {
   beforeEach(() => {
     localStorage.clear()
     vi.mocked(startJam).mockClear()
     jamStore.set({ ownerId: null, bar: 0, step: -1 })
   })
 
-  it('đổi thế bấm của hợp âm và điệu dùng đúng thế đó', () => {
+  it('changes a chord shape and the rhythm uses that shape', () => {
     renderWithProviders(<RhythmTrainer rhythm="ballad" progression="C G" />)
     expect(screen.getByText('Thế 1/7')).toBeInTheDocument()
     expect(screen.getByRole('img', { name: 'Sơ đồ hợp âm C: x 3 2 0 1 0' })).toBeInTheDocument()

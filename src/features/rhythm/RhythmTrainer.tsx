@@ -26,7 +26,7 @@ export interface RhythmTrainerProps {
   rhythm?: string
   progression?: string
   tempo?: number
-  /** Trang tập đệm: cho đổi điệu, sửa tiến trình và tự tạo điệu. Trong bài học: điệu cố định. */
+  /** Comping practice page: rhythm can be changed, progression edited and custom rhythms created. In lessons: a fixed rhythm. */
   editable?: boolean
 }
 
@@ -74,7 +74,7 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
   if (parsed.chords && parsed.chords !== lastChords) setLastChords(parsed.chords)
   const chords = parsed.chords ?? lastChords ?? []
 
-  // Thế bấm đã chọn cho từng hợp âm (theo ký hiệu); mặc định là thế đầu tiên (thế quen thuộc).
+  // Shape chosen for each chord (by symbol); defaults to the first (familiar) shape.
   const [shapeIdx, setShapeIdx] = useState<Record<string, number>>({})
   const shapeFor = (c: ProgressionChord, idx = shapeIdx): ChordShape | undefined => {
     const list = chordShapes(c)
@@ -101,7 +101,7 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
     return () => void stopJam(id)
   }, [playing, id])
 
-  // Chấm nhịp: gom thời điểm các nhịp của điệu và các tiếng gảy nghe qua micro, chấm trên ~40 cú gần nhất.
+  // Timing score: collect the rhythm's beat times and the strums heard through the mic, scoring the last ~40 hits.
   useEffect(() => {
     if (!timing || !playing || live.source !== 'mic' || live.status !== 'on') return
     const hits: number[] = []

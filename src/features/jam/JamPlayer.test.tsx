@@ -14,14 +14,14 @@ describe('JamPlayer', () => {
     jamStore.set({ ownerId: null, bar: 0 })
   })
 
-  it('hiển thị hợp âm, số La Mã và giọng tự đoán', () => {
+  it('shows chords, Roman numerals and the detected key', () => {
     renderWithProviders(<JamPlayer progression="G D Em C" />)
     const chords = within(screen.getByRole('list', { name: 'Các hợp âm' })).getAllByRole('button')
     expect(chords.map((c) => c.textContent)).toEqual(['GI', 'DV', 'Emvi', 'CIV'])
     expect(screen.getByText('G trưởng')).toBeInTheDocument()
   })
 
-  it('phát, theo dõi ô nhịp và dừng', async () => {
+  it('plays, follows the bar and stops', async () => {
     renderWithProviders(<JamPlayer progression="C G Am F" groove="rock" />)
     fireEvent.click(screen.getByRole('button', { name: '▶ Phát nhạc nền' }))
     expect(startJam).toHaveBeenCalledWith(expect.objectContaining({ tempo: 112, instrument: 'guitar' }))
@@ -33,14 +33,14 @@ describe('JamPlayer', () => {
     expect(stopJam).toHaveBeenCalled()
   })
 
-  it('trang Jam Room: báo lỗi khi gõ sai nhưng vẫn giữ tiến trình cũ', () => {
+  it('Jam Room page: shows an error on bad input but keeps the previous progression', () => {
     renderWithProviders(<JamPlayer editable progression="C G" />)
     fireEvent.change(screen.getByLabelText('Tiến trình hợp âm'), { target: { value: 'C Xm' } })
     expect(screen.getByRole('alert')).toHaveTextContent('Xm')
     expect(within(screen.getByRole('list', { name: 'Các hợp âm' })).getAllByRole('button')).toHaveLength(2)
   })
 
-  it('chọn tiến trình mẫu', () => {
+  it('picks a preset progression', () => {
     renderWithProviders(<JamPlayer editable progression="C G" />)
     fireEvent.click(screen.getByRole('button', { name: 'Blues 12 ô nhịp' }))
     expect(screen.getByLabelText('Tiến trình hợp âm')).toHaveValue('A7*4 D7*2 A7*2 E7 D7 A7 E7')
@@ -48,7 +48,7 @@ describe('JamPlayer', () => {
     expect(screen.getByLabelText('Scale để improvise')).toHaveDisplayValue(/A Ngũ cung thứ/)
   })
 
-  it('đổi giọng thì dịch hợp âm theo giọng mới, tiến trình mẫu theo giọng đang chọn', () => {
+  it('changing the key transposes the chords; presets follow the selected key', () => {
     renderWithProviders(<JamPlayer editable progression="C G Am F" songKey="C" />)
     fireEvent.change(screen.getByLabelText('Giọng'), { target: { value: 'Eb' } })
     expect(screen.getByLabelText('Tiến trình hợp âm')).toHaveValue('Eb Bb Cm Ab')

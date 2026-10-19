@@ -7,7 +7,7 @@ import { parseProgression } from '../progression'
 const shapes = (s: string) => chordShapes(parseProgression(s)[0]).map(shapeId)
 
 describe('chordShapes', () => {
-  it('có các thế bấm quen thuộc, thế chuẩn đứng đầu', () => {
+  it('has the familiar shapes, standard shape first', () => {
     expect(shapes('C')[0]).toBe('x32010')
     expect(shapes('C')).toEqual(expect.arrayContaining(['x35553', '8,10,10,9,8,8', 'x,x,10,12,13,12']))
     expect(shapes('F')[0]).toBe('133211')
@@ -16,7 +16,7 @@ describe('chordShapes', () => {
     expect(shapes('Am')[0]).toBe('x02210')
   })
 
-  it('mọi loại hợp âm ở mọi chủ âm: thế bấm hợp lệ', () => {
+  it('every chord type on every root: valid shapes', () => {
     const roots = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
     for (const t of CHORD_TYPES) {
       for (const root of roots) {
@@ -30,9 +30,9 @@ describe('chordShapes', () => {
           const midis = shapeMidis(sh).filter((m): m is number => m !== null)
           const pcs = new Set(midis.map((m) => m % 12))
           for (const p of pcs) expect(allowed.has(p), `${chord.symbol} ${shapeId(sh)}`).toBe(true)
-          for (const r of required) expect(pcs.has(r), `${chord.symbol} ${shapeId(sh)} thiếu nốt`).toBe(true)
+          for (const r of required) expect(pcs.has(r), `${chord.symbol} ${shapeId(sh)} missing note`).toBe(true)
           expect(Math.min(...midis) % 12, `${chord.symbol} ${shapeId(sh)} bass`).toBe(chroma(root))
-          expect(new Set(sh.fingers.filter((f) => f !== null)).size, `${chord.symbol} ${shapeId(sh)} ngón`).toBeLessThanOrEqual(4)
+          expect(new Set(sh.fingers.filter((f) => f !== null)).size, `${chord.symbol} ${shapeId(sh)} fingers`).toBeLessThanOrEqual(4)
           const fretted = sh.frets.filter((f): f is number => f !== null && f > 0)
           if (fretted.length) expect(Math.max(...fretted) - Math.min(...fretted)).toBeLessThanOrEqual(3)
         }
@@ -40,7 +40,7 @@ describe('chordShapes', () => {
     }
   })
 
-  it('ngón bấm và ngón chặn', () => {
+  it('fingering and barres', () => {
     const [f] = chordShapes(parseProgression('F')[0])
     expect(f.barre).toEqual({ fret: 1, from: 6, to: 1 })
     expect(f.fingers).toEqual([1, 3, 4, 2, 1, 1])
@@ -50,12 +50,12 @@ describe('chordShapes', () => {
     expect(c.position).toBe(0)
   })
 
-  it('quy tắc nốt: quãng 5 đúng và quãng 9 trong hợp âm 13 được bỏ', () => {
+  it('note rules: the perfect 5th and the 9th in a 13 chord may be dropped', () => {
     const rules = toneRules({ root: 'G', intervals: ['1P', '3M', '5P', '7m', '9M', '13M'] })
     expect(rules.filter((r) => !r.required).map((r) => r.chroma).sort()).toEqual([2, 9]) // D (5), A (9)
   })
 
-  it('hợp âm có bass riêng: nốt thấp nhất là bass', () => {
+  it('slash chords: the lowest note is the bass', () => {
     const list = chordShapes(parseProgression('G/B')[0])
     for (const sh of list) expect(Math.min(...(shapeMidis(sh).filter((m) => m !== null) as number[])) % 12).toBe(11)
   })

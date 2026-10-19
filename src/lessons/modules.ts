@@ -3,13 +3,13 @@ import type { Localized } from '../i18n/locale'
 export interface ModuleInfo {
   id: string
   number: number
-  /** Nhãn thay cho "Module n" (ví dụ nhánh riêng cho guitar). */
+  /** Label replacing "Module n" (e.g. a guitar-only track). */
   badge?: Localized
   title: Localized
   description: Localized
 }
 
-/** Thứ tự các module trong lộ trình (xem PLAN.md mục 4). Module chưa có bài hiển thị là "sắp có". */
+/** Order of modules in the curriculum (see PLAN.md section 4). A module without lessons shows as "coming soon". */
 export const MODULES: ModuleInfo[] = [
   {
     id: 'm0-ban-do',

@@ -1,6 +1,6 @@
 /**
- * Tone.Transport chỉ có một: lúc nào cũng chỉ một "chủ" dùng nó (chuỗi nốt của bài học, hoặc Jam).
- * Chủ mới nhận quyền thì chủ cũ được báo để tự dọn trạng thái (nút "Dừng" về "Nghe"…).
+ * There is only one Tone.Transport: at any time a single "owner" uses it (a lesson's note sequence, or the Jam).
+ * When a new owner takes over, the previous one is notified so it can reset its state (the "Stop" button back to "Listen"…).
  */
 type Release = () => void
 

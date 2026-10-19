@@ -10,7 +10,7 @@ function displaySymbol(symbol: string): string {
   return displayNote(tonic) + symbol.slice(tonic.length).replace(/b(\d)/g, '♭$1').replace(/#(\d)/g, '♯$1')
 }
 
-/** Nút nghe một chuỗi hợp âm: <PlayChords chords="C G Am F" />. */
+/** Button that plays a chord sequence: <PlayChords chords="C G Am F" />. */
 export function PlayChords({ chords, seconds = 1.4 }: { chords: string; seconds?: number }) {
   const { instrument } = useSettings()
   const { play, playing, stop } = usePlayer(instrument)

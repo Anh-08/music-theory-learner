@@ -11,13 +11,13 @@ export type JamEvent =
   | { kind: 'kick' | 'snare' | 'hat' | 'click'; beat: number; accent: boolean }
   | { kind: 'bass'; beat: number; midi: number; beats: number }
   | { kind: 'chord'; beat: number; midis: number[]; beats: number }
-  /** Quạt / móc guitar: các nốt vang lần lượt cách nhau `spread` giây theo thứ tự trong mảng. */
+  /** Guitar strum / pick: the notes sound one by one, `spread` seconds apart, in array order. */
   | { kind: 'strum'; beat: number; midis: number[]; spread: number; velocity: number; beats: number }
   | { kind: 'mute'; beat: number }
-  /** Vị trí bước trong điệu (để vạch chạy trên lưới phách). */
+  /** Step position in the rhythm (for the playhead on the rhythm grid). */
   | { kind: 'pos'; beat: number; step: number }
 
-/** Khoảng nốt cho phần đệm hợp âm: guitar thấp hơn piano. */
+/** Note range for chord comping: guitar sits lower than piano. */
 const COMP_RANGE: Record<InstrumentId, [number, number]> = {
   guitar: [48, 69],
   piano: [53, 76],
@@ -32,7 +32,7 @@ function bassInterval(chord: ProgressionChord, note: BassNote): number {
   return Interval.get(name).semitones ?? 0
 }
 
-/** Các nốt dùng để xếp hợp âm: bỏ quãng 9/11/13 nếu hợp âm đã có từ 4 nốt để tiếng gọn. */
+/** Notes used to voice a chord: drop 9/11/13 when the chord already has 4+ notes, to keep it tight. */
 function voicingChromas(chord: ProgressionChord): number[] {
   const core = chord.intervals.filter((i) => Interval.get(i).num <= 7)
   const use = core.length >= 4 ? core : chord.intervals
@@ -40,21 +40,21 @@ function voicingChromas(chord: ProgressionChord): number[] {
 }
 
 /**
- * Dựng toàn bộ sự kiện cho một vòng tiến trình, thời gian tính bằng phách (nốt đen) kể từ đầu vòng.
- * Hợp âm được xếp theo kiểu dẫn giọng (nốt di chuyển ít nhất giữa các hợp âm).
+ * Builds every event for one pass of the progression, timed in beats (quarter notes) from the start of the loop.
+ * Chords are voiced with voice leading (least note movement between chords).
  */
 export function buildJamEvents(
   chords: ProgressionChord[],
   groove: Groove,
   instrument: InstrumentId,
   rhythm?: Rhythm,
-  /** Thế bấm đã chọn cho từng hợp âm (theo ký hiệu), dùng khi chơi điệu guitar. */
+  /** Shape chosen for each chord (by symbol), used when playing a guitar rhythm. */
   shapes?: Record<string, (number | null)[]>,
 ): JamEvent[] {
   const bars = chordsPerBar(chords)
   const beatsPerBar = groove.beatsPerBar
   const beatsPerStep = beatsPerBar / groove.stepsPerBar
-  // Điệu guitar thay cho phần đệm hợp âm của groove (chỉ khi cùng số phách).
+  // A guitar rhythm replaces the groove's chord comping (only when the beat counts match).
   const useRhythm = rhythm && rhythm.beatsPerBar === beatsPerBar ? rhythm : undefined
   const [low, high] = COMP_RANGE[instrument]
   const events: JamEvent[] = []
@@ -72,7 +72,7 @@ export function buildJamEvents(
     const bassRoot = rootMidiAtOrAbove(chroma(chord.bass ?? chord.root), BASS_LOW)
     const chordRoot = chord.bass ? rootMidiAtOrAbove(chroma(chord.root), BASS_LOW) : bassRoot
     groove.bass.forEach((b, i) => {
-      // Hợp âm có bass riêng (C/E): nốt đầu ô nhịp là nốt bass đó, các nốt sau theo hợp âm.
+      // Slash chord (C/E): the first note of the bar is that bass note, later notes follow the chord.
       const midi = chord.bass && i === 0 ? bassRoot : chordRoot + bassInterval(chord, b.note)
       events.push({ kind: 'bass', beat: at(b.step), midi, beats: b.len * beatsPerStep })
     })
@@ -114,8 +114,8 @@ function pickMidi(v: GuitarVoicing, n: PickNote): number {
 }
 
 /**
- * Sự kiện của một ô nhịp theo điệu guitar: quạt xuống đánh từ dây trầm lên (bỏ dây không bấm),
- * quạt lên đánh 4 dây cao từ dây 1 xuống; quạt nhẹ chỉ chạm các dây cao; móc là từng nốt theo dây.
+ * Events for one bar of a guitar rhythm: downstrokes play from the low strings up (skipping unplayed strings),
+ * upstrokes hit the 4 high strings from string 1 down; light strums touch only the high strings; picking plays single strings.
  */
 export function rhythmBarEvents(chord: ProgressionChord, r: Rhythm, start: number, frets?: (number | null)[]): JamEvent[] {
   const v = voicingFor(chord, frets)

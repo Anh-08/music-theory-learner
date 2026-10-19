@@ -1,64 +1,66 @@
 # Music Theory Learner
 
-Ứng dụng web giúp người **đã biết chơi** guitar hoặc piano học nhạc lý một cách thực hành — để hiểu bài nhạc được tạo ra như thế nào, tự đệm và **improvise**. Song ngữ Việt – Anh (nút VI / EN ở thanh trên).
+A hands-on music theory course for people who **can already play** guitar or piano, so you can understand how songs are put together, accompany them and **improvise**. The app is bilingual, English and Vietnamese (use the EN / VI switch in the top bar).
 
-*A hands-on music theory course for guitarists and pianists who can already play, aimed at accompanying songs and improvising. Available in Vietnamese and English.*
+*Tiếng Việt: ứng dụng học nhạc lý thực hành cho người đã biết chơi guitar hoặc piano — bấm nút VI ở thanh trên để dùng bản tiếng Việt.*
 
-**Dùng ngay:** https://anh-08.github.io/music-theory-learner/ (cài được lên điện thoại như một ứng dụng, dùng offline).
+**Try it:** https://anh-08.github.io/music-theory-learner/ (installable on your phone as an app and works offline).
 
-Kế hoạch chi tiết: [PLAN.md](PLAN.md)
+Detailed plan: [PLAN.md](PLAN.md)
 
-## Có gì bên trong
+## What's inside
 
-- **Lộ trình 48 bài** (Module 0 – 10 và nhánh guitar): 12 nốt, quãng, scale trưởng, vòng quãng năm, hợp âm ba, thế đảo, CAGED, hợp âm thuận giọng, tiến trình, blues, ngũ cung, hợp âm 7, chord tones, guide tones, điệu thức, át phụ, hợp âm mượn, sáng tác — và nhánh **đệm guitar theo điệu** (móc dây, quạt chả). Mỗi bài hiển thị trên cần đàn hoặc bàn phím tùy nhạc cụ bạn chọn, có nghe minh họa, câu hỏi, bài bấm trên đàn và luyện tai.
-- **Explorer**: scale và hợp âm trên guitar, piano, bass, ukulele, mandolin.
-- **Jam Room**: gõ tiến trình (ký hiệu hợp âm hoặc số La Mã), ứng dụng đoán giọng, phát nhạc nền trống – bass – đệm, tô nốt của hợp âm đang vang theo thời gian thực và gợi ý scale để improvise.
-- **Đệm guitar**: 24 điệu quạt / móc (cả 3/4 và 12/8) trên lưới phách có vạch chạy, tăng tempo dần, tự tạo điệu, chấm độ đều tay qua micro, đổi thế bấm của từng hợp âm.
-- **Thế bấm hợp âm**: nhiều cách bấm cho mọi hợp âm (trưởng, thứ, sus, dim, aug, 6, 7, maj7, m7♭5, dim7, 9, 11, 13, 7♭9, 7♯9…) với sơ đồ, số ngón, chặn và nút nghe.
-- **Phản xạ hợp âm**: hợp âm hiện liên tục theo metronome, không lặp một vòng cố định nhưng luôn nối nhau mượt (vòng quen thuộc, tự sinh theo chức năng, hoặc tự nhập); quạt theo phách hoặc một lượt điệu, xem trước hợp âm tiếp theo, mức Dễ / Vừa / Khó.
-- **Công cụ**: Key Explorer (vòng quãng năm, hợp âm thuận giọng và chức năng), nhận diện hợp âm, kết nối đàn thật (MIDI hoặc micro).
-- **Ôn tập hằng ngày**: 7 bộ thẻ sinh câu hỏi ngẫu nhiên, lịch ôn lặp lại ngắt quãng.
-- Tiến độ lưu trong trình duyệt, xuất / nhập được bằng file JSON. Không có tài khoản, không gửi dữ liệu đi đâu.
+- **A 48-lesson curriculum** (Modules 0 – 10 plus a guitar track): the 12 notes, intervals, the major scale, the circle of fifths, triads, inversions, CAGED, diatonic chords, progressions, blues, pentatonics, seventh chords, chord tones, guide tones, modes, secondary dominants, borrowed chords, songwriting, and a **guitar rhythm comping** track (fingerpicking and strumming). Every lesson is shown on the fretboard or the keyboard depending on your instrument, with audio examples, quizzes, play-it-on-the-instrument exercises and ear training.
+- **Explorer**: scales and chords on guitar, piano, bass, ukulele and mandolin.
+- **Jam Room**: type a progression (chord symbols or Roman numerals); the app detects the key, plays a drums – bass – comping backing track, highlights the notes of the chord currently sounding in real time and suggests scales to improvise with. Changing the key transposes the progression.
+- **Guitar comping**: 24 strumming / picking rhythms (including 3/4 and 12/8) on a rhythm grid with a playhead, gradual tempo increase, custom rhythms, timing feedback through the mic, and per-chord shape selection.
+- **Chord shapes**: many fingerings for every chord (major, minor, sus, dim, aug, 6, 7, maj7, m7♭5, dim7, 9, 11, 13, 7♭9, 7♯9…) with diagrams, finger numbers, barres and a listen button.
+- **Chord reflex**: chords keep appearing with the metronome, never repeating a fixed loop but always connecting smoothly (familiar loops, function-based generation, or your own); strum on the beat or play one rhythm pass per chord, preview the next chord, Easy / Medium / Hard levels.
+- **Tools**: Key Explorer (circle of fifths, diatonic chords and their functions), chord identifier, real-instrument input (MIDI or mic).
+- **Daily review**: 7 decks of randomly generated questions on a spaced-repetition schedule.
+- Progress is stored in your browser and can be exported / imported as JSON. No accounts, no data sent anywhere.
 
-## Chạy trên máy
+## Running locally
 
-Cần Node.js 20 trở lên.
+Requires Node.js 20 or later.
 
 ```bash
 npm install
 npm run dev
 ```
 
-| Lệnh | Việc |
+| Command | What it does |
 |---|---|
-| `npm run dev` | Chạy dev server |
-| `npm run build` | Kiểm tra type và build ra `dist/` |
-| `npm test` | Chạy test một lần (thêm/đổi tên file bài học mà test chưa thấy? xóa `node_modules/.vitest-cache`) |
-| `npm run test:watch` | Chạy test ở chế độ theo dõi |
-| `npm run lint` | Lint bằng oxlint |
+| `npm run dev` | Start the dev server |
+| `npm run build` | Type-check and build into `dist/` |
+| `npm test` | Run the tests once (added / renamed a lesson file the tests don't see? delete `node_modules/.vitest-cache`) |
+| `npm run test:watch` | Run the tests in watch mode |
+| `npm run lint` | Lint with oxlint |
 
-## Cấu trúc
+## Project structure
 
-| Thư mục | Nội dung |
+| Folder | Contents |
 |---|---|
-| `src/theory/` | Nhạc lý thuần (không phụ thuộc React): nốt, quãng, scale, hợp âm, tiến trình, giọng, thế bấm guitar… |
-| `src/audio/` | Âm thanh bằng Tone.js: phát nốt, nhạc nền Jam, điệu đệm, groove |
-| `src/input/` | Đàn thật: Web MIDI, nhận diện cao độ và nhịp qua micro |
-| `src/components/` | Cần đàn, bàn phím, lưới phách, các component dùng trong bài học và bài tập |
-| `src/features/` | Các trang: lộ trình, bài học, Explorer, Jam Room, đệm guitar, giọng, nhận diện hợp âm, ôn tập, kết nối |
-| `src/lessons/` | Bài học MDX: `<module>/<NN-ten-bai>.mdx` (tiếng Việt) và `.en.mdx` (tiếng Anh) |
-| `src/i18n/` | Chuỗi giao diện hai ngôn ngữ |
+| `src/theory/` | Pure music theory (no React dependency): notes, intervals, scales, chords, progressions, keys, guitar shapes… |
+| `src/audio/` | Audio with Tone.js: note playback, the Jam backing track, comping rhythms, grooves |
+| `src/input/` | Real instruments: Web MIDI, pitch and onset detection through the mic |
+| `src/components/` | Fretboard, keyboard, rhythm grid, and the components used in lessons and exercises |
+| `src/features/` | Pages: curriculum, lessons, Explorer, Jam Room, guitar comping, keys, chord identifier, review, connect |
+| `src/lessons/` | MDX lessons: `<module>/<NN-slug>.mdx` (Vietnamese) and `.en.mdx` (English) |
+| `src/i18n/` | Interface strings in both languages |
 
-### Thêm một bài học
+Lesson folder and file names are Vietnamese slugs (e.g. `m1-quang` = intervals). They are part of lesson URLs and saved progress keys, so they stay as they are.
 
-Tạo `src/lessons/<module>/<NN-ten-bai>.mdx` với `export const meta = { title, description, minutes }`, viết nội dung Markdown và dùng trực tiếp các component trong `src/lessons/mdxComponents.ts` (`<Show>`, `<Play>`, `<PlayChords>`, `<Jam>`, `<RhythmPlayer>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`…). Thêm bản `.en.mdx` với **cùng các `id` bài tập**. Test sẽ kiểm tra bài hiển thị được ở cả hai ngôn ngữ và hai nhạc cụ, id không trùng, và hai bản có cùng bộ bài tập.
+### Adding a lesson
 
-## Deploy
+Create `src/lessons/<module>/<NN-slug>.mdx` with `export const meta = { title, description, minutes }`, write the content in Markdown and use the components from `src/lessons/mdxComponents.ts` directly (`<Show>`, `<Play>`, `<PlayChords>`, `<Jam>`, `<RhythmPlayer>`, `<Quiz>`, `<FindNotes>`, `<EarQuiz>`…). Add an `.en.mdx` version with **the same exercise `id`s**. The tests check that every lesson renders in both languages and on both instruments, that ids are unique, and that both versions have the same set of exercises.
 
-Mỗi lần push lên `main`, GitHub Actions ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)) chạy lint, test, build và đăng lên GitHub Pages.
+## Deployment
 
-## Giấy phép
+Every push to `main` runs GitHub Actions ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)): lint, test, build and publish to GitHub Pages.
 
-Mã nguồn: [MIT](LICENSE).
+## License
 
-Âm thanh piano: [Salamander Grand Piano](https://archive.org/details/SalamanderGrandPianoV3) của Alexander Holm (CC-BY 3.0), nạp từ bản do [Tone.js](https://tonejs.github.io/) lưu trữ. Logic nhạc lý dựa trên [tonal](https://github.com/tonaljs/tonal). Ví dụ bài hát trong bài học chỉ nhắc tên bài và tiến trình hợp âm.
+Source code: [MIT](LICENSE).
+
+Piano sound: [Salamander Grand Piano](https://archive.org/details/SalamanderGrandPianoV3) by Alexander Holm (CC-BY 3.0), loaded from the copy hosted by [Tone.js](https://tonejs.github.io/). Music theory logic is built on [tonal](https://github.com/tonaljs/tonal). Song examples in the lessons only mention the song title and its chord progression.

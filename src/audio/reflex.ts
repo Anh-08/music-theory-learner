@@ -8,41 +8,41 @@ import { claimTransport, ownsTransport, releaseTransport } from './transportOwne
 
 type Tone = typeof ToneNs
 
-/** Một hợp âm trên băng chạy: hợp âm, thế bấm, số phách giữ. */
+/** A chord on the running tape: the chord, its shape, and how many beats it lasts. */
 export interface ReflexSlot {
   chord: ProgressionChord
   shape?: ChordShape
   beats: number
-  /** Hợp âm đầu một câu (dùng để tăng tempo sau mỗi câu). */
+  /** First chord of a phrase (used to raise the tempo after each phrase). */
   phraseStart: boolean
 }
 
 export interface ReflexOptions {
   ownerId: string
   tempo: number
-  /** Lấy hợp âm kế tiếp (chuỗi vô hạn). */
+  /** Get the next chord (endless stream). */
   next: () => ReflexSlot
-  /** Số phách mỗi ô nhịp (phách mạnh của metronome). */
+  /** Beats per bar (the metronome's accented beat). */
   beatsPerBar: number
-  /** Chế độ "một lượt điệu": mỗi hợp âm là một ô nhịp của điệu này (dùng cho vạch chạy và tiếng mẫu). */
+  /** "One rhythm pass" mode: each chord is one bar of this rhythm (for the playhead and the demo sound). */
   rhythm?: Rhythm
-  /** Phát tiếng hợp âm mẫu (mặc định chỉ có metronome). */
+  /** Play the demo chord sound (by default only the metronome). */
   sound: boolean
-  /** Tăng 4 bpm sau mỗi câu, tới tempo này. */
+  /** Raise by 4 bpm after each phrase, up to this tempo. */
   rampTo?: number
-  /** Số hợp âm sắp tới được xem trước. */
+  /** Number of upcoming chords previewed. */
   preview?: number
 }
 
 export interface ReflexState {
   ownerId: string | null
-  /** Hợp âm đang chơi ở đầu, sau đó là các hợp âm sắp tới. */
+  /** The chord being played first, followed by the upcoming chords. */
   queue: ReflexSlot[]
-  /** Phách trong hợp âm hiện tại (0…), -1 khi chưa bắt đầu. */
+  /** Beat within the current chord (0…), -1 before starting. */
   beat: number
-  /** Số phách đếm ngược còn lại trước khi vào hợp âm đầu (0 = đang chơi). */
+  /** Count-in beats left before the first chord (0 = playing). */
   countIn: number
-  /** Bước của điệu đang chơi (chế độ một lượt điệu). */
+  /** Step of the rhythm being played (one-rhythm-pass mode). */
   step: number
   tempo: number
 }
@@ -91,12 +91,12 @@ function release() {
   reflexStore.set({ ownerId: null, queue: [], beat: -1, countIn: 0, step: -1 })
 }
 
-/** Gọi `fn` đúng lúc `time` (giờ AudioContext) bằng hẹn giờ — Draw dừng khi tab bị ẩn. */
+/** Calls `fn` exactly at `time` (AudioContext time) using a timer — Draw stops when the tab is hidden. */
 function at(T: Tone, time: number, fn: () => void) {
   setTimeout(fn, Math.max(0, (time - T.now()) * 1000))
 }
 
-/** Bắt đầu băng chạy hợp âm: đếm vào một ô nhịp, rồi mỗi phách một tiếng metronome; hợp âm đổi sau đủ số phách. */
+/** Starts the chord tape: one bar of count-in, then a metronome click every beat; chords change after their beat count. */
 export async function startReflex(opts: ReflexOptions): Promise<void> {
   const T = await getTone()
   kit ??= createKit(T)
@@ -173,7 +173,7 @@ export async function startReflex(opts: ReflexOptions): Promise<void> {
   transport.start('+0.1')
 }
 
-/** Đổi tempo / bật tắt tiếng hợp âm mẫu mà không dừng. */
+/** Change tempo / toggle the demo chord sound without stopping. */
 export async function updateReflex(next: { tempo?: number; sound?: boolean }): Promise<void> {
   if (next.sound !== undefined) sound = next.sound
   if (next.tempo !== undefined && repeatId !== null) {
@@ -183,7 +183,7 @@ export async function updateReflex(next: { tempo?: number; sound?: boolean }): P
   }
 }
 
-/** Dừng. Có `ownerId` thì chỉ dừng nếu đúng trình phát đó đang phát. */
+/** Stops. With `ownerId`, only stops if that player is the one playing. */
 export async function stopReflex(ownerId?: string): Promise<void> {
   if (!ownsTransport(release)) return
   if (ownerId !== undefined && reflexStore.get().ownerId !== ownerId) return

@@ -4,9 +4,9 @@ import { bestRootSpelling, type Chroma } from './notes'
 import { intervalLabel } from './intervals'
 
 export interface ScaleType {
-  /** Tên scale theo tonal. */
+  /** Scale name as understood by tonal. */
   id: string
-  /** Tên tiếng Anh. */
+  /** English name. */
   name: string
   nameVi: string
   description: Localized
@@ -30,34 +30,34 @@ export const SCALE_TYPES: ScaleType[] = [
 export interface ScaleInfo {
   type: ScaleType
   root: string
-  /** Tên nốt, viết theo đúng giọng (ví dụ F trưởng có B♭ chứ không phải A♯). */
+  /** Note names, spelled for the key (e.g. F major has B♭, not A♯). */
   notes: string[]
-  /** Quãng theo tonal: "1P", "3m"… */
+  /** Intervals as in tonal: "1P", "3m"… */
   intervals: string[]
-  /** Nhãn quãng: "1", "♭3"… */
+  /** Interval labels: "1", "♭3"… */
   labels: string[]
 }
 
-/** Tên loại scale theo ngôn ngữ: "Ngũ cung thứ" / "Minor pentatonic". */
+/** Scale type name in the given language: "Ngũ cung thứ" / "Minor pentatonic". */
 export function scaleTypeName(t: ScaleType, locale: Locale): string {
   return locale === 'vi' ? t.nameVi : t.name
 }
 
 export function scaleType(id: string): ScaleType {
   const t = SCALE_TYPES.find((s) => s.id === id)
-  if (!t) throw new Error(`Không có scale: ${id}`)
+  if (!t) throw new Error(`Unknown scale: ${id}`)
   return t
 }
 
-/** Scale với chủ âm viết đúng như truyền vào (không tự đổi C♯ thành D♭). */
+/** Scale with the root spelled exactly as given (C♯ is not turned into D♭). */
 export function scaleFromRoot(root: string, typeId: string): ScaleInfo {
   const type = scaleType(typeId)
   const s = Scale.get(`${root} ${typeId}`)
-  if (s.empty) throw new Error(`Không dựng được scale: ${root} ${typeId}`)
+  if (s.empty) throw new Error(`Cannot build scale: ${root} ${typeId}`)
   return { type, root, notes: s.notes, intervals: s.intervals, labels: s.intervals.map(intervalLabel) }
 }
 
-/** Scale theo chroma của chủ âm, tự chọn cách viết ít dấu hóa nhất. */
+/** Scale from the root's chroma, picking the spelling with the fewest accidentals. */
 export function getScale(rootChroma: Chroma, typeId: string): ScaleInfo {
   return scaleFromRoot(bestRootSpelling(rootChroma, (r) => Scale.get(`${r} ${typeId}`).notes), typeId)
 }

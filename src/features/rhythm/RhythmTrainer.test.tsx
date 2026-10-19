@@ -12,18 +12,18 @@ describe('RhythmTrainer', () => {
     jamStore.set({ ownerId: null, bar: 0, step: -1 })
   })
 
-  it('phát điệu với groove và tiếng guitar, vạch chạy theo bước', async () => {
+  it('plays the rhythm with a groove and guitar sound, the playhead follows the steps', async () => {
     renderWithProviders(<RhythmTrainer rhythm="valse" progression="C G" />)
     fireEvent.click(screen.getByRole('button', { name: '▶ Chơi điệu' }))
     expect(startJam).toHaveBeenCalledWith(expect.objectContaining({ instrument: 'guitar', rhythm: expect.objectContaining({ id: 'valse' }), groove: expect.objectContaining({ id: 'waltz' }) }))
     await screen.findByRole('button', { name: '■ Dừng' })
     act(() => jamStore.set({ step: 2 }))
-    // Cột đang phát được tô (tiêu đề "2" của phách 2 có màu nhấn).
+    // The playing column is highlighted (the "2" header of beat 2 gets the accent colour).
     const header = within(screen.getByRole('table', { name: 'Lưới phách của điệu' })).getAllByRole('columnheader')[3]
     expect(header.className).toContain('text-rose')
   })
 
-  it('đổi điệu và tự tạo điệu riêng', () => {
+  it('changes rhythm and creates a custom rhythm', () => {
     renderWithProviders(<RhythmTrainer editable rhythm="ballad" progression="C G" />)
     fireEvent.change(screen.getByLabelText('Điệu'), { target: { value: 'disco' } })
     expect(screen.getByLabelText('Quạt, bước 3: chặn')).toBeInTheDocument()
@@ -39,7 +39,7 @@ describe('RhythmTrainer', () => {
     expect(JSON.parse(localStorage.getItem('mtl:rhythms.custom')!)).toEqual([])
   })
 
-  it('báo lỗi khi gõ sai tiến trình', () => {
+  it('shows an error on a bad progression', () => {
     renderWithProviders(<RhythmTrainer editable progression="C G" />)
     fireEvent.change(screen.getByLabelText('Tiến trình'), { target: { value: 'C Qm' } })
     expect(screen.getByRole('alert')).toHaveTextContent('Qm')

@@ -18,12 +18,12 @@ export interface ScaleSuggestion {
   root: string
   /** Id trong SCALE_TYPES. */
   typeId: string
-  /** Lý do gợi ý — giao diện dịch qua khóa "suggest.<reason>". */
+  /** Why it is suggested — the UI translates it via the "suggest.<reason>" key. */
   reason: SuggestionReason
   params?: Record<string, string>
 }
 
-/** Gợi ý scale để improvise trên cả tiến trình, theo thứ tự nên thử. */
+/** Scales to improvise over the whole progression, in the order worth trying. */
 export function suggestScales(chords: ProgressionChord[], key: KeyRef): ScaleSuggestion[] {
   if (isBluesLike(chords)) {
     return [

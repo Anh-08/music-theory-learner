@@ -4,9 +4,9 @@ import { bestRootSpelling, displayNote, type Chroma } from './notes'
 import { intervalLabel } from './intervals'
 
 export interface ChordType {
-  /** Ký hiệu loại hợp âm theo tonal. */
+  /** Chord type symbol as understood by tonal. */
   id: string
-  /** Hậu tố hiển thị sau tên chủ âm: "" (trưởng), "m", "maj7"… */
+  /** Display suffix after the root name: "" (major), "m", "maj7"… */
   suffix: string
   nameVi: string
   nameEn: string
@@ -49,7 +49,7 @@ export interface ChordInfo {
   root: string
   notes: string[]
   intervals: string[]
-  /** Công thức: "1", "3", "5", "♭7"… */
+  /** Formula: "1", "3", "5", "♭7"… */
   labels: string[]
 }
 
@@ -59,15 +59,15 @@ export function chordTypeName(t: ChordType, locale: Locale): string {
 
 export function chordType(id: string): ChordType {
   const t = CHORD_TYPES.find((c) => c.id === id)
-  if (!t) throw new Error(`Không có loại hợp âm: ${id}`)
+  if (!t) throw new Error(`Unknown chord type: ${id}`)
   return t
 }
 
-/** Hợp âm với chủ âm viết đúng như truyền vào. */
+/** Chord with the root spelled exactly as given. */
 export function chordFromRoot(root: string, typeId: string): ChordInfo {
   const type = chordType(typeId)
   const c = Chord.getChord(typeId, root)
-  if (c.empty) throw new Error(`Không dựng được hợp âm: ${root} ${typeId}`)
+  if (c.empty) throw new Error(`Cannot build chord: ${root} ${typeId}`)
   return { type, root, notes: c.notes, intervals: c.intervals, labels: c.intervals.map(intervalLabel) }
 }
 
@@ -75,7 +75,7 @@ export function getChord(rootChroma: Chroma, typeId: string): ChordInfo {
   return chordFromRoot(bestRootSpelling(rootChroma, (r) => Chord.getChord(typeId, r).notes), typeId)
 }
 
-/** Tên hợp âm để hiển thị: "Bb" + "m7" → "B♭m7". */
+/** Chord name for display: "Bb" + "m7" → "B♭m7". */
 export function chordSymbol(root: string, typeId: string): string {
   return displayNote(root) + chordType(typeId).suffix
 }

@@ -6,13 +6,13 @@ import { buildJamEvents, loopBeats } from '../jamEvents'
 describe('buildJamEvents', () => {
   const chords = parseProgression('C G Am F*2')
 
-  it('có một sự kiện "bar" ở đầu mỗi ô nhịp', () => {
+  it('has a "bar" event at the start of every bar', () => {
     const e = buildJamEvents(chords, groove('pop'), 'piano')
     expect(e.filter((x) => x.kind === 'bar').map((x) => x.beat)).toEqual([0, 4, 8, 12, 16])
     expect(loopBeats(chords)).toBe(20)
   })
 
-  it('bass chơi nốt gốc của hợp âm ở đầu ô nhịp', () => {
+  it('bass plays the chord root at the start of the bar', () => {
     const e = buildJamEvents(chords, groove('pop'), 'piano')
     const firstBass = (bar: number) => e.find((x) => x.kind === 'bass' && x.beat === bar * 4)
     expect(firstBass(0)).toMatchObject({ midi: 36 }) // C2
@@ -20,22 +20,22 @@ describe('buildJamEvents', () => {
     expect(firstBass(2)).toMatchObject({ midi: 45 }) // A2
   })
 
-  it('hợp âm có bass riêng thì bass chơi nốt đó', () => {
+  it('slash chords: the bass plays the given bass note', () => {
     const e = buildJamEvents(parseProgression('C G/B'), groove('pop'), 'piano')
     expect(e.find((x) => x.kind === 'bass' && x.beat === 4)).toMatchObject({ midi: 47 }) // B2
   })
 
-  it('đệm hợp âm đúng nốt và dẫn giọng', () => {
+  it('comps the right chord notes with voice leading', () => {
     const e = buildJamEvents(chords, groove('pop'), 'piano')
     const chordAt = (bar: number) => e.find((x) => x.kind === 'chord' && x.beat === bar * 4) as { midis: number[] }
     expect(chordAt(0).midis.map((m) => m % 12).sort((a, b) => a - b)).toEqual([0, 4, 7])
     expect(chordAt(2).midis.map((m) => m % 12).sort((a, b) => a - b)).toEqual([0, 4, 9])
-    // Dẫn giọng: tổng quãng di chuyển giữa C và G nhỏ.
+    // Voice leading: total movement between C and G is small.
     const moved = chordAt(0).midis.reduce((s, m, i) => s + Math.abs(m - chordAt(1).midis[i]), 0)
     expect(moved).toBeLessThanOrEqual(6)
   })
 
-  it('shuffle dùng 12 bước mỗi ô nhịp', () => {
+  it('shuffle uses 12 steps per bar', () => {
     const e = buildJamEvents(parseProgression('A7'), groove('blues'), 'guitar')
     const snares = e.filter((x) => x.kind === 'snare').map((x) => x.beat)
     expect(snares).toEqual([1, 3])
@@ -43,7 +43,7 @@ describe('buildJamEvents', () => {
     expect(bass).toEqual([0, 4, 7, 9, 10, 9, 7, 4]) // boogie 1 3 5 6 ♭7 6 5 3
   })
 
-  it('mọi groove dựng được với hợp âm 7', () => {
+  it('every groove builds with seventh chords', () => {
     for (const g of GROOVES) {
       const e = buildJamEvents(parseProgression('Dm7 G7 Cmaj7'), g, 'guitar')
       expect(e.length, g.id).toBeGreaterThan(10)
@@ -52,53 +52,53 @@ describe('buildJamEvents', () => {
   })
 })
 
-describe('nhịp 3/4 và điệu guitar', async () => {
+describe('3/4 time and guitar rhythms', async () => {
   const { RHYTHMS, rhythm, validateRhythm, parsePattern, formatStep } = await import('../rhythms')
 
-  it('mọi điệu có đúng số bước cho một ô nhịp và groove cùng số phách', () => {
+  it('every rhythm has the right step count for one bar and a groove with the same beat count', () => {
     for (const r of RHYTHMS) {
       validateRhythm(r)
       expect(groove(r.groove).beatsPerBar, r.id).toBe(r.beatsPerBar)
     }
   })
 
-  it('đọc và viết lại các bước', () => {
+  it('parses and re-serialises steps', () => {
     const tokens = "D d U u X - B B' 3 B+1 123 B'+123".split(' ')
     expect(parsePattern(tokens.join(' ')).map(formatStep)).toEqual(tokens)
     expect(() => parsePattern('D Q')).toThrow()
   })
 
-  it('valse 3/4: ô nhịp dài 3 phách, metronome 3 tiếng', () => {
+  it('waltz 3/4: a bar is 3 beats, metronome clicks 3 times', () => {
     const e = buildJamEvents(parseProgression('C G'), groove('waltz'), 'guitar', rhythm('valse'))
     expect(e.filter((x) => x.kind === 'bar').map((x) => x.beat)).toEqual([0, 3])
     expect(e.filter((x) => x.kind === 'click').map((x) => x.beat)).toEqual([0, 1, 2, 3, 4, 5])
     expect(loopBeats(parseProgression('C G'), 3)).toBe(6)
   })
 
-  it('valse: bass ở phách 1, chặn ở phách 2 và 3', () => {
+  it('waltz: bass on beat 1, chops on beats 2 and 3', () => {
     const e = buildJamEvents(parseProgression('C'), groove('waltz'), 'guitar', rhythm('valse'))
     const strums = e.filter((x) => x.kind === 'strum') as { beat: number; midis: number[] }[]
     expect(strums).toHaveLength(1)
-    expect(strums[0]).toMatchObject({ beat: 0, midis: [48] }) // bass C, dây 5 phím 3
+    expect(strums[0]).toMatchObject({ beat: 0, midis: [48] }) // bass C, string 5 fret 3
     expect(e.filter((x) => x.kind === 'mute').map((x) => x.beat)).toEqual([1, 2])
     expect(e.some((x) => x.kind === 'chord')).toBe(false)
   })
 
-  it('quạt xuống từ dây trầm, quạt lên từ dây cao', () => {
+  it('downstrokes start from the low strings, upstrokes from the high strings', () => {
     const e = buildJamEvents(parseProgression('G'), groove('ballad'), 'guitar', rhythm('ballad'))
     const strums = e.filter((x) => x.kind === 'strum') as { midis: number[] }[]
-    expect(strums[0].midis).toEqual([43, 47, 50, 55, 59, 67]) // G mở: 320003
-    expect(strums[2].midis).toEqual([67, 59, 55, 50]) // quạt lên: 4 dây cao, từ dây 1
+    expect(strums[0].midis).toEqual([43, 47, 50, 55, 59, 67]) // open G: 320003
+    expect(strums[2].midis).toEqual([67, 59, 55, 50]) // upstroke: 4 high strings, from string 1
   })
 
-  it('móc ballad: B 3 2 3 1 3 2 3 trên hợp âm Am', () => {
+  it('ballad picking: B 3 2 3 1 3 2 3 over Am', () => {
     const e = buildJamEvents(parseProgression('Am'), groove('ballad'), 'guitar', rhythm('ballad-pick'))
     const notes = (e.filter((x) => x.kind === 'strum') as { midis: number[] }[]).map((x) => x.midis[0])
-    expect(notes).toEqual([45, 57, 60, 57, 64, 57, 60, 57]) // A2, A3 (dây 3), C4 (dây 2), E4 (dây 1)
+    expect(notes).toEqual([45, 57, 60, 57, 64, 57, 60, 57]) // A2, A3 (string 3), C4 (string 2), E4 (string 1)
     expect(e.filter((x) => x.kind === 'pos').map((x) => (x as { step: number }).step)).toEqual([0, 1, 2, 3, 4, 5, 6, 7])
   })
 
-  it('điệu khác số phách với groove thì dùng phần đệm của groove', () => {
+  it('a rhythm with a different beat count than the groove falls back to the groove comping', () => {
     const e = buildJamEvents(parseProgression('C'), groove('pop'), 'guitar', rhythm('valse'))
     expect(e.some((x) => x.kind === 'chord')).toBe(true)
     expect(e.some((x) => x.kind === 'strum')).toBe(false)

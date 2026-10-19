@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useProgress } from '../../store/progressContext'
 
-/** Đếm chuỗi trả lời đúng liên tiếp của một bài luyện và lưu kỷ lục vào tiến độ. */
+/** Counts a drill's streak of consecutive correct answers and saves the best streak to progress. */
 export function useDrill(id: string) {
   const { progress, recordDrill } = useProgress()
   const [streak, setStreak] = useState(0)
