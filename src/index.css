@@ -1,2 +1,12 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+
+/* Countdown bar of the fretboard note reflex drill. */
+@keyframes fret-timer {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}

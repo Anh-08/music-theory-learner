@@ -53,3 +53,19 @@ describe('spaced repetition review', async () => {
     expect(parseProgress('{"version":1,"completedLessons":[],"quizzes":{},"drills":{},"srs":{"x":{"box":"1"}}}')).toBeNull()
   })
 })
+
+describe('drill records', async () => {
+  const { recordBest } = await import('../progress')
+
+  it('keeps the best notes per minute and the best average reaction separately', () => {
+    let p = recordBest(emptyProgress(), 'fret', { perMinute: 20, avgMs: 1500 })
+    p = recordBest(p, 'fret', { perMinute: 25, avgMs: 1800 })
+    expect(p.records!.fret).toEqual({ perMinute: 25, avgMs: 1500 })
+  })
+
+  it('records survive export / import; malformed records are rejected', () => {
+    const p = recordBest(emptyProgress(), 'fret', { perMinute: 20, avgMs: 1500 })
+    expect(parseProgress(JSON.stringify(p))).toEqual(p)
+    expect(parseProgress('{"version":1,"completedLessons":[],"quizzes":{},"drills":{},"records":{"x":{"perMinute":1}}}')).toBeNull()
+  })
+})

@@ -11,6 +11,7 @@ import { Review } from './features/review/Review'
 import { ConnectPage } from './features/connect/ConnectPage'
 import { ChordLibrary } from './features/chords/ChordLibrary'
 import { ReflexPage } from './features/reflex/ReflexPage'
+import { NoteReflexPage } from './features/reflex/NoteReflexPage'
 import { LessonPage } from './features/lesson/LessonPage'
 import { ProgressProvider } from './store/ProgressProvider'
 import { SettingsProvider } from './store/SettingsProvider'
@@ -42,6 +43,7 @@ export function AppRoutes() {
         <Route path="connect" element={<ConnectPage />} />
         <Route path="chords" element={<ChordLibrary />} />
         <Route path="reflex/chords" element={<ReflexPage />} />
+        <Route path="reflex/notes" element={<NoteReflexPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

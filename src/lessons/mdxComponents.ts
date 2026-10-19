@@ -14,6 +14,7 @@ import { Show } from '../components/lesson/Show'
 import { JamPlayer } from '../features/jam/JamPlayer'
 import { RhythmTrainer } from '../features/rhythm/RhythmTrainer'
 import { ChordReflex } from '../features/reflex/ChordReflex'
+import { FretReflex } from '../features/reflex/FretReflex'
 
 /** Components usable directly in .mdx lesson files without importing. */
-export const mdxComponents = { Show, Play, PlayChords, OnlyFor, Callout, CircleOfFifths, Quiz, FindNotes, EarQuiz, NoteDrill, Jam: JamPlayer, RhythmPlayer: RhythmTrainer, RhythmQuiz, PatternView, ChordShapes, ChordReflex }
+export const mdxComponents = { Show, Play, PlayChords, OnlyFor, Callout, CircleOfFifths, Quiz, FindNotes, EarQuiz, NoteDrill, Jam: JamPlayer, RhythmPlayer: RhythmTrainer, RhythmQuiz, PatternView, ChordShapes, ChordReflex, FretReflex }

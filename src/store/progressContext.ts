@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react'
-import { emptyProgress, type Progress } from './progress'
+import { emptyProgress, type DrillRecord, type Progress } from './progress'
 
 export interface ProgressApi {
   progress: Progress
@@ -7,6 +7,7 @@ export interface ProgressApi {
   recordQuiz: (quizId: string, correct: boolean) => void
   recordDrill: (drillId: string, streak: number, correct: boolean) => void
   recordCard: (cardId: string, correct: boolean) => void
+  recordBest: (id: string, run: DrillRecord) => void
   replace: (p: Progress) => void
 }
 
@@ -18,6 +19,7 @@ export const ProgressContext = createContext<ProgressApi>({
   recordQuiz: noop,
   recordDrill: noop,
   recordCard: noop,
+  recordBest: noop,
   replace: noop,
 })
 

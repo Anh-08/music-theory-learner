@@ -15,6 +15,7 @@ const MAIN: { to: string; label: MessageKey; end?: boolean }[] = [
   { to: '/jam', label: 'nav.jam' },
   { to: '/rhythm', label: 'nav.rhythm' },
   { to: '/reflex/chords', label: 'nav.reflex' },
+  { to: '/reflex/notes', label: 'nav.reflexNotes' },
 ]
 
 const TOOLS: { to: string; label: MessageKey }[] = [

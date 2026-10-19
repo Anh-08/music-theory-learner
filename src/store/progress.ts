@@ -8,6 +8,13 @@ export interface Progress {
   drills: Record<string, { best: number; total: number }>
   /** Spaced-repetition cards: Leitner box (0–6) and due time (ms). May be missing in old data. */
   srs?: Record<string, { box: number; due: number }>
+  /** Personal records of timed drills (fretboard note reflex): best correct notes per minute and best average reaction. */
+  records?: Record<string, DrillRecord>
+}
+
+export interface DrillRecord {
+  perMinute: number
+  avgMs: number
 }
 
 /** Review interval per Leitner box, in days. */
@@ -44,6 +51,13 @@ export function recordDrill(p: Progress, drillId: string, streak: number, correc
   }
 }
 
+/** Keeps the best of each figure separately: more notes per minute, a faster average reaction. */
+export function recordBest(p: Progress, id: string, run: DrillRecord): Progress {
+  const prev = p.records?.[id]
+  const best = prev ? { perMinute: Math.max(prev.perMinute, run.perMinute), avgMs: Math.min(prev.avgMs, run.avgMs) } : run
+  return { ...p, records: { ...p.records, [id]: best } }
+}
+
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v)
 }
@@ -66,6 +80,10 @@ export function parseProgress(json: string): Progress | null {
   if (data.srs !== undefined) {
     if (!isRecord(data.srs)) return null
     if (!Object.values(data.srs).every((c) => isRecord(c) && typeof c.box === 'number' && typeof c.due === 'number')) return null
+  }
+  if (data.records !== undefined) {
+    if (!isRecord(data.records)) return null
+    if (!Object.values(data.records).every((r) => isRecord(r) && typeof r.perMinute === 'number' && typeof r.avgMs === 'number')) return null
   }
   return data as unknown as Progress
 }

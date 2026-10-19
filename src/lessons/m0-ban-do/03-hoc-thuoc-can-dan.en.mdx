@@ -1,0 +1,83 @@
+export const meta = {
+  title: 'Learning the neck',
+  description: 'See a note name, play it straight away, no counting frets: split the neck into two zones, then drill one string, several strings and positions.',
+  minutes: 15,
+}
+
+In the previous lesson you learned how to **find** a note. This one trains you to find it **instantly**, without counting frets — like reading words, you just recognise them. It is what lets you play scales, build chords and improvise anywhere on the neck.
+
+<OnlyFor instrument="guitar">
+
+## Two zones on a string
+
+A string has only **12 different notes**; from fret 12 on everything repeats an octave higher. So we split the neck into two zones:
+
+- **Frets 0–11** (low zone)
+- **Frets 12–22** (high zone)
+
+Within **one zone**, each note name has **exactly one position** on a string. So when you practise, the app gives you the note name and the zone to search (shaded on a small neck) — no other notation needed.
+
+<Show notes="E" positions="6:0 6:12" play="none" caption="E on string 6: fret 0 in the low zone, fret 12 in the high zone" />
+
+## Level 1: one string, one zone
+
+Start with string 6, frets 0–11 and natural notes only. The zone never changes, so you only need to remember the note names. Press **Start**, and when a note name appears, click its position on the fretboard below.
+
+<FretReflex id="m0-can-dan-reflex-6" mode="string" strings="6" level={1} zone={0} naturalsOnly rounds={10} />
+
+Do the same on string 5 — together with string 6, these hold the roots of most barre chords:
+
+<FretReflex id="m0-can-dan-reflex-5" mode="string" strings="5" level={1} zone={0} rounds={10} />
+
+## Level 2: the whole string
+
+Now the zone changes at random each time: look at the small neck to see whether to search the low or the high zone. Tip: a note in the high zone is its low-zone position **plus 12**, but try to recognise it straight away from the fret markers (frets 12, 15, 17…) rather than adding in your head.
+
+<FretReflex id="m0-can-dan-reflex-zone2" mode="string" strings="6" level={2} rounds={10} />
+
+## Several strings: octave shapes
+
+In **Find them all**, the app gives a note name and you click **every** position of it from fret 0 to 12 on all six strings. There is no "add 12" trick here, because the strings are a 4th apart (strings 3–2 a major 3rd). You will gradually see the **octave shapes** from the previous lesson join up into a network across the neck.
+
+<FretReflex id="m0-can-dan-reflex-all" mode="findAll" naturalsOnly rounds={10} seconds={4} />
+
+<Quiz
+  id="m0-can-dan-q1"
+  question="On one string, within frets 0–11, how many positions does F♯ have?"
+  options={['One', 'Two', 'Three', 'It depends on the string']}
+  answer={0}
+  explain="A string has 12 different notes in 12 frets, so each note name appears exactly once in a zone. The second position is in the high zone, exactly 12 frets up."
+/>
+
+<Quiz
+  id="m0-can-dan-q2"
+  question="String 6 fret 3 is G. Which fret is G in the high zone of string 6?"
+  options={['Fret 13', 'Fret 15', 'Fret 12', 'Fret 10']}
+  answer={1}
+  explain="The high zone repeats the low zone 12 frets up: 3 + 12 = 15 — right on a fret marker."
+/>
+
+## Going further
+
+The **Note reflex** page (top bar) also has:
+
+- **Note + string**: "F♯ — string 3", with the string chosen at random among the strings you enable.
+- **In a position**: search only a 5-fret window (e.g. frets 5–9) — exactly how you think when improvising inside a scale box.
+- **Advanced mode**: note names with octaves (open string 6 is E2, string 6 fret 12 is E3), and the **Exact pitch** drill: find every place the same pitch can be played.
+- Running with the **metronome**, using your **real guitar through the mic** (the mic hears the octave but cannot tell strings apart), and a **blind-spot map** after each session: darker cells are where you were wrong or slow. Those positions come up more often in later sessions.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Piano: see the key, know the note
+
+On the piano each note has only **one** key per octave and every octave looks the same, so "learning the keyboard" is much quicker than learning a fretboard. The reflex drills in this lesson are for guitar. On the piano, practise naming notes quickly, aiming to answer within 2 seconds:
+
+<NoteDrill id="m0-can-dan-drill-piano" />
+
+</OnlyFor>
+
+<Callout type="practice" title="Pick up your instrument">
+Five minutes a day: pick a string and say each note name out loud as you play from fret 0 up to 12 and back down. Then open the **Note reflex** page, run a 20-note session and check the blind-spot map — usually frets 6–11 on strings 3 and 4.
+</Callout>

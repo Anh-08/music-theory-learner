@@ -422,11 +422,15 @@ Goal: see a note name and fret it immediately, without counting frets. Notes app
 - The tuning follows the settings (Standard, Drop D…), so it works for bass / ukulele too.
 
 **Tasks:**
-- [ ] `src/theory/fretTargets.ts`: generate targets by mode / string / zone / tuning (ensuring each note name has only one position in a zone on a string), check answers (position or pitch), pick notes weighted by weakness. Use `fretboardPositions` / `positionForMidi` in `src/theory/fretboard.ts`. Thorough tests.
-- [ ] Mini fretboard component showing the zone / string; `#/reflex/notes` page: mode bar, advanced-mode switch, timer / metronome, virtual fretboard, feedback.
-- [ ] Hook up the mic (pitch with octave) + MIDI.
-- [ ] Heat map, records, per-position review schedule.
-- [ ] A short bilingual lesson in Module 0 ("Learning the neck"), embedding `<FretReflex mode="..." />`.
+- [x] `src/theory/fretTargets.ts`: generate targets by mode / string / zone / tuning (ensuring each note name has only one position in a zone on a string), check answers (position or pitch), pick notes weighted by weakness. Use `fretboardPositions` / `positionForMidi` in `src/theory/fretboard.ts`. Thorough tests.
+- [x] Mini fretboard component showing the zone / string; `#/reflex/notes` page: mode bar, advanced-mode switch, timer / metronome, virtual fretboard, feedback.
+- [x] Hook up the mic (pitch with octave) + MIDI.
+- [x] Heat map, records, per-position review schedule.
+- [x] A short bilingual lesson in Module 0 ("Learning the neck"), embedding `<FretReflex mode="..." />`.
+
+> Note: the `#/reflex/notes` page (*Note reflex* in the main bar). Targets and answer checking are in `src/theory/fretTargets.ts`, session settings / stats / heat in `src/features/reflex/fretReflexModel.ts`, the UI in `src/features/reflex/FretReflex.tsx` (with `MiniFretboard` and `FretHeatMap` in `src/components/Fretboard/`), the metronome in `src/audio/noteReflex.ts`. Level 3 is the advanced-mode switch (octave names, no mini fretboard), which also unlocks the exact-pitch mode. "By position" asks a note name and every position of it inside a 5-fret window. Each answered position goes into the Leitner schedule as `note-pos:<string>:<fret>` (a correct but slow answer — over 75% of the time limit — counts as weak); records are stored in the progress data (`records`, per mode and level). With the mic, a wrong pitch counts as a wrong answer, and in "find all" each pitch heard marks every position with that pitch. Not done: the reverse mode (position → name), which `NoteDrill` already covers in lessons. In lessons: `<FretReflex id="..." mode="string" strings="6" level={1} zone={0} naturalsOnly />`; lesson M0-3 "Learning the neck".
+
+✅ *Result: notes appear against the clock or the metronome, answered on the virtual fretboard or a real guitar, with weak positions practised more.*
 
 **Agreed with the user (2026-10-18):**
 1. Chord reflex is guitar only, no mic, no scoring.
@@ -434,11 +438,11 @@ Goal: see a note name and fret it immediately, without counting frets. Notes app
 3. The screen shows only chords, no explanations; smooth chord changes come first.
 4. Note practice: by default notes are indicated by **neck zone**; E2/E3 names are an advanced mode for users solid on theory.
 
-## 10. Status (2026-10-18)
+## 10. Status (2026-10-19)
 
-All 6 original phases are done: 48 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
+All 6 original phases are done: 49 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
-Phase 7 (chord reflex training) was finished on 2026-10-18; Phase 8 (fretboard note reflex) starts on 2026-10-19.
+Phase 7 (chord reflex training) was finished on 2026-10-18 and Phase 8 (fretboard note reflex training) on 2026-10-19.
 
 Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key.
 

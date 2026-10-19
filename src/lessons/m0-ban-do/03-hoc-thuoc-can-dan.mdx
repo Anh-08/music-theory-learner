@@ -1,0 +1,83 @@
+export const meta = {
+  title: 'Thuộc cần đàn',
+  description: 'Thấy tên nốt là bấm ngay, không đếm phím: chia cần đàn thành hai vùng, rồi luyện phản xạ từng dây, nhiều dây và theo thế bấm.',
+  minutes: 15,
+}
+
+Bài trước bạn đã biết cách **tìm** một nốt. Bài này luyện để tìm **ngay lập tức**, không cần đếm phím — giống như đọc chữ, nhìn là nhận ra. Đây là thứ giúp bạn chơi scale, dựng hợp âm và improvise ở bất kỳ đâu trên cần đàn.
+
+<OnlyFor instrument="guitar">
+
+## Hai vùng trên một dây
+
+Trên một dây chỉ có **12 nốt khác nhau**, rồi từ phím 12 mọi thứ lặp lại một quãng tám cao hơn. Vì vậy ta chia cần đàn thành hai vùng:
+
+- **Phím 0–11** (vùng thấp)
+- **Phím 12–22** (vùng cao)
+
+Trong **một vùng**, mỗi tên nốt chỉ có **đúng một vị trí** trên một dây. Nên khi luyện, app cho bạn biết tên nốt và vùng cần tìm (trên cần đàn nhỏ được tô màu) — không cần thêm ký hiệu nào khác.
+
+<Show notes="E" positions="6:0 6:12" play="none" caption="Nốt E trên dây 6: phím 0 ở vùng thấp, phím 12 ở vùng cao" />
+
+## Mức 1: một dây, một vùng
+
+Bắt đầu với dây 6, vùng phím 0–11 và chỉ nốt tự nhiên. Vùng không đổi, nên bạn chỉ cần nhớ tên nốt. Bấm **Bắt đầu**, thấy tên nốt thì bấm vào vị trí của nó trên cần đàn bên dưới.
+
+<FretReflex id="m0-can-dan-reflex-6" mode="string" strings="6" level={1} zone={0} naturalsOnly rounds={10} />
+
+Làm tương tự với dây 5 — cùng với dây 6, đây là hai dây đặt nốt gốc của hầu hết hợp âm chặn:
+
+<FretReflex id="m0-can-dan-reflex-5" mode="string" strings="5" level={1} zone={0} rounds={10} />
+
+## Mức 2: cả dây
+
+Giờ vùng đổi ngẫu nhiên mỗi lần: nhìn cần đàn nhỏ để biết phải tìm ở vùng thấp hay vùng cao. Mẹo: nốt ở vùng cao chính là vị trí ở vùng thấp **cộng 12**, nhưng hãy cố nhận ra ngay bằng các chấm mốc (phím 12, 15, 17…) thay vì cộng nhẩm.
+
+<FretReflex id="m0-can-dan-reflex-zone2" mode="string" strings="6" level={2} rounds={10} />
+
+## Nhiều dây: hình quãng tám
+
+Ở kiểu **Tìm tất cả**, app cho một tên nốt và bạn phải bấm **mọi** vị trí của nó từ phím 0 đến 12 trên cả 6 dây. Không có mẹo "cộng 12" ở đây, vì các dây cách nhau quãng 4 (riêng dây 3–2 cách quãng 3 trưởng). Bạn sẽ dần thấy các **hình quãng tám** đã học ở bài trước nối thành một mạng trên cần đàn.
+
+<FretReflex id="m0-can-dan-reflex-all" mode="findAll" naturalsOnly rounds={10} seconds={4} />
+
+<Quiz
+  id="m0-can-dan-q1"
+  question="Trên một dây, trong vùng phím 0–11, nốt F♯ có mấy vị trí?"
+  options={['Một', 'Hai', 'Ba', 'Tùy dây']}
+  answer={0}
+  explain="Một dây có 12 nốt khác nhau trong 12 phím, nên mỗi tên nốt xuất hiện đúng một lần trong một vùng. Vị trí thứ hai ở vùng cao, cách đúng 12 phím."
+/>
+
+<Quiz
+  id="m0-can-dan-q2"
+  question="Dây 6 phím 3 là G. Nốt G ở vùng cao của dây 6 là phím nào?"
+  options={['Phím 13', 'Phím 15', 'Phím 12', 'Phím 10']}
+  answer={1}
+  explain="Vùng cao lặp lại vùng thấp sau 12 phím: 3 + 12 = 15 — ngay chỗ có chấm mốc."
+/>
+
+## Đi xa hơn
+
+Trang **Phản xạ nốt** (thanh trên cùng) có thêm:
+
+- **Nốt + dây**: "F♯ — dây 3", dây đổi ngẫu nhiên giữa các dây bạn chọn.
+- **Theo thế bấm**: chỉ tìm trong khung 5 phím (ví dụ phím 5–9) — đúng cách bạn nghĩ khi improvise trong một hộp scale.
+- **Chế độ nâng cao**: tên nốt kèm quãng tám (dây 6 buông là Mi2, dây 6 phím 12 là Mi3), và kiểu **Cao độ chính xác**: tìm mọi chỗ chơi được cùng một cao độ.
+- Chạy theo **metronome**, dùng **đàn thật qua micro** (micro nghe được quãng tám nhưng không phân biệt được dây), và **bản đồ điểm mù** sau mỗi lượt: ô càng đậm là chỗ bạn hay sai hoặc chậm. Những vị trí đó sẽ được hỏi thường xuyên hơn ở các lượt sau.
+
+</OnlyFor>
+
+<OnlyFor instrument="piano">
+
+## Piano: nhìn phím là biết nốt
+
+Trên piano, mỗi nốt chỉ có **một** phím trong mỗi quãng tám và các quãng tám trông giống hệt nhau, nên việc "thuộc bàn phím" nhanh hơn nhiều so với cần đàn. Phần luyện phản xạ trong bài này dành cho guitar. Với piano, hãy luyện đọc tên nốt thật nhanh, cố trả lời trong vòng 2 giây:
+
+<NoteDrill id="m0-can-dan-drill-piano" />
+
+</OnlyFor>
+
+<Callout type="practice" title="Cầm đàn lên">
+Mỗi ngày 5 phút: chọn một dây, nói to tên từng nốt khi bấm từ phím 0 lên 12 rồi đi xuống. Sau đó mở trang **Phản xạ nốt** chạy một lượt 20 nốt và xem bản đồ điểm mù — thường là phím 6–11 trên dây 3 và 4.
+</Callout>
