@@ -13,9 +13,9 @@ import type { Locale } from '../../i18n/locale'
 import type { MessageKey } from '../../i18n/messages'
 import { useT, type Translate } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
-import { CHROMAS, keyLabel, spellingsOf, type ScaleSuggestion } from '../../theory'
+import { CHROMAS, chroma, keyLabel, parseKey, relatedKeys, spellingsOf, type KeyRef, type ScaleSuggestion } from '../../theory'
 import { errorMessage } from '../../i18n/errors'
-import { analyze, chordIndexAtBar, chordLabel, jamHighlights, scaleLabel, type Analysis } from './jamModel'
+import { analyze, chordIndexAtBar, chordLabel, jamHighlights, scaleLabel, transposeProgression, type Analysis } from './jamModel'
 import { JAM_PRESETS, type JamPreset } from './presets'
 
 export interface JamPlayerProps {
@@ -36,8 +36,16 @@ function keyOptions(t: Translate, locale: Locale) {
   return [
     { value: 'auto', label: t('jam.auto'), group: t('jam.autoGroup') },
     ...CHROMAS.map((c) => spellingsOf(c).at(-1)!).map((k) => ({ value: k, label: keyLabel({ tonic: k, mode: 'major' }, locale), group: t('jam.majorKeys') })),
-    ...['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'].map((k) => ({ value: `${k}m`, label: keyLabel({ tonic: k, mode: 'minor' }, locale), group: t('jam.minorKeys') })),
+    ...MINOR_TONICS.map((k) => ({ value: `${k}m`, label: keyLabel({ tonic: k, mode: 'minor' }, locale), group: t('jam.minorKeys') })),
   ]
+}
+
+const MINOR_TONICS = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B']
+
+/** Giá trị trong danh sách giọng ứng với một giọng bất kỳ (A#m → "Bbm", C# → "Db"). */
+function keyValue(key: KeyRef): string {
+  const c = chroma(key.tonic)
+  return key.mode === 'major' ? spellingsOf(c).at(-1)! : `${MINOR_TONICS.find((t) => chroma(t) === c)}m`
 }
 
 const TRACKS: { id: JamTrack; label: MessageKey }[] = [
@@ -115,9 +123,9 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
   }
 
   // Đổi tiến trình / nhịp khi đang phát: phát lại ngay với cấu hình mới.
-  const changeText = (next: string) => {
+  const changeText = (next: string, key = keyChoice) => {
     setText(next)
-    const result = tryAnalyze(next, keyChoice)
+    const result = tryAnalyze(next, key)
     if (playing && result.analysis) play(result.analysis.chords, grooveId)
   }
 
@@ -131,9 +139,15 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
     return () => void stopJam(id)
   }, [playing, id])
 
+  // Đổi giọng: dịch luôn các hợp âm trong tiến trình sang giọng mới (số La Mã thì tự theo giọng).
   const chooseKey = (v: string) => {
+    const from = keyChoice === 'auto' ? parsed.analysis?.key : parseKey(keyChoice)
+    const next = v !== 'auto' && from && parsed.analysis ? transposeProgression(text, from, parseKey(v)) : text
     setKeyChoice(v)
     setScaleIndex(0)
+    setText(next)
+    const result = tryAnalyze(next, v)
+    if (playing && result.analysis) play(result.analysis.chords, grooveId)
   }
 
   const chooseGroove = (v: string) => {
@@ -159,9 +173,19 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
     })),
   ].map((o) => ({ group: t('jam.compStyle'), ...o }))
 
+  // Đã chọn giọng thì tiến trình mẫu được dịch sang giọng đó (mẫu giọng thứ dùng giọng thứ song song).
   const choosePreset = (p: JamPreset) => {
-    changeText(p.progression)
-    setKeyChoice(p.songKey ?? 'auto')
+    let progression = p.progression
+    let key = p.songKey ?? 'auto'
+    if (keyChoice !== 'auto' && p.songKey) {
+      const presetKey = parseKey(p.songKey)
+      const current = parseKey(keyChoice)
+      const target = current.mode === presetKey.mode ? current : relatedKeys(current).relative
+      key = keyValue(target)
+      progression = transposeProgression(progression, presetKey, parseKey(key))
+    }
+    setKeyChoice(key)
+    changeText(progression, key)
     setGrooveId(p.groove)
     setCompId('default')
     setTempo(p.tempo ?? getGroove(p.groove).defaultTempo)

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { parseProgression } from '../../theory'
-import { analyze, chordIndexAtBar, chordLabel, jamHighlights, usesRomanNumerals } from './jamModel'
+import { analyze, chordIndexAtBar, chordLabel, jamHighlights, transposeProgression, usesRomanNumerals } from './jamModel'
 
 describe('jamModel', () => {
   it('nhận ra số La Mã', () => {
@@ -35,5 +35,15 @@ describe('jamModel', () => {
     const [a, b] = parseProgression('Bm7b5 G/B')
     expect(chordLabel(a)).toBe('Bm7♭5')
     expect(chordLabel(b)).toBe('G/B')
+  })
+
+  it('dịch giọng tiến trình', () => {
+    const C = { tonic: 'C', mode: 'major' as const }
+    expect(transposeProgression('C G Am F', C, { tonic: 'Eb', mode: 'major' })).toBe('Eb Bb Cm Ab')
+    expect(transposeProgression('C - G/B | Am7*2 % F6/9', C, { tonic: 'D', mode: 'major' })).toBe('D - A/C# | Bm7*2 % G6/9')
+    expect(transposeProgression('A7*4 D7*2', { tonic: 'A', mode: 'major' }, { tonic: 'Gb', mode: 'major' })).toBe('Gb7*4 Cb7*2')
+    expect(transposeProgression('Am G F G', { tonic: 'A', mode: 'minor' }, { tonic: 'D#', mode: 'minor' })).toBe('D#m C# B C#')
+    expect(transposeProgression('C G Am F', C, { tonic: 'A', mode: 'minor' })).toBe('C G Am F')
+    expect(transposeProgression('I V vi IV', C, { tonic: 'E', mode: 'major' })).toBe('I V vi IV')
   })
 })

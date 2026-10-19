@@ -47,4 +47,15 @@ describe('JamPlayer', () => {
     expect(screen.getByLabelText('Nhịp điệu')).toHaveValue('blues')
     expect(screen.getByLabelText('Scale để improvise')).toHaveDisplayValue(/A Ngũ cung thứ/)
   })
+
+  it('đổi giọng thì dịch hợp âm theo giọng mới, tiến trình mẫu theo giọng đang chọn', () => {
+    renderWithProviders(<JamPlayer editable progression="C G Am F" songKey="C" />)
+    fireEvent.change(screen.getByLabelText('Giọng'), { target: { value: 'Eb' } })
+    expect(screen.getByLabelText('Tiến trình hợp âm')).toHaveValue('Eb Bb Cm Ab')
+    const romans = within(screen.getByRole('list', { name: 'Các hợp âm' })).getAllByRole('button').map((b) => b.textContent)
+    expect(romans).toEqual(['E♭I', 'B♭V', 'Cmvi', 'A♭IV'])
+    fireEvent.click(screen.getByRole('button', { name: 'Rock giọng thứ' }))
+    expect(screen.getByLabelText('Giọng')).toHaveValue('Cm')
+    expect(screen.getByLabelText('Tiến trình hợp âm')).toHaveValue('Cm Bb Ab Bb')
+  })
 })

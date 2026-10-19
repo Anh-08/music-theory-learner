@@ -1,6 +1,7 @@
 import type { Locale } from '../../i18n/locale'
-import { Interval } from 'tonal'
+import { Interval, Note } from 'tonal'
 import {
+  accidentalCount,
   chroma,
   detectKey,
   displayNote,
@@ -42,6 +43,36 @@ export function analyze(text: string, keyText: string | null): Analysis {
   const chords = parseProgression(text, chosen ?? { tonic: 'C', mode: 'major' })
   const key = chosen ?? (roman ? { tonic: 'C', mode: 'major' as const } : detectKey(chords))
   return { chords, key, romans: chords.map((c) => romanNumeral(c, key)), suggestions: suggestScales(chords, key) }
+}
+
+/** Chủ âm giọng trưởng tương ứng: giọng thứ đổi sang giọng trưởng song song (Am → C). */
+function majorTonic(key: KeyRef): string {
+  return key.mode === 'major' ? key.tonic : Note.transpose(key.tonic, '3m')
+}
+
+function transposeNote(note: string, interval: string): string {
+  const n = Note.transpose(note, interval)
+  return accidentalCount(n) > 1 ? Note.simplify(n) : n
+}
+
+/**
+ * Dịch giọng tiến trình người dùng nhập từ giọng `from` sang giọng `to`, giữ nguyên cách viết
+ * (dấu ngăn cách, "*2", "%"). Số La Mã giữ nguyên vì đã tự theo giọng. Khác thể (trưởng ↔ thứ) thì
+ * dịch theo giọng song song, nên C → Am giữ nguyên hợp âm. Ký hiệu không hiểu được để nguyên.
+ */
+export function transposeProgression(text: string, from: KeyRef, to: KeyRef): string {
+  const interval = Interval.distance(majorTonic(from), majorTonic(to))
+  if (interval === '1P') return text
+  return text
+    .split(/([\s|,–-]+)/)
+    .map((part) => {
+      const m = part.match(/^([A-G][#b♯♭]?)(.*?)(?:\/([A-G][#b♯♭]?))?(\*\d+)?$/)
+      if (!m) return part
+      const [, root, suffix, bass, times = ''] = m
+      const norm = (n: string) => n.replace(/♯/g, '#').replace(/♭/g, 'b')
+      return transposeNote(norm(root), interval) + suffix + (bass ? `/${transposeNote(norm(bass), interval)}` : '') + times
+    })
+    .join('')
 }
 
 export function chordLabel(c: ProgressionChord): string {
