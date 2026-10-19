@@ -440,7 +440,7 @@ Goal: see a note name and fret it immediately, without counting frets. Notes app
 
 ## 10. Status (2026-10-19)
 
-All 6 original phases are done: 49 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
+All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
 Phase 7 (chord reflex training) was finished on 2026-10-18 and Phase 8 (fretboard note reflex training) on 2026-10-19.
 

@@ -10,7 +10,7 @@ Detailed plan: [PLAN.md](PLAN.md)
 
 ## What's inside
 
-- **A 49-lesson curriculum** (Modules 0 – 10 plus a guitar track): the 12 notes, intervals, the major scale, the circle of fifths, triads, inversions, CAGED, diatonic chords, progressions, blues, pentatonics, seventh chords, chord tones, guide tones, modes, secondary dominants, borrowed chords, songwriting, and a **guitar rhythm comping** track (fingerpicking and strumming). Every lesson is shown on the fretboard or the keyboard depending on your instrument, with audio examples, quizzes, play-it-on-the-instrument exercises and ear training.
+- **A 50-lesson curriculum** (Modules 0 – 10 plus a guitar track): the 12 notes, intervals, the major scale, the circle of fifths, triads, inversions, CAGED, diatonic chords, progressions, blues, pentatonics, seventh chords, chord tones, guide tones, modes, secondary dominants, borrowed chords, songwriting, and a **guitar rhythm comping** track (fingerpicking and strumming). Every lesson is shown on the fretboard or the keyboard depending on your instrument, with audio examples, quizzes, play-it-on-the-instrument exercises and ear training.
 - **Explorer**: scales and chords on guitar, piano, bass, ukulele and mandolin.
 - **Jam Room**: type a progression (chord symbols or Roman numerals); the app detects the key, plays a drums – bass – comping backing track, highlights the notes of the chord currently sounding in real time and suggests scales to improvise with. Changing the key transposes the progression.
 - **Guitar comping**: 24 strumming / picking rhythms (including 3/4 and 12/8) on a rhythm grid with a playhead, gradual tempo increase, custom rhythms, timing feedback through the mic, and per-chord shape selection.
