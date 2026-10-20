@@ -13,7 +13,7 @@ import { useT } from '../../i18n/useT'
 import { usePersistentState } from '../../store/usePersistentState'
 import { keyLabel, parseKey } from '../../theory'
 import { chordLabel } from '../jam/jamModel'
-import { timeSignature } from '../rhythm/customRhythms'
+import { rhythmLabel } from '../rhythm/customRhythms'
 import { DEFAULT_REFLEX, LEVELS, REFLEX_KEYS, levelOf, newSeed, parseCustomLoops, reflexSource, type ReflexLevel, type ReflexSettings } from './reflexModel'
 
 export interface ChordReflexProps {
@@ -219,7 +219,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
               label={t('reflex.rhythm')}
               value={rhythm.id}
               onChange={(v) => update({ rhythm: v })}
-              options={RHYTHMS.map((r) => ({ value: r.id, label: `${r.name[locale]} (${timeSignature(r)})`, group: t(r.kind === 'strum' ? 'rhythm.groupStrum' : 'rhythm.groupPick') }))}
+              options={RHYTHMS.map((r) => ({ value: r.id, label: rhythmLabel(r, locale), group: t(r.kind === 'strum' ? 'rhythm.groupStrum' : 'rhythm.groupPick') }))}
             />
           </div>
         )}

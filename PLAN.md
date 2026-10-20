@@ -319,7 +319,7 @@ Rule: the `theory/` folder **never imports React or Tone.js** — it is plain fu
 - [x] Use the rhythms for the Jam Room's guitar comping.
 - [x] Write content for the **R1 → R6** track.
 
-> Note: rhythms live in `src/audio/rhythms.ts` (15 strumming + 9 picking, including 3/4 and 12/8), shapes in `src/theory/guitarVoicing.ts`. Page `#/rhythm?r=<rhythm id>&p=<progression>`. In lessons: `<RhythmPlayer rhythm="..." progression="..." />`, `<RhythmQuiz options="..." />`, `<PatternView pattern="..." />`. The guitar track sits after Module 5 in the curriculum. Guitar sound is still PluckSynth.
+> Note: rhythms live in `src/audio/rhythms.ts` (16 strumming + 10 picking, including 3/4, 6/8 and 12/8 — slow rock comes in both 12/8 and 6/8), shapes in `src/theory/guitarVoicing.ts`. Page `#/rhythm?r=<rhythm id>&p=<progression>`. In lessons: `<RhythmPlayer rhythm="..." progression="..." />`, `<RhythmQuiz options="..." />`, `<PatternView pattern="..." />`. The guitar track sits after Module 5 in the curriculum. Guitar sound is still PluckSynth.
 
 ✅ *Result: pick up a chord sheet and accompany singing in many rhythm styles.*
 

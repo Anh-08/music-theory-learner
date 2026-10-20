@@ -158,6 +158,7 @@ export const vi = {
   'groove.blues': 'Cảm giác chùm ba "lắc lư", bass boogie.',
   'groove.bossa': 'Nhẹ nhàng, nhịp đệm so le kiểu Brazil.',
   'groove.slowrock': 'Nhịp 12/8, mỗi phách chia ba, chậm và tình cảm.',
+  'groove.slowrock68': 'Nhịp 6/8: 2 phách, mỗi phách chia ba — cảm giác như 12/8 nhưng ô nhịp ngắn hơn.',
   'groove.waltz': 'Nhịp 3/4: mạnh – nhẹ – nhẹ.',
 
   'suggest.bluesMinorPent': 'Âm thanh blues kinh điển — chơi ngũ cung thứ trên nền hợp âm 7 trưởng.',
@@ -606,6 +607,7 @@ export const en: Record<MessageKey, string> = {
   'groove.blues': 'Swinging triplet feel with a boogie bass line.',
   'groove.bossa': 'Light, syncopated Brazilian comping.',
   'groove.slowrock': '12/8 time, each beat split in three, slow and soulful.',
+  'groove.slowrock68': '6/8 time: 2 beats, each split in three — the 12/8 feel in shorter bars.',
   'groove.waltz': '3/4 time: strong – weak – weak.',
 
   'suggest.bluesMinorPent': 'The classic blues sound — minor pentatonic over dominant 7th chords.',

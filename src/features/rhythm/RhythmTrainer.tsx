@@ -20,7 +20,7 @@ import { chordShapes, intervalLabel, makeHighlights, parseProgression, type Chor
 import { ChordDiagram } from '../../components/ChordDiagram/ChordDiagram'
 import { shapeCaption, shapeIntervalLabels } from '../../components/ChordDiagram/shapeLabels'
 import { chordIndexAtBar, chordLabel } from '../jam/jamModel'
-import { nextCustomId, timeSignature, toRhythm, type CustomRhythm } from './customRhythms'
+import { nextCustomId, rhythmLabel, timeSignature, toRhythm, type CustomRhythm } from './customRhythms'
 
 export interface RhythmTrainerProps {
   rhythm?: string
@@ -187,7 +187,7 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
     [currentChord, locale],
   )
 
-  const label = (r: Rhythm) => `${r.name[locale]} (${timeSignature(r)})`
+  const label = (r: Rhythm) => rhythmLabel(r, locale)
   const options = [
     ...RHYTHMS.filter((r) => r.kind === 'strum').map((r) => ({ value: r.id, label: label(r), group: t('rhythm.groupStrum') })),
     ...RHYTHMS.filter((r) => r.kind === 'pick').map((r) => ({ value: r.id, label: label(r), group: t('rhythm.groupPick') })),

@@ -1,11 +1,12 @@
 import type { Groove } from '../../audio/grooves'
 import { parsePattern, type Rhythm } from '../../audio/rhythms'
+import type { Locale } from '../../i18n/locale'
 
 /** User-created rhythms, stored in the browser. */
 export interface CustomRhythm {
   id: string
   name: string
-  beatsPerBar: 3 | 4
+  beatsPerBar: 2 | 3 | 4
   stepsPerBeat: 2 | 3 | 4
   pattern: string
   groove: Groove['id']
@@ -28,9 +29,16 @@ export function toRhythm(c: CustomRhythm): Rhythm {
   }
 }
 
+/** Time signature: beats split in three are compound time (6/8, 9/8, 12/8). */
 export function timeSignature(r: Pick<Rhythm, 'beatsPerBar' | 'stepsPerBeat'>): string {
-  if (r.beatsPerBar === 3) return '3/4'
-  return r.stepsPerBeat === 3 ? '12/8' : '4/4'
+  return r.stepsPerBeat === 3 ? `${r.beatsPerBar * 3}/8` : `${r.beatsPerBar}/4`
+}
+
+/** Rhythm name with its time signature, unless the name already shows it: "Ballad / Pop (4/4)", "Slow Rock 6/8". */
+export function rhythmLabel(r: Pick<Rhythm, 'beatsPerBar' | 'stepsPerBeat' | 'name'>, locale: Locale): string {
+  const sig = timeSignature(r)
+  const name = r.name[locale]
+  return name.includes(sig) ? name : `${name} (${sig})`
 }
 
 /** A new unique id: "custom-1", "custom-2"… */

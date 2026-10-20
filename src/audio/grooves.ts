@@ -3,11 +3,11 @@ export type BassNote = 'root' | 'third' | 'fifth' | 'seventh' | 'octave' | strin
 
 /** Each groove's description lives in the UI translations, key "groove.<id>". */
 export interface Groove {
-  id: 'pop' | 'ballad' | 'rock' | 'blues' | 'bossa' | 'slowrock' | 'waltz'
+  id: 'pop' | 'ballad' | 'rock' | 'blues' | 'bossa' | 'slowrock' | 'slowrock68' | 'waltz'
   name: string
   /** Beats per bar. */
-  beatsPerBar: 3 | 4
-  /** Steps per bar: 16 (4/4, sixteenths), 12 (4/4, triplets), 6 (3/4, eighths). */
+  beatsPerBar: 2 | 3 | 4
+  /** Steps per bar: 16 (4/4, sixteenths), 12 (12/8: 4 beats of triplets), 6 (3/4 eighths, or 6/8: 2 beats of triplets). */
   stepsPerBar: 16 | 12 | 6
   defaultTempo: number
   kick: number[]
@@ -134,6 +134,22 @@ export const GROOVES: Groove[] = [
       { step: 9, note: 'fifth', len: 3 },
     ],
     comp: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map((step) => ({ step, len: 1, tones: [[0, 1, 2][step % 3]] })),
+  },
+  {
+    // 6/8: two dotted-quarter beats, each split in three — the same feel as the 12/8 groove in half-length bars.
+    id: 'slowrock68',
+    name: 'Slow rock (6/8)',
+    beatsPerBar: 2,
+    stepsPerBar: 6,
+    defaultTempo: 60,
+    kick: [0],
+    snare: [3],
+    hat: [0, 1, 2, 3, 4, 5],
+    bass: [
+      { step: 0, note: 'root', len: 3 },
+      { step: 3, note: 'fifth', len: 3 },
+    ],
+    comp: [0, 1, 2, 3, 4, 5].map((step) => ({ step, len: 1, tones: [[0, 1, 2][step % 3]] })),
   },
   {
     id: 'waltz',

@@ -14,7 +14,7 @@ export interface Rhythm {
   id: string
   name: Localized
   kind: 'strum' | 'pick'
-  beatsPerBar: 3 | 4
+  beatsPerBar: 2 | 3 | 4
   /** Steps per beat: 2 (eighths), 3 (triplets), 4 (sixteenths). */
   stepsPerBeat: 2 | 3 | 4
   /**
@@ -93,6 +93,7 @@ export const RHYTHMS: Rhythm[] = [
   { id: 'ballad', name: vi('Ballad / Pop', 'Ballad / Pop'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D - D U - U D U', defaultTempo: 80, groove: 'ballad', description: vi('Kiểu quạt cơ bản nhất, hợp với rất nhiều bài pop và ballad.', 'The most basic strumming pattern, fits a huge number of pop songs and ballads.') },
   { id: 'slow', name: vi('Slow', 'Slow'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D - - U X - D U', defaultTempo: 66, groove: 'ballad', description: vi('Chậm, nhẹ, có tiếng chặn ở phách 3.', 'Slow and gentle, with a muted hit on beat 3.') },
   { id: 'slowrock', name: vi('Slow Rock', 'Slow rock (12/8)'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 3, pattern: 'D d d X d d D d d X d d', defaultTempo: 60, groove: 'slowrock', description: vi('Mỗi phách chia ba (12/8), chặn ở phách 2 và 4.', 'Each beat split in three (12/8), with mutes on beats 2 and 4.') },
+  { id: 'slowrock68', name: vi('Slow Rock 6/8', 'Slow rock (6/8)'), kind: 'strum', beatsPerBar: 2, stepsPerBeat: 3, pattern: 'D d d X d d', defaultTempo: 60, groove: 'slowrock68', description: vi('Cùng cảm giác chùm ba như Slow Rock 12/8, nhưng ô nhịp ngắn bằng một nửa: 2 phách, mỗi phách chia ba — đếm "1 2 3 4 5 6", chặn ở tiếng 4.', 'The same triplet feel as 12/8 slow rock in half-length bars: 2 beats, each split in three — count "1 2 3 4 5 6", mute on 4.') },
   { id: 'rock', name: vi('Rock', 'Rock'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D d D d D d D d', defaultTempo: 112, groove: 'rock', description: vi('Quạt xuống đều móc đơn, nhấn phách.', 'Steady eighth-note downstrokes, accenting the beats.') },
   { id: 'disco', name: vi('Disco', 'Disco'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'D U X U D U X U', defaultTempo: 116, groove: 'pop', description: vi('Chặn tiếng ở phách 2 và 4 — sôi động.', 'Mutes on beats 2 and 4 — upbeat and danceable.') },
   { id: 'fox', name: vi('Fox', 'Foxtrot'), kind: 'strum', beatsPerBar: 4, stepsPerBeat: 2, pattern: "B - X - B' - X -", defaultTempo: 120, groove: 'pop', description: vi('Bass xen kẽ tiếng chặn: bass – chặn – bass luân phiên – chặn.', 'Bass alternating with mutes: bass – mute – alternate bass – mute.') },
@@ -109,6 +110,7 @@ export const RHYTHMS: Rhythm[] = [
   { id: 'ballad-pick', name: vi('Móc Ballad', 'Ballad picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 2, pattern: 'B 3 2 3 1 3 2 3', defaultTempo: 76, groove: 'ballad', description: vi('Kiểu móc cơ bản nhất: bass rồi rải các dây cao.', 'The most basic fingerpicking pattern: bass, then the treble strings.') },
   { id: 'slow-pick', name: vi('Móc Slow', 'Slow picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 2, pattern: "B 3 2 1 B' 3 2 1", defaultTempo: 66, groove: 'ballad', description: vi('Rải lên đều, bass luân phiên ở phách 3.', 'Even upward arpeggios, alternate bass on beat 3.') },
   { id: 'slowrock-pick', name: vi('Móc Slow Rock', 'Slow rock picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 3, pattern: "B 3 2 1 2 3 B' 3 2 1 2 3", defaultTempo: 60, groove: 'slowrock', description: vi('Chùm ba 12/8: rải lên rồi xuống.', 'Triplets in 12/8: arpeggio up and back down.') },
+  { id: 'slowrock68-pick', name: vi('Móc Slow Rock 6/8', 'Slow rock picking (6/8)'), kind: 'pick', beatsPerBar: 2, stepsPerBeat: 3, pattern: 'B 3 2 1 2 3', defaultTempo: 60, groove: 'slowrock68', description: vi('Chùm ba 6/8: bass rồi rải lên – xuống, mỗi ô nhịp một lượt.', 'Triplets in 6/8: bass, then arpeggio up and back down, once per bar.') },
   { id: 'valse-pick', name: vi('Móc Valse', 'Waltz picking'), kind: 'pick', beatsPerBar: 3, stepsPerBeat: 2, pattern: 'B 3 2 1 2 3', defaultTempo: 108, groove: 'waltz', description: vi('Nhịp 3/4: bass rồi rải lên – xuống.', '3/4 time: bass, then up and down the treble strings.') },
   { id: 'boston-pick', name: vi('Móc Boston', 'Boston picking'), kind: 'pick', beatsPerBar: 3, stepsPerBeat: 2, pattern: "B 3 2 B' 2 3", defaultTempo: 92, groove: 'waltz', description: vi('Valse chậm với bass luân phiên giữa ô nhịp.', 'A slow waltz with an alternate bass mid-bar.') },
   { id: 'bolero-pick', name: vi('Móc Bolero', 'Bolero picking'), kind: 'pick', beatsPerBar: 4, stepsPerBeat: 2, pattern: "B 3 2 3 B' 1 2 3", defaultTempo: 84, groove: 'ballad', description: vi('Bass ở phách 1 và 3, các dây cao rải xen kẽ.', 'Bass on beats 1 and 3 with the treble strings in between.') },

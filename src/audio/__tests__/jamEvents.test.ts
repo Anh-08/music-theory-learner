@@ -84,6 +84,17 @@ describe('3/4 time and guitar rhythms', async () => {
     expect(e.some((x) => x.kind === 'chord')).toBe(false)
   })
 
+  it('slow rock 6/8: a bar is 2 beats of three steps, mute on step 4', () => {
+    const e = buildJamEvents(parseProgression('C G'), groove('slowrock68'), 'guitar', rhythm('slowrock68'))
+    expect(e.filter((x) => x.kind === 'bar').map((x) => x.beat)).toEqual([0, 2])
+    expect(e.filter((x) => x.kind === 'click').map((x) => x.beat)).toEqual([0, 1, 2, 3])
+    expect(e.filter((x) => x.kind === 'mute').map((x) => x.beat)).toEqual([1, 3])
+    expect(e.filter((x) => x.kind === 'strum')).toHaveLength(10)
+    // The 12/8 groove covers the same music in one bar.
+    const twelve = buildJamEvents(parseProgression('C'), groove('slowrock'), 'guitar', rhythm('slowrock'))
+    expect(twelve.filter((x) => x.kind === 'mute').map((x) => x.beat)).toEqual([1, 3])
+  })
+
   it('downstrokes start from the low strings, upstrokes from the high strings', () => {
     const e = buildJamEvents(parseProgression('G'), groove('ballad'), 'guitar', rhythm('ballad'))
     const strums = e.filter((x) => x.kind === 'strum') as { midis: number[] }[]
