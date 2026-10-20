@@ -375,6 +375,7 @@ Decided: guitar only; **no mic, no scoring** — users practise along with the m
 - [x] A short bilingual lesson in the guitar track embedding `<ChordReflex />`; UI strings in `src/i18n/messages.ts`.
 
 > Note: the `#/reflex/chords` page (*Chord reflex* in the main bar, accepts `?seed=` to share an exact stream). The generator is in `src/theory/chordFlow.ts`, its own scheduler in `src/audio/reflex.ts` (Transport `scheduleRepeat` every beat, an endless stream — not the Jam Room's fixed loop), the UI in `src/features/reflex/`. Easy / Medium / Hard are setting presets. In lessons: `<ChordReflex level="easy" source="loops" songKey="G" />`; lesson R8 "Changing chords by reflex".
+- [x] Chaos mode (`source: 'chaos'`): any root, any triad/seventh/colour chord, no key or cadence; never the same chord or root twice in a row; the key and key-change controls are hidden.
 
 ✅ *Result: chords run continuously with the metronome, cannot be memorised, and connect smoothly.*
 

@@ -7,7 +7,7 @@ import { relatedKeys } from './keys'
  * (following common-practice pop harmony habits), and every phrase resolves to the tonic.
  */
 
-export type FlowSource = 'loops' | 'generate' | 'custom'
+export type FlowSource = 'loops' | 'generate' | 'custom' | 'chaos'
 
 export interface FlowOptions {
   key: KeyRef
@@ -130,6 +130,18 @@ export function degreeSymbol(key: KeyRef, degree: number, opts: Pick<FlowOptions
   return root + suffix
 }
 
+/** Root spellings as guitarists read chord charts, by pitch class (major chords / minor chords). */
+const CHAOS_ROOTS_MAJOR = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'Ab', 'A', 'Bb', 'B']
+const CHAOS_ROOTS_MINOR = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B']
+
+/** Chord suffixes available in chaos mode, with their weights. */
+function chaosSuffixes(opts: Pick<FlowOptions, 'sevenths' | 'colors'>): [string, number][] {
+  const out: [string, number][] = [['', 4], ['m', 4]]
+  if (opts.sevenths) out.push(['7', 2], ['m7', 2], ['maj7', 1.5])
+  if (opts.colors) out.push(['sus4', 1], ['sus2', 1], ['add9', 1])
+  return out
+}
+
 function sameKey(a: KeyRef, b: KeyRef): boolean {
   return a.mode === b.mode && chroma(a.tonic) === chroma(b.tonic)
 }
@@ -191,6 +203,7 @@ export function generatePhrase(mode: KeyRef['mode'], length: number, from: numbe
  * - `loops`: familiar loops, each played 1–2 times, then joined to another loop whose first chord follows naturally from the last.
  * - `generate`: 4/8-chord phrases walking the harmonic graph, always resolving to the tonic.
  * - `custom`: user-entered loops in shuffled order (never the same loop twice in a row when there are several).
+ * - `chaos`: any root, any chord type, no key and no smoothness; only never the same chord or root twice in a row.
  */
 export function chordFlow(opts: FlowOptions, seed: number): () => FlowChord {
   const random = seededRandom(seed)
@@ -199,6 +212,24 @@ export function chordFlow(opts: FlowOptions, seed: number): () => FlowChord {
   const queue: FlowChord[] = []
   let lastDegree: number | null = null
   let lastLoop = -1
+
+  let chaosPrev: { chroma: number; symbol: string } | null = null
+  let chaosCount = 0
+
+  const chaosChord = (): FlowChord => {
+    const suffixes = chaosSuffixes(opts)
+    for (;;) {
+      const pc = Math.floor(random() * 12)
+      const suffix = weighted(suffixes, random)
+      if (chaosPrev && pc === chaosPrev.chroma) continue
+      const minor = suffix.startsWith('m') && !suffix.startsWith('maj')
+      const symbol = (minor ? CHAOS_ROOTS_MINOR : CHAOS_ROOTS_MAJOR)[pc] + suffix
+      if (symbol === chaosPrev?.symbol) continue
+      chaosPrev = { chroma: pc, symbol }
+      const phraseStart = chaosCount++ % (opts.phraseLength ?? 4) === 0
+      return { chord: parseProgression(symbol)[0], key: home, phraseStart }
+    }
+  }
 
   const realize = (k: KeyRef, degrees: number[]) =>
     degrees.forEach((d, i) => {
@@ -251,6 +282,7 @@ export function chordFlow(opts: FlowOptions, seed: number): () => FlowChord {
   }
 
   return () => {
+    if (opts.source === 'chaos') return chaosChord()
     if (!queue.length) refill()
     return queue.shift()!
   }

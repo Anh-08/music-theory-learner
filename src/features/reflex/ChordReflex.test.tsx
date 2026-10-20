@@ -69,6 +69,26 @@ describe('chord reflex page', () => {
     expect(screen.getByRole('alert')).toBeInTheDocument()
   })
 
+  it('chaos mode: hides the key and key changes, still shows chords with shapes', () => {
+    renderWithProviders(<AppRoutes />, { route: '/reflex/chords?seed=9' })
+    fireEvent.click(screen.getByRole('radio', { name: 'Hỗn loạn (mọi giọng)' }))
+    expect(screen.queryByRole('combobox', { name: 'Giọng' })).not.toBeInTheDocument()
+    expect(screen.getByText(/Hợp âm lấy từ mọi giọng/)).toBeInTheDocument()
+    expect(screen.getByRole('radio', { name: '4 hợp âm' })).toBeInTheDocument()
+    fireEvent.click(screen.getByText('Thêm tùy chọn'))
+    expect(screen.queryByLabelText('Thỉnh thoảng sang giọng gần')).not.toBeInTheDocument()
+    expect(strip()).toHaveLength(3)
+    expect(screen.getAllByRole('img', { name: /Sơ đồ hợp âm/ }).length).toBeGreaterThan(0)
+    expect(JSON.parse(localStorage.getItem('mtl:reflex.chords')!).source).toBe('chaos')
+  })
+
+  it('chaos mode: every chord of the stream has a shape, in both playing modes', () => {
+    for (const mode of ['beats', 'rhythm'] as const) {
+      const next = reflexSource({ ...DEFAULT_REFLEX, ...LEVELS.hard, source: 'chaos', mode, nearShapes: true }, 11, 4)
+      for (let i = 0; i < 60; i++) expect(next().shape).toBeDefined()
+    }
+  })
+
   it('Hard level: 2 beats per chord, shapes hidden; settings are saved', () => {
     renderWithProviders(<AppRoutes />, { route: '/reflex/chords' })
     fireEvent.click(screen.getByRole('radio', { name: 'Khó' }))

@@ -154,3 +154,55 @@ describe('nearestShape', () => {
     }
   })
 })
+
+describe('chaos source', () => {
+  const chaos = (o: Partial<FlowOptions> = {}): FlowOptions => ({ key: parseKey('C'), source: 'chaos', ...o })
+  const SEEDS = Array.from({ length: 20 }, (_, i) => i + 1)
+
+  it('covers many roots and types, triads only by default', () => {
+    const out = SEEDS.flatMap((s) => take(chaos(), s, 60))
+    expect(new Set(out.map((c) => chroma(c.chord.root))).size).toBe(12)
+    expect(new Set(out.map((c) => c.chord.suffix))).toEqual(new Set(['', 'm']))
+  })
+
+  it('sevenths and colours switches add chord types', () => {
+    const sev = SEEDS.flatMap((s) => take(chaos({ sevenths: true }), s, 60)).map((c) => c.chord.suffix)
+    expect(new Set(sev)).toEqual(new Set(['', 'm', '7', 'm7', 'maj7']))
+    const col = SEEDS.flatMap((s) => take(chaos({ colors: true }), s, 60)).map((c) => c.chord.suffix)
+    expect(new Set(col)).toEqual(new Set(['', 'm', 'sus4', 'sus2', 'add9']))
+  })
+
+  it('uses chart-style spellings', () => {
+    const roots = new Set(SEEDS.flatMap((s) => take(chaos({ sevenths: true, colors: true }), s, 80)).map((c) => c.chord.root))
+    for (const bad of ['A#', 'D#', 'Gb', 'Cb', 'E#']) expect(roots.has(bad)).toBe(false)
+  })
+
+  it('never repeats a chord or a root back to back', () => {
+    for (const s of SEEDS) {
+      const out = take(chaos({ sevenths: true, colors: true }), s, 200)
+      for (let i = 1; i < out.length; i++) {
+        expect(out[i].chord.symbol).not.toBe(out[i - 1].chord.symbol)
+        expect(chroma(out[i].chord.root)).not.toBe(chroma(out[i - 1].chord.root))
+      }
+    }
+  })
+
+  it('same seed gives the same stream', () => {
+    const a = take(chaos({ sevenths: true }), 42, 30).map((c) => c.chord.symbol)
+    expect(take(chaos({ sevenths: true }), 42, 30).map((c) => c.chord.symbol)).toEqual(a)
+    expect(take(chaos({ sevenths: true }), 43, 30).map((c) => c.chord.symbol)).not.toEqual(a)
+  })
+
+  it('marks a phrase start every phraseLength chords', () => {
+    for (const n of [4, 8] as const) {
+      const out = take(chaos({ phraseLength: n }), 5, 40)
+      out.forEach((c, i) => expect(c.phraseStart).toBe(i % n === 0))
+    }
+  })
+
+  it('every chord has a guitar shape', () => {
+    for (const s of SEEDS) {
+      for (const c of take(chaos({ sevenths: true, colors: true }), s, 100)) expect(chordShapes(c.chord).length, c.chord.symbol).toBeGreaterThan(0)
+    }
+  })
+})

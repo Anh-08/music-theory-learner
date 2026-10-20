@@ -126,6 +126,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
   const counting = playing && reflex.countIn > 0
   const steps = useMemo(() => parsePattern(rhythm.pattern), [rhythm.pattern])
 
+  const chaos = settings.source === 'chaos'
   const lvl = levelOf(settings)
   const levelOptions = (['easy', 'medium', 'hard'] as const).map((l) => ({ value: l, label: t(`reflex.${l}` as MessageKey) }))
 
@@ -170,12 +171,16 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
             { value: 'loops', label: t('reflex.loops') },
             { value: 'generate', label: t('reflex.generate') },
             { value: 'custom', label: t('reflex.custom') },
+            { value: 'chaos', label: t('reflex.chaos') },
           ]}
         />
-        <div className="w-40">
-          <Select label={t('reflex.key')} value={settings.key} onChange={(v) => update({ key: v })} options={REFLEX_KEYS.map((k) => ({ value: k, label: keyLabel(parseKey(k), locale) }))} />
-        </div>
+        {!chaos && (
+          <div className="w-40">
+            <Select label={t('reflex.key')} value={settings.key} onChange={(v) => update({ key: v })} options={REFLEX_KEYS.map((k) => ({ value: k, label: keyLabel(parseKey(k), locale) }))} />
+          </div>
+        )}
       </div>
+      {chaos && <p className="text-xs text-stone-500">{t('reflex.chaosHint')}</p>}
 
       {settings.source === 'custom' && (
         <label className="block">
@@ -223,7 +228,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
             />
           </div>
         )}
-        {settings.source === 'generate' && (
+        {(settings.source === 'generate' || chaos) && (
           <Segmented
             label={t('reflex.phrase')}
             value={String(settings.phraseLength) as '4' | '8'}
@@ -246,9 +251,11 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
           <Check checked={settings.colors} onChange={(v) => update({ colors: v })}>
             {t('reflex.colors')}
           </Check>
-          <Check checked={settings.modulate} onChange={(v) => update({ modulate: v })}>
-            {t('reflex.modulate')}
-          </Check>
+          {!chaos && (
+            <Check checked={settings.modulate} onChange={(v) => update({ modulate: v })}>
+              {t('reflex.modulate')}
+            </Check>
+          )}
           <Check checked={settings.hideShapes} onChange={(v) => update({ hideShapes: v })}>
             {t('reflex.hideShapes')}
           </Check>
