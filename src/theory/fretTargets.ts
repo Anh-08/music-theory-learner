@@ -5,7 +5,8 @@ import { displayNote, spellingsOf, type Chroma } from './notes'
 /**
  * Targets for the fretboard note reflex drill: "play F♯ on string 3, frets 0–11", "find every G from fret 0 to 12"…
  * By default a target is located by neck zone: on one string a note name repeats every 12 frets, so within
- * a zone (frets 0–11 or 12–22) it has exactly one position. Advanced mode uses octave names (E2, E3) instead.
+ * a zone (frets 0–11 or 12 up to the last fret, at most 23) it has exactly one position. Advanced mode uses octave
+ * names (E2, E3) instead. The neck length is configurable (a Taylor 214ce has 20 frets), even per string.
  */
 
 /**
@@ -18,14 +19,17 @@ import { displayNote, spellingsOf, type Chroma } from './notes'
 export type FretMode = 'string' | 'noteString' | 'findAll' | 'pitch' | 'box'
 export type FretZone = 0 | 1
 
-/** Last fret used by the drill (most electric and acoustic necks have at least 20–22 frets). */
+/** Default last fret (most electric and acoustic necks have 20–22 frets). */
 export const NECK_FRETS = 22
+/** Range accepted for the number of frets on the user's neck. */
+export const MIN_NECK_FRETS = 12
+export const MAX_NECK_FRETS = 24
+/** Last fret of the upper zone: fret 24 would repeat fret 12 inside the zone. */
+const ZONE_LAST = 23
 /** "Find all" covers the first 12 frets: past fret 12 the neck repeats. */
 export const FIND_ALL_FRETS = 12
 /** Width of a position box, in frets. */
 export const BOX_WIDTH = 5
-
-const ZONES: Record<FretZone, [number, number]> = { 0: [0, 11], 1: [12, NECK_FRETS] }
 
 export interface TargetOptions {
   mode: FretMode
@@ -40,6 +44,10 @@ export interface TargetOptions {
   boxStart?: number
   /** Only natural notes (no sharps / flats) — an easier start. */
   naturalsOnly?: boolean
+  /** Number of frets on the neck (default `NECK_FRETS`). */
+  neckFrets?: number
+  /** Per-string override of `neckFrets` (string number → last fret), for necks where strings have different fret counts. */
+  stringFrets?: Partial<Record<number, number>>
 }
 
 export interface FretTarget {
@@ -67,8 +75,23 @@ export function zoneOf(fret: number): FretZone {
   return fret < 12 ? 0 : 1
 }
 
-export function zoneFrets(zone: FretZone): [number, number] {
-  return ZONES[zone]
+export function clampFrets(n: number): number {
+  return Math.max(MIN_NECK_FRETS, Math.min(MAX_NECK_FRETS, Math.round(n) || NECK_FRETS))
+}
+
+/** Last fret of a string on the configured neck. */
+export function lastFret(opts: Pick<TargetOptions, 'neckFrets' | 'stringFrets'>, string: number): number {
+  return clampFrets(opts.stringFrets?.[string] ?? opts.neckFrets ?? NECK_FRETS)
+}
+
+/** Last fret of the longest of `strings`. */
+export function neckEnd(opts: Pick<TargetOptions, 'neckFrets' | 'stringFrets'>, strings: number[]): number {
+  return Math.max(...strings.map((s) => lastFret(opts, s)), MIN_NECK_FRETS)
+}
+
+/** Frets of a zone on a neck whose last fret is `last`. */
+export function zoneFrets(zone: FretZone, last: number = NECK_FRETS): [number, number] {
+  return zone === 0 ? [0, 11] : [12, Math.min(last, ZONE_LAST)]
 }
 
 /** Progress key of a position in the review schedule: `note-pos:<string>:<fret>`. */
@@ -86,20 +109,23 @@ function isSingle(mode: FretMode): boolean {
 
 /** Fret range the targets are drawn from. */
 export function modeFrets(opts: TargetOptions): [number, number] {
+  const end = neckEnd(opts, opts.strings)
   if (opts.mode === 'findAll') return [0, FIND_ALL_FRETS]
   if (opts.mode === 'box') {
-    const start = Math.max(0, Math.min(NECK_FRETS - BOX_WIDTH + 1, opts.boxStart ?? 5))
+    const start = Math.max(0, Math.min(end - BOX_WIDTH + 1, opts.boxStart ?? 5))
     return [start, start + BOX_WIDTH - 1]
   }
-  if (isSingle(opts.mode) && !opts.advanced && opts.zone != null) return zoneFrets(opts.zone)
-  return [0, NECK_FRETS]
+  if (isSingle(opts.mode) && !opts.advanced) return opts.zone != null ? zoneFrets(opts.zone, end) : [0, Math.min(end, ZONE_LAST)]
+  return [0, end]
 }
 
 /** Positions a target can be drawn from (`pitch` mode keeps only pitches playable in at least two places). */
 export function candidatePositions(opts: TargetOptions): FretPosition[] {
   const [from, to] = modeFrets(opts)
   const strings = new Set(opts.strings)
-  const all = fretboardPositions(opts.tuning, to).filter((p) => p.fret >= from && strings.has(p.string) && (!opts.naturalsOnly || NATURALS.has(p.chroma)))
+  const all = fretboardPositions(opts.tuning, to).filter(
+    (p) => p.fret >= from && strings.has(p.string) && p.fret <= lastFret(opts, p.string) && (!opts.naturalsOnly || NATURALS.has(p.chroma)),
+  )
   if (opts.mode !== 'pitch') return all
   const shared = all.filter((p) => all.some((q) => q.midi === p.midi && q.string !== p.string))
   return shared.length ? shared : all
@@ -117,7 +143,7 @@ export function targetFor(position: FretPosition, opts: TargetOptions, random: (
       name,
       midi: opts.advanced ? position.midi : null,
       string: position.string,
-      frets: opts.advanced ? [0, NECK_FRETS] : zoneFrets(zoneOf(position.fret)),
+      frets: opts.advanced ? [0, lastFret(opts, position.string)] : zoneFrets(zoneOf(position.fret), lastFret(opts, position.string)),
       strings: [position.string],
       answers: [position],
     }

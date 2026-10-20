@@ -9,6 +9,9 @@ import {
   checkPitch,
   checkPosition,
   isComplete,
+  lastFret,
+  modeFrets,
+  neckEnd,
   octaveLabel,
   pickTarget,
   pitchName,
@@ -194,5 +197,46 @@ describe('fretTargets — weighting and names', () => {
     expect(octaveLabel(52, 'E', 'vi')).toBe('Mi3 (E3)')
     expect(octaveLabel(54, 'F#', 'vi')).toBe('Fa♯3 (F♯3)')
     expect(octaveLabel(58, 'Bb', 'en')).toBe('B♭3')
+  })
+})
+
+describe('fretTargets — neck length', () => {
+  it('uses the configured fret count, per-string overrides and clamps to 12–24', () => {
+    expect(lastFret({}, 1)).toBe(NECK_FRETS)
+    expect(lastFret({ neckFrets: 20 }, 3)).toBe(20)
+    expect(lastFret({ neckFrets: 20, stringFrets: { 1: 24 } }, 1)).toBe(24)
+    expect(lastFret({ neckFrets: 8 }, 1)).toBe(12)
+    expect(lastFret({ neckFrets: 30 }, 1)).toBe(24)
+    expect(neckEnd({ neckFrets: 19, stringFrets: { 1: 21, 2: 20 } }, ALL)).toBe(21)
+  })
+
+  it('a 20-fret neck: nothing past fret 20, the upper zone is frets 12–20', () => {
+    const opts: TargetOptions = { mode: 'noteString', tuning: standard, strings: ALL, neckFrets: 20 }
+    expect(Math.max(...candidatePositions(opts).map((p) => p.fret))).toBe(20)
+    expect(modeFrets({ ...opts, mode: 'string', strings: [6], zone: 1 })).toEqual([12, 20])
+    const random = seededRandom(5)
+    for (let i = 0; i < 80; i++) {
+      const t = pickTarget(opts, { random })
+      expect(t.answers[0].fret).toBeLessThanOrEqual(20)
+      expect(t.frets[1]).toBeLessThanOrEqual(20)
+    }
+  })
+
+  it('per-string fret counts limit each string separately', () => {
+    const opts: TargetOptions = { mode: 'pitch', tuning: standard, strings: ALL, advanced: true, neckFrets: 19, stringFrets: { 1: 22, 2: 21 } }
+    const pool = candidatePositions(opts)
+    for (const s of ALL) expect(Math.max(...pool.filter((p) => p.string === s).map((p) => p.fret)), `string ${s}`).toBeLessThanOrEqual(lastFret(opts, s))
+    const t = targetFor(at(1, 22), { ...opts, mode: 'noteString' })
+    expect(t.frets).toEqual([0, 22])
+  })
+
+  it('a 24-fret neck keeps zones unambiguous: the upper zone stops at fret 23', () => {
+    for (const string of ALL) {
+      const pool = candidatePositions({ mode: 'string', tuning: standard, strings: [string], zone: 1, neckFrets: 24 })
+      expect(new Set(pool.map((p) => p.chroma)).size).toBe(pool.length)
+      expect(pool).toHaveLength(12)
+    }
+    expect(modeFrets({ mode: 'box', tuning: standard, strings: ALL, boxStart: 20, neckFrets: 24 })).toEqual([20, 24])
+    expect(modeFrets({ mode: 'box', tuning: standard, strings: ALL, boxStart: 20, neckFrets: 20 })).toEqual([16, 20])
   })
 })

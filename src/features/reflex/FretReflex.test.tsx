@@ -149,6 +149,22 @@ describe('note reflex page', () => {
     expect(screen.getByText('Nốt 2/20')).toBeInTheDocument()
   })
 
+  it('neck length: a 20-fret guitar, and per-string fret counts in advanced settings', () => {
+    renderWithProviders(<FretReflex page />)
+    fireEvent.change(screen.getByLabelText('Số phím trên cần đàn của bạn'), { target: { value: '20' } })
+    expect(screen.getByRole('button', { name: /^Dây 6, phím 20:/ })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Dây 6, phím 21:/ })).not.toBeInTheDocument()
+    expect(screen.getByText('Phím 12–20')).toBeInTheDocument()
+    expect(JSON.parse(localStorage.getItem('mtl:reflex.notes')!).neckFrets).toBe(20)
+
+    fireEvent.click(screen.getByLabelText(/mỗi dây có số phím khác nhau/))
+    fireEvent.change(screen.getByLabelText('Dây 1'), { target: { value: '22' } })
+    expect(screen.getByRole('button', { name: /^Dây 1, phím 22:/ })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Dây 6, phím 21:/ })).not.toBeInTheDocument()
+    expect(screen.getByTestId('string-end-6')).toBeInTheDocument()
+    expect(screen.queryByTestId('string-end-1')).not.toBeInTheDocument()
+  })
+
   it('in a lesson: the exercise id is shown and settings are tucked away', () => {
     const { container } = renderWithProviders(<FretReflex id="lesson-fret" strings="5" naturalsOnly />)
     expect(container.querySelector('[data-exercise-id="lesson-fret"]')).not.toBeNull()

@@ -25,6 +25,8 @@ export interface FretboardProps {
   only?: ReadonlyArray<{ string: number; fret: number }>
   /** If given: exactly these markers, one per position (two positions with the same note can differ), instead of `highlights`. */
   marks?: ReadonlyArray<{ string: number; fret: number; highlight: Highlight }>
+  /** Last fret of each string when some strings have fewer frets than `fretCount` (string number → fret); the rest is shaded. */
+  stringEnds?: Partial<Record<number, number>>
 }
 
 const WIDTH = 1000
@@ -34,7 +36,7 @@ const TOP = 22
 const STRING_GAP = 30
 const MARKER_R = 12
 
-export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteClick, only, marks }: FretboardProps) {
+export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteClick, only, marks, stringEnds }: FretboardProps) {
   const { t, locale } = useT()
   const stringCount = tuning.strings.length
   const boardHeight = (stringCount - 1) * STRING_GAP
@@ -47,7 +49,8 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
   const stringY = (string: number) => TOP + (string - 1) * STRING_GAP
   const midY = TOP + boardHeight / 2
 
-  const positions = fretboardPositions(tuning, fretCount)
+  const endOf = (string: number) => Math.min(fretCount, stringEnds?.[string] ?? fretCount)
+  const positions = fretboardPositions(tuning, fretCount).filter((p) => p.fret <= endOf(p.string))
 
   return (
     <svg
@@ -73,6 +76,23 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
         <line key={f} x1={lineX(f)} x2={lineX(f)} y1={TOP - 8} y2={TOP + boardHeight + 8} strokeWidth={2} className="stroke-stone-400 dark:stroke-stone-500" />
       ))}
       <line x1={NUT_X} x2={NUT_X} y1={TOP - 8} y2={TOP + boardHeight + 8} strokeWidth={6} className="stroke-stone-700 dark:stroke-stone-300" />
+
+      {tuning.strings.map((_, idx) => {
+        const string = stringCount - idx
+        const end = endOf(string)
+        if (end >= fretCount) return null
+        return (
+          <rect
+            key={string}
+            data-testid={`string-end-${string}`}
+            x={lineX(end)}
+            y={stringY(string) - STRING_GAP / 2}
+            width={BOARD_RIGHT - lineX(end)}
+            height={STRING_GAP}
+            className="fill-stone-300/70 dark:fill-stone-950/70"
+          />
+        )
+      })}
 
       {tuning.strings.map((open, idx) => {
         const string = stringCount - idx

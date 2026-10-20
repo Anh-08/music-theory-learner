@@ -14,7 +14,8 @@ import { useProgress } from '../../store/progressContext'
 import { usePersistentState } from '../../store/usePersistentState'
 import {
   FIND_ALL_FRETS,
-  NECK_FRETS,
+  MAX_NECK_FRETS,
+  MIN_NECK_FRETS,
   TUNINGS,
   checkPitch,
   checkPosition,
@@ -28,7 +29,9 @@ import {
   rootLabel,
   samePosition,
   tuning as getTuning,
+  lastFret as lastFretOf,
   weaknessWeight,
+  zoneFrets,
   type FretMode,
   type FretPosition,
   type FretTarget,
@@ -43,6 +46,8 @@ import {
   emptyStats,
   fitStrings,
   heat,
+  neckLength,
+  neckOptions,
   recordAttempt,
   recordId,
   roundLimitMs,
@@ -323,7 +328,10 @@ export function FretReflex(props: FretReflexProps) {
 
   const target = round?.target
   const multi = !!target && target.answers.length > 1
-  const fretCount = settings.mode === 'findAll' || (settings.mode === 'box' && settings.boxStart + 4 <= FIND_ALL_FRETS) ? FIND_ALL_FRETS : NECK_FRETS
+  const neck = neckLength(settings, tuning)
+  const fretCount = settings.mode === 'findAll' || (settings.mode === 'box' && settings.boxStart + 4 <= FIND_ALL_FRETS) ? FIND_ALL_FRETS : neck
+  // Strings shorter than the longest one (advanced per-string fret counts), shaded on the virtual neck.
+  const stringEnds = Object.fromEntries(stringNumbers(tuning).map((n) => [n, lastFretOf(neckOptions(settings), n)]))
 
   const marks = (() => {
     if (!round) return []
@@ -356,7 +364,9 @@ export function FretReflex(props: FretReflexProps) {
     ...(settings.advanced ? [{ value: 'pitch' as const, label: t('noteReflex.modePitch') }] : []),
   ]
   const single = settings.mode === 'string' || settings.mode === 'noteString'
-  const lastFret = NECK_FRETS
+  // Upper zone label: the practised string's own last fret when only one string is used.
+  const upperEnd = settings.mode === 'string' && settings.rotateEvery === 0 ? lastFretOf(neckOptions(settings), oneString) : neck
+  const fretChoices = Array.from({ length: MAX_NECK_FRETS - MIN_NECK_FRETS + 1 }, (_, i) => MIN_NECK_FRETS + i)
 
   const controls = (
     <div className="space-y-4">
@@ -380,7 +390,7 @@ export function FretReflex(props: FretReflexProps) {
             onChange={(v) => update({ zone: Number(v) as FretZone })}
             options={[
               { value: '0', label: t('noteReflex.zoneN', { from: 0, to: 11 }) },
-              { value: '1', label: t('noteReflex.zoneN', { from: 12, to: lastFret }) },
+              { value: '1', label: t('noteReflex.zoneN', { from: 12, to: zoneFrets(1, upperEnd)[1] }) },
             ]}
           />
         )}
@@ -431,9 +441,9 @@ export function FretReflex(props: FretReflexProps) {
           <div className="w-36">
             <Select
               label={t('noteReflex.box')}
-              value={String(settings.boxStart)}
+              value={String(Math.min(settings.boxStart, neck - 4))}
               onChange={(v) => update({ boxStart: Number(v) })}
-              options={Array.from({ length: 13 }, (_, i) => ({ value: String(i), label: t('noteReflex.zoneN', { from: i, to: i + 4 }) }))}
+              options={Array.from({ length: neck - 3 }, (_, i) => ({ value: String(i), label: t('noteReflex.zoneN', { from: i, to: i + 4 }) }))}
             />
           </div>
         )}
@@ -491,6 +501,36 @@ export function FretReflex(props: FretReflexProps) {
         <div className="w-64">
           <Select label={t('explorer.tuning')} value={tuning.id} onChange={(v) => update({ tuning: v })} options={TUNINGS.map((x) => ({ value: x.id, label: x.name[locale] }))} />
         </div>
+      </div>
+      <div className="space-y-2">
+        <div className="flex flex-wrap items-end gap-4">
+          <div className="w-40">
+            <Select
+              label={t('noteReflex.neckFrets')}
+              value={String(settings.neckFrets)}
+              onChange={(v) => update({ neckFrets: Number(v) })}
+              options={fretChoices.map((n) => ({ value: String(n), label: t('noteReflex.neckFretsN', { n }) }))}
+            />
+          </div>
+          <p className="pb-2 text-xs text-stone-500 dark:text-stone-400">{t('noteReflex.neckHint')}</p>
+        </div>
+        <Check checked={settings.perString} onChange={(v) => update({ perString: v })}>
+          {t('noteReflex.perString')}
+        </Check>
+        {settings.perString && (
+          <div className="flex flex-wrap gap-3">
+            {stringNumbers(tuning).map((n) => (
+              <div key={n} className="w-28">
+                <Select
+                  label={t('noteReflex.stringN', { n })}
+                  value={String(lastFretOf(neckOptions(settings), n))}
+                  onChange={(v) => update({ stringFrets: { ...settings.stringFrets, [n]: Number(v) } })}
+                  options={fretChoices.map((f) => ({ value: String(f), label: String(f) }))}
+                />
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
@@ -551,7 +591,7 @@ export function FretReflex(props: FretReflexProps) {
                 </div>
                 <div className="mt-1 text-sm text-stone-600 dark:text-stone-300">{where}</div>
               </div>
-              {!settings.advanced && <MiniFretboard stringCount={tuning.strings.length} strings={target.strings} frets={target.frets} fretCount={NECK_FRETS} />}
+              {!settings.advanced && <MiniFretboard stringCount={tuning.strings.length} strings={target.strings} frets={target.frets} fretCount={neck} />}
             </>
           )}
           {target && settings.pace === 'timer' && !round?.result && (
@@ -571,7 +611,7 @@ export function FretReflex(props: FretReflexProps) {
 
       {phase !== 'done' && (
         <div className="overflow-x-auto">
-          <Fretboard tuning={tuning} fretCount={fretCount} highlights={new Map()} marks={marks} onNoteClick={onClick} />
+          <Fretboard tuning={tuning} fretCount={fretCount} highlights={new Map()} marks={marks} onNoteClick={onClick} stringEnds={stringEnds} />
         </div>
       )}
 

@@ -444,7 +444,7 @@ All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the gui
 
 Phase 7 (chord reflex training) was finished on 2026-10-18 and Phase 8 (fretboard note reflex training) on 2026-10-19.
 
-Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key.
+Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key. The note reflex trainer lets users set how many frets their neck has (12–24, default 22 — e.g. 20 on a Taylor 214ce), with an advanced per-string override for necks whose strings have different fret counts; the upper zone runs from fret 12 to the last fret (at most 23, so zones stay unambiguous).
 
 Ideas for later:
 - Real guitar samples instead of PluckSynth (needs a sample source with a clear licence).

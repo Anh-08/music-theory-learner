@@ -1,4 +1,4 @@
-import { positionKey, type FretMode, type FretZone, type StringFret, type TargetOptions, type Tuning } from '../../theory'
+import { NECK_FRETS, clampFrets, neckEnd, positionKey, type FretMode, type FretZone, type StringFret, type TargetOptions, type Tuning } from '../../theory'
 
 export type FretPace = 'timer' | 'metronome'
 
@@ -30,6 +30,12 @@ export interface FretReflexSettings {
   tuning: string
   /** Play the note after each answer. */
   sound: boolean
+  /** Number of frets on the user's neck. */
+  neckFrets: number
+  /** Advanced: strings have different fret counts (`stringFrets`). */
+  perString: boolean
+  /** String number → last fret, used when `perString` is on. */
+  stringFrets: Partial<Record<number, number>>
 }
 
 export const DEFAULT_FRET_REFLEX: FretReflexSettings = {
@@ -49,6 +55,9 @@ export const DEFAULT_FRET_REFLEX: FretReflexSettings = {
   rounds: 20,
   tuning: 'standard',
   sound: true,
+  neckFrets: NECK_FRETS,
+  perString: false,
+  stringFrets: {},
 }
 
 export const SECONDS_OPTIONS = [5, 4, 3, 2, 1.5]
@@ -63,6 +72,16 @@ export function fitStrings(s: FretReflexSettings, t: Tuning): Pick<FretReflexSet
   const n = t.strings.length
   const strings = s.strings.filter((x) => x >= 1 && x <= n)
   return { strings: strings.length ? strings : stringNumbers(t), string: s.string >= 1 && s.string <= n ? s.string : n }
+}
+
+/** Neck length options for the target generator: per-string fret counts only when enabled. */
+export function neckOptions(s: FretReflexSettings): { neckFrets: number; stringFrets?: Partial<Record<number, number>> } {
+  return { neckFrets: clampFrets(s.neckFrets), ...(s.perString ? { stringFrets: s.stringFrets } : {}) }
+}
+
+/** Last fret of the longest string of the tuning (how many frets to draw). */
+export function neckLength(s: FretReflexSettings, t: Tuning): number {
+  return neckEnd(neckOptions(s), stringNumbers(t))
 }
 
 /** Target options for the `round`-th note (one-string mode may rotate through the enabled strings). */
@@ -81,6 +100,7 @@ export function targetOptions(s: FretReflexSettings, t: Tuning, round: number): 
     advanced: s.advanced,
     boxStart: s.boxStart,
     naturalsOnly: s.naturalsOnly,
+    ...neckOptions(s),
   }
 }
 
