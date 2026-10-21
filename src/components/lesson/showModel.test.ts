@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { ascendingMidis, buildShow, pianoRangeFor } from './showModel'
+import { ascendingMidis, buildShow, neckPositions, neckRun, pianoRangeFor } from './showModel'
 
 describe('buildShow', () => {
   it('builds a scale and plays it up and down', () => {
@@ -30,5 +30,19 @@ describe('buildShow', () => {
     expect(ascendingMidis(['G', 'C', 'E'], 60)).toEqual([67, 72, 76])
     expect(pianoRangeFor(new Set([43, 76]))).toEqual([36, 83])
     expect(pianoRangeFor()).toEqual([48, 71])
+  })
+})
+
+describe('neckRun', () => {
+  it('runs each position up and back down, one after another', () => {
+    const boxes = neckPositions('G', 'major', 15)
+    const run = neckRun(boxes, [0, 1])
+    const first = boxes[0].notes.length * 2 - 1
+    expect(run.events).toHaveLength(first + boxes[1].notes.length * 2 - 1)
+    expect(run.steps[0]).toEqual({ position: 0, spot: { string: 6, fret: 0 } })
+    expect(run.steps[first - 1].position).toBe(0)
+    expect(run.steps[first].position).toBe(1)
+    expect(run.events[first].at).toBeGreaterThan(run.events[first - 1].at + 0.24)
+    expect(run.events.map((e) => e.midis[0])[first - 1]).toBe(run.events[0].midis[0])
   })
 })

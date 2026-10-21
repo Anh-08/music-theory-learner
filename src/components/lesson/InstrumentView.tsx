@@ -8,6 +8,8 @@ import { pianoRangeFor } from './showModel'
 export interface InstrumentViewProps {
   highlights: HighlightMap
   activeMidis?: ReadonlySet<number>
+  /** Guitar: the sounding positions, instead of every position of `activeMidis`. */
+  activePositions?: ReadonlyArray<StringFret>
   onPick?: (midi: number, position?: FretPosition) => void
   /** Guitar: highlight only these positions. */
   only?: StringFret[]
@@ -22,7 +24,7 @@ export interface InstrumentViewProps {
 const STANDARD = tuning('standard')
 
 /** Fretboard or keyboard, depending on the learner's chosen instrument. */
-export function InstrumentView({ highlights, activeMidis, onPick, only, onlyMidis, fretCount = 12, pianoRange, instrument }: InstrumentViewProps) {
+export function InstrumentView({ highlights, activeMidis, activePositions, onPick, only, onlyMidis, fretCount = 12, pianoRange, instrument }: InstrumentViewProps) {
   const settings = useSettings()
   const which = instrument ?? settings.instrument
   const [start, end] = pianoRange ?? pianoRangeFor(onlyMidis)
@@ -30,7 +32,7 @@ export function InstrumentView({ highlights, activeMidis, onPick, only, onlyMidi
   return (
     <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white p-2 dark:border-stone-800 dark:bg-stone-900">
       {which === 'guitar' ? (
-        <Fretboard tuning={STANDARD} fretCount={fretCount} highlights={highlights} activeMidis={activeMidis} only={only} onNoteClick={(p) => onPick?.(p.midi, p)} />
+        <Fretboard tuning={STANDARD} fretCount={fretCount} highlights={highlights} activeMidis={activeMidis} activePositions={activePositions} only={only} onNoteClick={(p) => onPick?.(p.midi, p)} />
       ) : (
         <Piano startMidi={start} endMidi={end} highlights={highlights} activeMidis={activeMidis} onlyMidis={onlyMidis} onKeyClick={(m) => onPick?.(m)} />
       )}

@@ -20,6 +20,8 @@ export interface FretboardProps {
   highlights: HighlightMap
   /** Sounding notes (midi) — given extra emphasis. */
   activeMidis?: ReadonlySet<number>
+  /** If given: the sounding positions, used instead of `activeMidis` (so only that spot lights up, not every spot with the same pitch). */
+  activePositions?: ReadonlyArray<{ string: number; fret: number }>
   onNoteClick?: (position: FretPosition) => void
   /** If given: highlight only these positions (e.g. a chord shape) instead of every position with the same note name. */
   only?: ReadonlyArray<{ string: number; fret: number }>
@@ -36,7 +38,7 @@ const TOP = 22
 const STRING_GAP = 30
 const MARKER_R = 12
 
-export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteClick, only, marks, stringEnds }: FretboardProps) {
+export function Fretboard({ tuning, fretCount, highlights, activeMidis, activePositions, onNoteClick, only, marks, stringEnds }: FretboardProps) {
   const { t, locale } = useT()
   const stringCount = tuning.strings.length
   const boardHeight = (stringCount - 1) * STRING_GAP
@@ -125,7 +127,9 @@ export function Fretboard({ tuning, fretCount, highlights, activeMidis, onNoteCl
           : !only || only.some((o) => o.string === p.string && o.fret === p.fret)
             ? highlights.get(p.chroma)
             : undefined
-        const active = activeMidis?.has(p.midi) ?? false
+        const active = activePositions
+          ? activePositions.some((a) => a.string === p.string && a.fret === p.fret)
+          : (activeMidis?.has(p.midi) ?? false)
         const x = noteX(p.fret)
         const y = stringY(p.string)
         const name = rootLabel(p.chroma)

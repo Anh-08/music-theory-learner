@@ -2,7 +2,8 @@ import { existingVoices, getTone, getVoice, isToneLoaded, type InstrumentId } fr
 import { totalDuration, type PlayEvent } from './events'
 import { claimTransport, ownsTransport, releaseTransport } from './transportOwner'
 
-export type StepListener = (midis: number[] | null) => void
+/** `index` is the position of the sounding event in the list given to `playEvents`. */
+export type StepListener = (midis: number[] | null, index?: number) => void
 
 let session = 0
 let stopCurrent: (() => void) | null = null
@@ -37,12 +38,12 @@ export async function playEvents(instrument: InstrumentId, events: PlayEvent[], 
   transport.cancel()
   transport.position = 0
 
-  for (const e of events) {
+  events.forEach((e, i) => {
     transport.schedule((time) => {
       voice.play(e.midis, time, e.duration)
-      if (onStep) draw.schedule(() => onStep(e.midis), time)
+      if (onStep) draw.schedule(() => onStep(e.midis, i), time)
     }, e.at)
-  }
+  })
 
   await new Promise<void>((resolve) => {
     const end = totalDuration(events)

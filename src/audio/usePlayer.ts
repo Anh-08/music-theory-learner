@@ -7,13 +7,18 @@ import { playEvents, playNote, stopPlayback } from './player'
 export function usePlayer(instrument: InstrumentId) {
   const [playing, setPlaying] = useState(false)
   const [activeMidis, setActiveMidis] = useState<ReadonlySet<number>>(new Set())
+  /** Index of the sounding event in the list passed to `play` (null when nothing from it is sounding). */
+  const [activeStep, setActiveStep] = useState<number | null>(null)
   const clearTimer = useRef<number | undefined>(undefined)
 
   const play = useCallback(
     async (events: PlayEvent[]) => {
       setPlaying(true)
       try {
-        await playEvents(instrument, events, (midis) => setActiveMidis(new Set(midis ?? [])))
+        await playEvents(instrument, events, (midis, index) => {
+          setActiveMidis(new Set(midis ?? []))
+          setActiveStep(midis ? (index ?? null) : null)
+        })
       } finally {
         setPlaying(false)
       }
@@ -27,6 +32,7 @@ export function usePlayer(instrument: InstrumentId) {
     (midi: number) => {
       void playNote(instrument, midi)
       setActiveMidis(new Set([midi]))
+      setActiveStep(null)
       window.clearTimeout(clearTimer.current)
       clearTimer.current = window.setTimeout(() => setActiveMidis(new Set()), 600)
     },
@@ -41,5 +47,5 @@ export function usePlayer(instrument: InstrumentId) {
     [],
   )
 
-  return { playing, activeMidis, play, stop, playNote: note }
+  return { playing, activeMidis, activeStep, play, stop, playNote: note }
 }

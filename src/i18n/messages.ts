@@ -75,6 +75,10 @@ export const vi = {
   'chordGroup.seventh': 'Hợp âm 7',
   'chordGroup.extended': 'Hợp âm mở rộng',
 
+  'show.positions': 'Thế bấm:',
+  'show.wholeNeck': 'Cả cần đàn',
+  'show.position': 'Thế {n} · ngăn {lo}–{hi}',
+  'show.playAll': '▶ Chạy hết các thế',
   'fretboard.aria': 'Cần đàn guitar, {frets} phím, tuning {tuning}',
   'fretboard.position': 'Dây {string}, {where}: {note}',
   'fretboard.open': 'buông',
@@ -596,6 +600,10 @@ export const en: Record<MessageKey, string> = {
   'chordGroup.seventh': 'Seventh chords',
   'chordGroup.extended': 'Extended chords',
 
+  'show.positions': 'Positions:',
+  'show.wholeNeck': 'Whole neck',
+  'show.position': 'Position {n} · frets {lo}–{hi}',
+  'show.playAll': '▶ Play all positions',
   'fretboard.aria': 'Guitar fretboard, {frets} frets, {tuning} tuning',
   'fretboard.position': 'String {string}, {where}: {note}',
   'fretboard.open': 'open',

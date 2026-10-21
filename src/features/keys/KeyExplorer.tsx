@@ -110,7 +110,7 @@ export function KeyExplorer() {
 
       <section>
         <h3 className="font-semibold">{t('keys.scale')}</h3>
-        <Show root={key.tonic} scale={key.mode === 'major' ? 'major' : 'aeolian'} labels="interval" frets={15} />
+        <Show root={key.tonic} scale={key.mode === 'major' ? 'major' : 'aeolian'} labels="interval" frets={15} neck />
       </section>
     </div>
   )

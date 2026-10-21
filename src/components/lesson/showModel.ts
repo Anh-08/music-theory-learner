@@ -13,11 +13,13 @@ import {
   positionMidi,
   rootMidiAtOrAbove,
   scaleFromRoot,
+  scalePositions,
   scaleRun,
   stackIntervals,
   tuning,
   type HighlightMap,
   type LabelMode,
+  type ScalePosition,
   type StringFret,
 } from '../../theory'
 
@@ -137,4 +139,35 @@ export function pianoRangeFor(midis?: ReadonlySet<number>): [number, number] {
     hi = Math.max(hi, m - (m % 12) + 11)
   }
   return [lo, hi]
+}
+
+/** The scale positions ("thế") of a scale on a standard-tuned guitar, from the open position up the neck. */
+export function neckPositions(root: string, scale: string, fretCount: number): ScalePosition[] {
+  return scalePositions(STANDARD, scaleFromRoot(root, scale).notes.map(chroma), fretCount)
+}
+
+export interface NeckRun {
+  events: PlayEvent[]
+  /** For each event: which position it belongs to (index in the list given) and where it is played. */
+  steps: { position: number; spot: StringFret }[]
+}
+
+/**
+ * Plays each of `positions` up from its lowest note to its highest and back down, one position after another,
+ * with a short pause in between.
+ */
+export function neckRun(positions: ScalePosition[], indexes: number[], step = 0.24, gap = 0.5): NeckRun {
+  const events: PlayEvent[] = []
+  const steps: NeckRun['steps'] = []
+  let at = 0
+  for (const position of indexes) {
+    const notes = positions[position].notes
+    for (const n of [...notes, ...notes.slice(0, -1).reverse()]) {
+      events.push({ midis: [n.midi], at, duration: step * 1.6 })
+      steps.push({ position, spot: { string: n.string, fret: n.fret } })
+      at += step
+    }
+    at += gap
+  }
+  return { events, steps }
 }
