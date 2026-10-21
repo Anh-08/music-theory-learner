@@ -395,14 +395,14 @@ export function transposeEvents(score: Score, refs: EventRef[], semitones: numbe
         notes.push(keep)
         continue
       }
-      const string = chooseString(score, midi, { nearFret: Math.max(0, fretOf(score, n)), taken: notes.map((x) => x.string) })
+      const string = chooseString(score, midi, { nearFret: Math.max(0, fretOf(score, n) || 0), taken: notes.map((x) => x.string) })
       notes.push({ ...keep, string: string ?? n.string })
     }
     return { ...e, notes: sortNotes(notes) }
   })
 }
 
-function allRefs(score: Score): EventRef[] {
+export function allRefs(score: Score): EventRef[] {
   return score.measures.flatMap((m, measure) => m.events.map((_, event) => ({ measure, event })))
 }
 

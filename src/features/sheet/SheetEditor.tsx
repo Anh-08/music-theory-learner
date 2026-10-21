@@ -1,0 +1,151 @@
+import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react'
+import { Link, useParams } from 'react-router'
+import { Fretboard } from '../../components/Fretboard/Fretboard'
+import { Piano } from '../../components/Piano/Piano'
+import { ScoreView } from '../../components/Score/ScoreView'
+import { useT } from '../../i18n/useT'
+import { useSettings } from '../../store/settingsContext'
+import { usePersistentState } from '../../store/usePersistentState'
+import { displayNote } from '../../theory/notes'
+import { Note } from 'tonal'
+import { fretOf, midiAt, scoreKey, scoreTuning, spellMidi, type Score } from '../../theory/score'
+import { getEvent, refsInRange } from '../../theory/scoreEdit'
+import type { ScoreViewMode } from '../../theory/scoreLayout'
+import { MetaBar, Toolbar } from './EditorPanels'
+import { editorReducer, initEditor, keyToAction } from './editorState'
+import { lastSaveFailed, loadSheet, saveSheet, storageUsage, subscribeSheets } from './sheetStore'
+import { card } from './ui'
+
+/** `#/sheet/:id` — the editor for one saved score. */
+export function SheetEditor() {
+  const { id } = useParams()
+  const { t } = useT()
+  const initial = useMemo(() => (id ? loadSheet(id) : null), [id])
+  if (!initial) {
+    return (
+      <div className="space-y-4 py-10 text-center">
+        <p>{t('sheet.notFound')}</p>
+        <Link to="/sheet" className="text-rose-600 underline">
+          {t('sheet.back')}
+        </Link>
+      </div>
+    )
+  }
+  return <Editor key={initial.id} initial={initial} />
+}
+
+const FRETS = 17
+
+function isTyping(target: EventTarget | null): boolean {
+  return target instanceof HTMLElement && (['INPUT', 'SELECT', 'TEXTAREA'].includes(target.tagName) || target.isContentEditable)
+}
+
+function Editor({ initial }: { initial: Score }) {
+  const { t } = useT()
+  const { instrument } = useSettings()
+  const [state, dispatch] = useReducer(editorReducer, initial, initEditor)
+  const score = state.history.present
+  const [view, setView] = usePersistentState<ScoreViewMode>('sheet:view', instrument === 'piano' ? 'staff' : 'both')
+  const [chordMode, setChordMode] = useState(false)
+  const box = useRef<HTMLDivElement>(null)
+  const shift = useRef(false)
+
+  // Autosave every change (scores are small); an untouched score keeps its "last edited" date.
+  useEffect(() => {
+    if (score !== initial) saveSheet(score)
+  }, [score, initial])
+  const saveFailed = useSyncExternalStore(subscribeSheets, lastSaveFailed)
+  const [usage] = useState(storageUsage)
+
+  // Remember whether Shift was held for clicks on the instrument (its callbacks only get the note).
+  useEffect(() => {
+    const track = (e: PointerEvent) => (shift.current = e.shiftKey)
+    window.addEventListener('pointerdown', track, true)
+    return () => window.removeEventListener('pointerdown', track, true)
+  }, [])
+
+  useEffect(() => box.current?.focus({ preventScroll: true }), [])
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (isTyping(e.target)) return
+    const action = keyToAction(e, performance.now())
+    if (!action) return
+    e.preventDefault()
+    dispatch(action)
+  }
+
+  const tuning = scoreTuning(score)
+  const key = scoreKey(score)
+  const event = getEvent(score, state.cursor)
+  const marks = (event?.notes ?? []).flatMap((n) => {
+    const fret = fretOf(score, n)
+    if (!Number.isFinite(fret)) return []
+    return [{ string: n.string, fret: fret + score.capo, highlight: { label: displayNote(Note.pitchClass(spellMidi(n.midi, key))), isRoot: false } }]
+  })
+  const selection = state.anchor ? refsInRange(score, state.anchor, state.cursor) : undefined
+  const addToChord = () => shift.current || chordMode
+
+  return (
+    <div className="space-y-4 outline-none" ref={box} tabIndex={-1} onKeyDown={onKeyDown}>
+      <Link to="/sheet" className="text-sm text-stone-500 hover:text-rose-600">
+        {t('sheet.back')}
+      </Link>
+
+      <MetaBar score={score} view={view} onView={setView} dispatch={dispatch} />
+
+      {saveFailed && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">{t('sheet.saveFailed')}</p>}
+      {!saveFailed && usage > 0.8 && <p className="text-sm text-amber-700 dark:text-amber-400">{t('sheet.storageHigh', { pct: Math.round(usage * 100) })}</p>}
+
+      <div className={`${card} z-10 !p-3 shadow-sm md:sticky md:top-0`}>
+        <Toolbar state={state} dispatch={dispatch} chordMode={chordMode} onChordMode={setChordMode} />
+      </div>
+
+      <section className={`${card} !p-2`} aria-label={t('sheet.scoreAria')}>
+        <ScoreView
+          score={score}
+          view={view}
+          cursor={state.cursor}
+          selection={selection}
+          onPick={(hit, e) => {
+            dispatch({ type: 'pick', hit, extend: e.shiftKey })
+            box.current?.focus({ preventScroll: true })
+          }}
+        />
+      </section>
+
+      <section className={`${card} space-y-2 !p-3`}>
+        <p className="text-sm text-stone-500">{instrument === 'piano' ? t('sheet.instrumentHintPiano') : t('sheet.instrumentHint')}</p>
+        <div className="overflow-x-auto">
+          {instrument === 'piano' ? (
+            <Piano startMidi={40} endMidi={84} highlights={new Map()} activeMidis={new Set(event?.notes.map((n) => n.midi))} onKeyClick={(m) => dispatch({ type: 'insertMidi', midi: m, chord: addToChord() })} />
+          ) : (
+            <Fretboard
+              tuning={tuning}
+              fretCount={FRETS}
+              highlights={new Map()}
+              marks={marks}
+              onNoteClick={(p) => {
+                // Frets are counted from the nut on the drawn neck; below the capo nothing sounds, open = capo.
+                const fret = p.fret === 0 ? score.capo : p.fret
+                if (fret < score.capo) return
+                const note = { midi: midiAt(score, p.string, fret - score.capo), string: p.string }
+                dispatch(addToChord() ? { type: 'addToChord', note } : { type: 'insert', notes: [note] })
+                box.current?.focus({ preventScroll: true })
+              }}
+            />
+          )}
+        </div>
+        <p className="text-xs text-stone-500 sm:hidden">{t('sheet.phoneHint')}</p>
+      </section>
+
+      <details className={`${card} !p-3 text-sm`}>
+        <summary className="cursor-pointer font-medium">{t('sheet.shortcuts')}</summary>
+        <ul className="mt-2 list-disc space-y-1 pl-5 text-stone-600 dark:text-stone-400">
+          {(['move', 'string', 'fret', 'duration', 'tech', 'edit'] as const).map((k) => (
+            <li key={k}>{t(`sheet.sc.${k}`)}</li>
+          ))}
+        </ul>
+      </details>
+    </div>
+  )
+}

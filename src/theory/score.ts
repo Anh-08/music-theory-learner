@@ -192,9 +192,14 @@ export function openStringMidi(t: Tuning, capo: number, string: number): number 
   return noteMidi(open) + capo
 }
 
-/** Fret written in the tab (relative to the capo); may be out of range if the note is unplayable. */
+/**
+ * Fret written in the tab (relative to the capo); may be out of range if the note is unplayable,
+ * and NaN if the tuning has no such string (e.g. string 6 after switching to a 4-string bass).
+ */
 export function fretOf(score: Pick<Score, 'tuning' | 'capo'>, note: Pick<ScoreNote, 'midi' | 'string'>): number {
-  return note.midi - openStringMidi(scoreTuning(score), score.capo, note.string)
+  const t = scoreTuning(score)
+  if (note.string < 1 || note.string > t.strings.length) return NaN
+  return note.midi - openStringMidi(t, score.capo, note.string)
 }
 
 export function midiAt(score: Pick<Score, 'tuning' | 'capo'>, string: number, fret: number): number {
@@ -203,7 +208,7 @@ export function midiAt(score: Pick<Score, 'tuning' | 'capo'>, string: number, fr
 
 export function isPlayable(score: Pick<Score, 'tuning' | 'capo'>, note: Pick<ScoreNote, 'midi' | 'string'>): boolean {
   const f = fretOf(score, note)
-  return f >= 0 && f <= MAX_FRET - score.capo
+  return Number.isFinite(f) && f >= 0 && f <= MAX_FRET - score.capo
 }
 
 /**

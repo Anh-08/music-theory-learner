@@ -24,6 +24,7 @@ const TOOLS: { to: string; label: MessageKey }[] = [
   { to: '/keys', label: 'nav.keys' },
   { to: '/identify', label: 'nav.identify' },
   { to: '/metronome', label: 'nav.metronome' },
+  { to: '/sheet', label: 'nav.sheet' },
   { to: '/connect', label: 'nav.connect' },
 ]
 

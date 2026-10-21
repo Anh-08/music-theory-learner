@@ -581,8 +581,8 @@ interface ScoreEvent {
 
 **Tasks:**
 - [x] 10.1 Model: `score.ts` (types, fret ↔ midi with tuning + capo, spelling, durations in ticks) + `scoreEdit.ts` (insert / delete / chord / duration / bar filling with ties / string choice / transpose / copy-paste / repeats) + tests.
-- [ ] 10.2 Rendering: add VexFlow (lazy), `scoreLayout.ts` + tests, `ScoreView` for staff + tab, tab only, staff only; techniques and chord symbols; click → cursor mapping.
-- [ ] 10.3 Editor page: library + editor routes, cursor, palettes, fretboard entry, keyboard entry, chord-shape insert, undo/redo, autosave, phone layout.
+- [x] 10.2 Rendering: add VexFlow (lazy), `scoreLayout.ts` + tests, `ScoreView` for staff + tab, tab only, staff only; techniques and chord symbols; click → cursor mapping.
+- [x] 10.3 Editor page: library + editor routes, cursor, palettes, fretboard entry, keyboard entry, chord-shape insert, undo/redo, autosave, phone layout.
 - [ ] 10.4 Playback: `scoreToEvents` + tests (repeats, ties, tuplets, tempo %), `scorePlayer.ts` with Transport ownership, cursor/fretboard follow, loop selection, count-in.
 - [ ] 10.5 Real-instrument step entry (MIDI / mic) with automatic string choice.
 - [ ] 10.6 Import / export: JSON, ASCII tab (both ways) + tests, MusicXML export + tests (validated against a sample file), print stylesheet, share link, backup integration.
@@ -591,6 +591,8 @@ interface ScoreEvent {
 - [ ] Later: MusicXML import, a second voice (bass + melody), grand staff for piano (two hands), Guitar Pro file import.
 
 > Note (10.1): time is counted in ticks (`TICKS_PER_QUARTER = 480`, so every value down to a 32nd triplet is a whole number). `src/theory/score.ts` holds the types, durations, fret ↔ pitch with tuning + capo, `chooseString` and key-aware spelling (`spellMidi`, which keeps the raised 6th/7th in minor keys). `src/theory/scoreEdit.ts` holds the editing operations and the undo history; neither is re-exported from `src/theory/index.ts` (import them directly). Inserting in the middle of a bar pushes the following events (the bar is then flagged `over`); only appending splits a note across the bar line.
+
+> Note (10.2–10.3): VexFlow 5 (`vexflow/bravura`, only the Bravura music font) is loaded with `import()` by `src/components/Score/loadVex.ts`, so it is a separate chunk. `src/theory/scoreLayout.ts` decides bar widths, line breaks and system heights and hit-tests clicks; `src/components/Score/drawScore.ts` draws into those boxes and returns each event's x position; `ScoreView` draws the cursor, selection, playback position and over-full bars as an HTML overlay. Dark mode inverts the SVG with a CSS filter. Guitar and bass tunings are written an octave up with an "8" under the clef. The editor's state lives in a pure reducer (`src/features/sheet/editorState.ts`, with `keyToAction` for the shortcuts); scores are stored as `mtl:sheet:<id>` plus an index `mtl:sheets:index` (`sheetStore.ts`) and checked field by field when read (`src/theory/scoreIO.ts`). Changing the tuning or capo keeps pitches and re-fingers notes the new neck cannot play on their string. Clicking the fretboard inserts a note and moves on; Shift+click or the *Add to chord* toggle adds it to the previous note.
 
 **Decisions (confirmed by the user on 2026-10-21: all four defaults accepted — tab + staff for riffs/solos first, no chord-sheet mode for now; single treble staff for piano; VexFlow; phone = view + tap entry):**
 1. Scope: *riff / lick / solo tab with staff* (this plan) — or a **chord sheet** (lyrics + chords above them, the "sheet hợp âm" used for singing) — or both? A chord-sheet mode is simple to add (text + chord symbols, transpose, print) and could be done first as a small step.

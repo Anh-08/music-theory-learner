@@ -13,6 +13,8 @@ import { ChordLibrary } from './features/chords/ChordLibrary'
 import { ReflexPage } from './features/reflex/ReflexPage'
 import { NoteReflexPage } from './features/reflex/NoteReflexPage'
 import { MetronomePage } from './features/metronome/MetronomePage'
+import { SheetLibrary } from './features/sheet/SheetLibrary'
+import { SheetEditor } from './features/sheet/SheetEditor'
 import { LessonPage } from './features/lesson/LessonPage'
 import { ProgressProvider } from './store/ProgressProvider'
 import { SettingsProvider } from './store/SettingsProvider'
@@ -44,6 +46,8 @@ export function AppRoutes() {
         <Route path="connect" element={<ConnectPage />} />
         <Route path="chords" element={<ChordLibrary />} />
         <Route path="metronome" element={<MetronomePage />} />
+        <Route path="sheet" element={<SheetLibrary />} />
+        <Route path="sheet/:id" element={<SheetEditor />} />
         <Route path="reflex/chords" element={<ReflexPage />} />
         <Route path="reflex/notes" element={<NoteReflexPage />} />
         <Route path="*" element={<NotFound />} />
