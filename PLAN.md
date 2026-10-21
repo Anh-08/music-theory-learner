@@ -497,7 +497,7 @@ Goal: a metronome good enough to replace a phone app while practising — open i
 
 Goal: write down your own riffs, licks, solos and arrangements as **tab + staff**, hear them back, and keep or share them. It closes the loop of the app: after learning a scale, a chord-tone idea or a lick in the Jam Room, the user can *notate* what they played and see *why* it works (each note labelled by its degree against the chord). Guitar-first, like the rest of the app; piano users get the staff view.
 
-Defaults chosen in this plan (to confirm with the user, see "Open decisions" below): one voice per staff, staff + tab shown together, the notation drawn by **VexFlow** (MIT) loaded only on this page, scores stored in the browser, no song transcriptions shipped with the app.
+Defaults chosen in this plan (confirmed by the user, see "Decisions" below): one voice per staff, staff + tab shown together, the notation drawn by **VexFlow** (MIT) loaded only on this page, scores stored in the browser, no song transcriptions shipped with the app.
 
 **Screen** (new page `#/sheet`, *Tools* menu → *Sheet & tab*; vi: *Soạn sheet & tab (Tab editor)*):
 - **Library view** (`#/sheet`): the user's scores as cards (title, key, tempo, last edited) — New, Duplicate, Delete (with confirmation), Import. A few starter templates written for the app (empty 4/4 tab, 12-bar blues comping, a pentatonic lick sheet) — no copyrighted songs.
@@ -517,7 +517,7 @@ interface Score {
   tuning: string; capo: number                               // tuning id from TUNINGS
   measures: Measure[]
 }
-interface Measure { events: ScoreEvent[]; chords?: { beat: number; symbol: string }[]; repeat?: 'start' | 'end'; endings?: number[] }
+interface Measure { events: ScoreEvent[]; chords?: { tick: number; symbol: string }[]; repeatStart?: boolean; repeatEnd?: { times: number }; ending?: number[] }
 interface ScoreEvent {
   duration: 'w' | 'h' | 'q' | '8' | '16' | '32'; dots: 0 | 1 | 2; tuplet?: 3
   rest?: boolean; tieToNext?: boolean
@@ -580,7 +580,7 @@ interface ScoreEvent {
 - Routes `sheet`, `sheet/:id`, `sheet/shared` in `src/App.tsx`; entry in `TOOLS` (`src/app/Layout.tsx`); `nav.sheet` and `sheet.*` strings in `src/i18n/messages.ts`.
 
 **Tasks:**
-- [ ] 10.1 Model: `score.ts` (types, fret ↔ midi with tuning + capo, spelling, durations in ticks) + `scoreEdit.ts` (insert / delete / chord / duration / bar filling with ties / string choice / transpose / copy-paste / repeats) + tests.
+- [x] 10.1 Model: `score.ts` (types, fret ↔ midi with tuning + capo, spelling, durations in ticks) + `scoreEdit.ts` (insert / delete / chord / duration / bar filling with ties / string choice / transpose / copy-paste / repeats) + tests.
 - [ ] 10.2 Rendering: add VexFlow (lazy), `scoreLayout.ts` + tests, `ScoreView` for staff + tab, tab only, staff only; techniques and chord symbols; click → cursor mapping.
 - [ ] 10.3 Editor page: library + editor routes, cursor, palettes, fretboard entry, keyboard entry, chord-shape insert, undo/redo, autosave, phone layout.
 - [ ] 10.4 Playback: `scoreToEvents` + tests (repeats, ties, tuplets, tempo %), `scorePlayer.ts` with Transport ownership, cursor/fretboard follow, loop selection, count-in.
@@ -590,7 +590,9 @@ interface ScoreEvent {
 - [ ] 10.8 `<TabView>` in MDX, a few licks added to Modules 5 and 7, the short lesson; page tests (`SheetEditor.test.tsx`: create a score from the Tools menu, enter notes by fretboard and keyboard, undo, survives a reload, export ASCII tab) and bilingual UI strings.
 - [ ] Later: MusicXML import, a second voice (bass + melody), grand staff for piano (two hands), Guitar Pro file import.
 
-**Open decisions (to confirm with the user before starting):**
+> Note (10.1): time is counted in ticks (`TICKS_PER_QUARTER = 480`, so every value down to a 32nd triplet is a whole number). `src/theory/score.ts` holds the types, durations, fret ↔ pitch with tuning + capo, `chooseString` and key-aware spelling (`spellMidi`, which keeps the raised 6th/7th in minor keys). `src/theory/scoreEdit.ts` holds the editing operations and the undo history; neither is re-exported from `src/theory/index.ts` (import them directly). Inserting in the middle of a bar pushes the following events (the bar is then flagged `over`); only appending splits a note across the bar line.
+
+**Decisions (confirmed by the user on 2026-10-21: all four defaults accepted — tab + staff for riffs/solos first, no chord-sheet mode for now; single treble staff for piano; VexFlow; phone = view + tap entry):**
 1. Scope: *riff / lick / solo tab with staff* (this plan) — or a **chord sheet** (lyrics + chords above them, the "sheet hợp âm" used for singing) — or both? A chord-sheet mode is simple to add (text + chord symbols, transpose, print) and could be done first as a small step.
 2. Piano: staff only on a single treble staff in this phase, grand staff later — OK?
 3. VexFlow as a new dependency (MIT, loaded only on this page) instead of drawing the staff by hand — OK?
@@ -602,7 +604,7 @@ interface ScoreEvent {
 
 All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
-Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21. Phase 10 (sheet & tab editor) is planned, waiting for the open decisions to be confirmed.
+Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21. Phase 10 (sheet & tab editor) was started on 2026-10-21.
 
 Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key. The note reflex trainer lets users set how many frets their neck has (12–24, default 22 — e.g. 20 on a Taylor 214ce), with an advanced per-string override for necks whose strings have different fret counts; the upper zone runs from fret 12 to the last fret (at most 23, so zones stay unambiguous).
 
@@ -643,4 +645,4 @@ Things that can be decided along the way:
 
 ## 9. Next step
 
-Confirm the open decisions of **Phase 10** (sheet & tab editor), then start with task 10.1 (the score model).
+Continue **Phase 10** (sheet & tab editor) task by task.
