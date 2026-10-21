@@ -71,6 +71,7 @@
    - Pick a chord progression → the pattern applies to each chord (the bass note follows the chord, e.g. C bass on string 5, G bass on string 6).
    - Adjust tempo, metronome, a "drums + bass only" mode so the user comps along, and a mode that raises the tempo after every loop.
    - Create custom rhythms by clicking the grid and saving them.
+7. **Metronome** — a standalone practice metronome: tempo + tap tempo, any time signature, subdivisions, per-beat accents, speed trainer and muted bars. See Phase 9.
 
 ### 3.2. Curriculum
 Split into modules, each with several short lessons (10–15 minutes). Every lesson follows the same structure:
@@ -438,6 +439,54 @@ Goal: see a note name and fret it immediately, without counting frets. Notes app
 2. Chords change with the metronome: one strum per beat, or one rhythm pass per chord.
 3. The screen shows only chords, no explanations; smooth chord changes come first.
 4. Note practice: by default notes are indicated by **neck zone**; E2/E3 names are an advanced mode for users solid on theory.
+
+### Phase 9 — Metronome (Tools menu)
+
+Goal: a metronome good enough to replace a phone app while practising — open it, set the tempo, play. Today a click only exists inside other features (the Jam Room's click track, the reflex drills); there is no way to just practise with a click.
+
+**Screen** (new page `#/metronome`, *Tools* menu → *Metronome*):
+- A big tempo number in the middle with its Italian tempo name (Largo, Adagio, Andante, Moderato, Allegro, Presto — bilingual tooltip), a row of **beat dots** that light up on each beat, and a large Start / Stop button.
+- Below: tempo controls, time signature, subdivision, sound, practice tools (collapsible "Advanced" section so the basic screen stays simple).
+- Works at phone width (it is the tool people will most often open on a phone next to the instrument).
+
+**Tempo:**
+- 30–300 BPM: slider, −5 / −1 / +1 / +5 buttons, and a typed number.
+- **Tap tempo**: average of the last 4 taps, ignoring outliers; the tap history resets after 2 seconds without a tap.
+- Changing the tempo while running takes effect **without restarting** (set `Transport.bpm`, the bar position is kept).
+
+**Time signature & beats:**
+- Presets 2/4, 3/4, 4/4, 5/4, 6/8, 7/8, 9/8, 12/8, plus a custom beat count (1–16).
+- Compound meters (6/8, 9/8, 12/8): the BPM counts the **dotted quarter** by default (6/8 at 60 = 2 felt beats per second), with an option to count eighths. Odd meters get a grouping (7/8 = 2+2+3, 3+2+2, 2+3+2), whose group starts are accented.
+- **Per-beat accent**: clicking a beat dot cycles *accent → normal → silent*, e.g. accent only beats 2 and 4 (backbeat practice) or leave beat 1 silent.
+
+**Subdivision:** none, eighths, triplets, sixteenths, swung eighths (adjustable swing ratio); subdivision clicks are quieter than beats, with their own volume.
+
+**Sound:** 3 synthesized timbres (click, woodblock, beep — no samples, works offline), master volume. Optional **visual-only mode** (screen flash, no sound) for loud rooms or recording.
+
+**Practice tools:**
+- **Speed trainer**: start BPM → target BPM, +N BPM every M bars (or every M seconds); stops rising at the target. Shows the current step.
+- **Muted bars (gap trainer)**: play X bars, then mute Y bars (beat dots keep moving) — to check whether you hold the tempo on your own.
+- **Session timer**: stop after N minutes; shows the elapsed time and bar count.
+
+**Comfort:**
+- Keyboard: Space = start/stop, ↑/↓ = ±1 BPM (Shift = ±5), T = tap.
+- Every setting is remembered (`usePersistentState`, keys `metronome:*`).
+- Keep the screen awake while running (Screen Wake Lock API, silently skipped where unsupported).
+
+**Architecture:**
+- `src/features/metronome/metronomeModel.ts` — pure, fully tested logic: the click events of one bar (offset in beats, beat/subdivision index, level accent / normal / sub / silent) for a meter + grouping + subdivision + swing; the tempo of bar *n* in the speed trainer; whether bar *n* is muted in the gap trainer; tap tempo averaging; the tempo name for a BPM.
+- `src/audio/metronome.ts` — the scheduler, following `src/audio/noteReflex.ts`: claims the single Transport through `transportOwner` (starting the metronome stops a Jam / reflex drill and vice versa), `scheduleRepeat` once per bar placing that bar's events, UI updates through `setTimeout` (not `Draw`, which stops in hidden tabs), state exposed through a `useSyncExternalStore` store (running, current beat, bar, current tempo).
+- Shared click voices: `jam.ts`, `reflex.ts` and `noteReflex.ts` each build the same square-wave click; move it into one `createClick()` helper (e.g. `src/audio/click.ts`) used by all four, with the new timbres.
+- `src/features/metronome/MetronomePage.tsx` + route `metronome` in `src/App.tsx` + entry in `TOOLS` (`src/app/Layout.tsx`) + `nav.metronome` and `metronome.*` strings in `src/i18n/messages.ts` (vi: *Máy đếm nhịp (Metronome)*).
+
+**Tasks:**
+- [ ] `metronomeModel.ts` + tests (meters, groupings, subdivisions, swing offsets, accents/silent beats, speed-trainer steps, gap bars, tap tempo).
+- [ ] `src/audio/click.ts` (shared click + 3 timbres) and switch the existing click users to it, without changing how they sound.
+- [ ] `src/audio/metronome.ts` scheduler: start/stop, live tempo change, transport ownership, beat callback.
+- [ ] `#/metronome` page, basic screen: tempo controls, tap tempo, time signature, beat dots, start/stop, keyboard shortcuts, persisted settings, phone layout.
+- [ ] Advanced section: subdivision, per-beat accents, grouping, timbre/volume, visual-only mode, speed trainer, gap trainer, session timer, wake lock.
+- [ ] Page tests (`MetronomePage.test.tsx`: renders from the Tools menu, tap tempo sets the BPM, beat dots cycle accents, settings survive a reload) and the bilingual UI strings.
+- [ ] Optional: an embeddable `<Metronome />` in lesson R1 "Beats and counting" (preset to that lesson's meter), and a "metronome" link from the Rhythm Trainer.
 
 ## 10. Status (2026-10-19)
 
