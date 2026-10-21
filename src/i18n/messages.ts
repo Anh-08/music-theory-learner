@@ -613,6 +613,16 @@ export const vi = {
   'sheet.sc.edit': 'Delete xóa nốt, Backspace xóa nốt trước, Ctrl+Z / Ctrl+Shift+Z hoàn tác / làm lại, Ctrl+C / Ctrl+V chép / dán ô nhịp, Esc bỏ chọn',
   'sheet.phoneHint': 'Trên điện thoại: chạm vào bản nhạc để đặt con trỏ, chạm cần đàn để nhập nốt. Soạn đầy đủ nên dùng máy tính.',
   'sheet.scoreAria': 'Bản nhạc: bấm để đặt con trỏ',
+  'sheet.play': '▶ Phát từ đầu',
+  'sheet.playCursor': '▶ Từ con trỏ (Space)',
+  'sheet.stop': '■ Dừng',
+  'sheet.countingIn': 'Đếm vào…',
+  'sheet.speed': 'Tốc độ {pct}%',
+  'sheet.loop': 'Lặp lại',
+  'sheet.loopHint': 'Lặp các ô nhịp đang chọn, hoặc cả bài khi không chọn gì.',
+  'sheet.countIn': 'Đếm vào 1 ô',
+  'sheet.metronome': 'Metronome',
+  'sheet.sc.play': 'Space phát / dừng từ con trỏ',
 }
 
 export type MessageKey = keyof typeof vi
@@ -1231,6 +1241,16 @@ export const en: Record<MessageKey, string> = {
   'sheet.sc.edit': 'Delete removes the note, Backspace the one before, Ctrl+Z / Ctrl+Shift+Z undo / redo, Ctrl+C / Ctrl+V copy / paste bars, Esc clears the selection',
   'sheet.phoneHint': 'On a phone: tap the score to place the cursor and tap the neck to enter notes. Full editing works best on a computer.',
   'sheet.scoreAria': 'Score: click to place the cursor',
+  'sheet.play': '▶ Play from start',
+  'sheet.playCursor': '▶ From cursor (Space)',
+  'sheet.stop': '■ Stop',
+  'sheet.countingIn': 'Count-in…',
+  'sheet.speed': 'Speed {pct}%',
+  'sheet.loop': 'Loop',
+  'sheet.loopHint': 'Loops the selected bars, or the whole score when nothing is selected.',
+  'sheet.countIn': 'One-bar count-in',
+  'sheet.metronome': 'Metronome',
+  'sheet.sc.play': 'Space plays / stops from the cursor',
 }
 
 export const MESSAGES = { vi, en }

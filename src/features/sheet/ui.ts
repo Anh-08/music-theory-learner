@@ -9,3 +9,13 @@ export function keyName(k: string): string {
   const minor = k.endsWith('m')
   return displayNote(minor ? k.slice(0, -1) : k) + (minor ? 'm' : '')
 }
+
+export interface PlaybackSettings {
+  /** Tempo factor in percent (50–150). */
+  speed: number
+  loop: boolean
+  countIn: boolean
+  metronome: boolean
+}
+
+export const DEFAULT_PLAYBACK: PlaybackSettings = { speed: 100, loop: false, countIn: true, metronome: false }

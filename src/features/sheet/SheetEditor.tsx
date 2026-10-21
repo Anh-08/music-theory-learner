@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useRef, useState, useSyncExternalStore, type KeyboardEvent } from 'react'
 import { Link, useParams } from 'react-router'
+import { playScore, scorePlayerStore, stopScore, useScorePlayer } from '../../audio/scorePlayer'
 import { Fretboard } from '../../components/Fretboard/Fretboard'
 import { Piano } from '../../components/Piano/Piano'
 import { ScoreView } from '../../components/Score/ScoreView'
@@ -12,9 +13,10 @@ import { fretOf, midiAt, scoreKey, scoreTuning, spellMidi, type Score } from '..
 import { getEvent, refsInRange } from '../../theory/scoreEdit'
 import type { ScoreViewMode } from '../../theory/scoreLayout'
 import { MetaBar, Toolbar } from './EditorPanels'
+import { PlaybackBar } from './PlaybackBar'
 import { editorReducer, initEditor, keyToAction } from './editorState'
 import { lastSaveFailed, loadSheet, saveSheet, storageUsage, subscribeSheets } from './sheetStore'
-import { card } from './ui'
+import { DEFAULT_PLAYBACK, card, type PlaybackSettings } from './ui'
 
 /** `#/sheet/:id` — the editor for one saved score. */
 export function SheetEditor() {
@@ -49,6 +51,25 @@ function Editor({ initial }: { initial: Score }) {
   const [chordMode, setChordMode] = useState(false)
   const box = useRef<HTMLDivElement>(null)
   const shift = useRef(false)
+  const player = useScorePlayer()
+  const [playback, setPlayback] = usePersistentState<PlaybackSettings>('sheet:playback', DEFAULT_PLAYBACK)
+
+  const play = (fromCursor: boolean) => {
+    const a = state.anchor
+    const bars: [number, number] | undefined = playback.loop && a ? [Math.min(a.measure, state.cursor.measure), Math.max(a.measure, state.cursor.measure)] : undefined
+    void playScore(score, {
+      instrument,
+      speed: playback.speed / 100,
+      from: fromCursor && !bars ? state.cursor : undefined,
+      bars,
+      loop: playback.loop,
+      countIn: playback.countIn,
+      metronome: playback.metronome,
+    })
+  }
+
+  // Leaving the editor stops the music.
+  useEffect(() => () => void (scorePlayerStore.get().playing && stopScore()), [])
 
   // Autosave every change (scores are small); an untouched score keeps its "last edited" date.
   useEffect(() => {
@@ -68,6 +89,12 @@ function Editor({ initial }: { initial: Score }) {
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (isTyping(e.target)) return
+    if (e.key === ' ') {
+      e.preventDefault()
+      if (player.playing) void stopScore()
+      else play(true)
+      return
+    }
     const action = keyToAction(e, performance.now())
     if (!action) return
     e.preventDefault()
@@ -77,7 +104,9 @@ function Editor({ initial }: { initial: Score }) {
   const tuning = scoreTuning(score)
   const key = scoreKey(score)
   const event = getEvent(score, state.cursor)
-  const marks = (event?.notes ?? []).flatMap((n) => {
+  // While playing, the instrument shows the notes being played; otherwise the notes under the cursor.
+  const shown = player.playing && player.current ? getEvent(score, player.current) : event
+  const marks = (shown?.notes ?? []).flatMap((n) => {
     const fret = fretOf(score, n)
     if (!Number.isFinite(fret)) return []
     return [{ string: n.string, fret: fret + score.capo, highlight: { label: displayNote(Note.pitchClass(spellMidi(n.midi, key))), isRoot: false } }]
@@ -96,7 +125,9 @@ function Editor({ initial }: { initial: Score }) {
       {saveFailed && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">{t('sheet.saveFailed')}</p>}
       {!saveFailed && usage > 0.8 && <p className="text-sm text-amber-700 dark:text-amber-400">{t('sheet.storageHigh', { pct: Math.round(usage * 100) })}</p>}
 
-      <div className={`${card} z-10 !p-3 shadow-sm md:sticky md:top-0`}>
+      <div className={`${card} z-10 space-y-3 !p-3 shadow-sm md:sticky md:top-0`}>
+        <PlaybackBar playing={player.playing} countingIn={player.countIn} settings={playback} onSettings={setPlayback} onPlay={play} onStop={() => void stopScore()} />
+        <hr className="border-stone-200 dark:border-stone-800" />
         <Toolbar state={state} dispatch={dispatch} chordMode={chordMode} onChordMode={setChordMode} />
       </div>
 
@@ -106,6 +137,7 @@ function Editor({ initial }: { initial: Score }) {
           view={view}
           cursor={state.cursor}
           selection={selection}
+          playing={player.playing ? player.current : null}
           onPick={(hit, e) => {
             dispatch({ type: 'pick', hit, extend: e.shiftKey })
             box.current?.focus({ preventScroll: true })
@@ -117,13 +149,14 @@ function Editor({ initial }: { initial: Score }) {
         <p className="text-sm text-stone-500">{instrument === 'piano' ? t('sheet.instrumentHintPiano') : t('sheet.instrumentHint')}</p>
         <div className="overflow-x-auto">
           {instrument === 'piano' ? (
-            <Piano startMidi={40} endMidi={84} highlights={new Map()} activeMidis={new Set(event?.notes.map((n) => n.midi))} onKeyClick={(m) => dispatch({ type: 'insertMidi', midi: m, chord: addToChord() })} />
+            <Piano startMidi={40} endMidi={84} highlights={new Map()} activeMidis={new Set(shown?.notes.map((n) => n.midi))} onKeyClick={(m) => dispatch({ type: 'insertMidi', midi: m, chord: addToChord() })} />
           ) : (
             <Fretboard
               tuning={tuning}
               fretCount={FRETS}
               highlights={new Map()}
               marks={marks}
+              activePositions={player.playing ? marks : undefined}
               onNoteClick={(p) => {
                 // Frets are counted from the nut on the drawn neck; below the capo nothing sounds, open = capo.
                 const fret = p.fret === 0 ? score.capo : p.fret
@@ -141,7 +174,7 @@ function Editor({ initial }: { initial: Score }) {
       <details className={`${card} !p-3 text-sm`}>
         <summary className="cursor-pointer font-medium">{t('sheet.shortcuts')}</summary>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-stone-600 dark:text-stone-400">
-          {(['move', 'string', 'fret', 'duration', 'tech', 'edit'] as const).map((k) => (
+          {(['play', 'move', 'string', 'fret', 'duration', 'tech', 'edit'] as const).map((k) => (
             <li key={k}>{t(`sheet.sc.${k}`)}</li>
           ))}
         </ul>

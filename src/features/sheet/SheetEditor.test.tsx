@@ -1,16 +1,28 @@
 import { fireEvent, screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppRoutes } from '../../App'
+import { playScore } from '../../audio/scorePlayer'
 import { renderWithProviders } from '../../test/renderWithProviders'
 import { listSheets, loadSheet } from './sheetStore'
 
 // VexFlow needs real font metrics; the drawing itself is not part of these tests.
 vi.mock('../../components/Score/loadVex', () => ({ loadVex: () => new Promise(() => {}) }))
+vi.mock('../../audio/scorePlayer', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../../audio/scorePlayer')>()
+  return {
+    ...actual,
+    playScore: vi.fn(async () => actual.scorePlayerStore.set({ playing: true, current: null })),
+    stopScore: vi.fn(async () => actual.scorePlayerStore.set({ playing: false, current: null })),
+  }
+})
 
 const editor = () => document.querySelector('div[tabindex="-1"]') as HTMLElement
 
 describe('Sheet & tab editor', () => {
-  beforeEach(() => localStorage.clear())
+  beforeEach(() => {
+    localStorage.clear()
+    vi.mocked(playScore).mockClear()
+  })
 
   it('opens from the Tools menu and creates a score from a template', () => {
     renderWithProviders(<AppRoutes />, { route: '/' })
@@ -68,5 +80,19 @@ describe('Sheet & tab editor', () => {
   it('shows a message for an unknown score', () => {
     renderWithProviders(<AppRoutes />, { route: '/sheet/nope' })
     expect(screen.getByText('Không tìm thấy bản nhạc này trong trình duyệt.')).toBeInTheDocument()
+  })
+
+  it('plays from the start or from the cursor with the playback settings', () => {
+    renderWithProviders(<AppRoutes />, { route: '/sheet' })
+    fireEvent.click(screen.getByRole('button', { name: '+ Tạo bản mới' }))
+    fireEvent.keyDown(editor(), { key: '3' })
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Metronome' }))
+    fireEvent.click(screen.getByRole('button', { name: '▶ Phát từ đầu' }))
+    expect(playScore).toHaveBeenLastCalledWith(expect.objectContaining({ id: listSheets()[0].id }), expect.objectContaining({ from: undefined, metronome: true, countIn: true, speed: 1 }))
+    expect(screen.getByRole('button', { name: '■ Dừng' })).toBeInTheDocument()
+    fireEvent.keyDown(editor(), { key: ' ' })
+    expect(screen.getByRole('button', { name: '▶ Phát từ đầu' })).toBeInTheDocument()
+    fireEvent.keyDown(editor(), { key: ' ' })
+    expect(playScore).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ from: { measure: 0, event: 0, string: 3 } }))
   })
 })

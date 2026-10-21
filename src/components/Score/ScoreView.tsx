@@ -81,6 +81,12 @@ export function ScoreView({ score, view, cursor, selection, playing, labels, onP
 
   const cur = geo && cursor ? cursorBox(geo, cursor.measure, cursor.event, cursor.string) : null
   const play = geo && playing ? cursorBox(geo, playing.measure, playing.event, 1) : null
+  const playBox = useRef<HTMLDivElement>(null)
+  const playTop = play?.top
+  // Keep the line being played in view.
+  useEffect(() => {
+    playBox.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' })
+  }, [playTop])
   const overBars = geo ? geo.measures.filter((m) => score.measures[m.index] && measureFill(score.measures[m.index], score.timeSig) === 'over') : []
 
   return (
@@ -106,7 +112,7 @@ export function ScoreView({ score, view, cursor, selection, playing, labels, onP
               const b = cursorBox(geo, ref.measure, ref.event, 1)
               return b ? <div key={`sel-${ref.measure}-${ref.event}`} className="absolute rounded bg-sky-400/20" style={{ left: b.x - 12, top: b.top + 24, width: 24, height: b.bottom - b.top - 30 }} /> : null
             })}
-            {play && <div className="absolute rounded bg-amber-400/30" style={{ left: play.x - 13, top: play.top + 20, width: 26, height: play.bottom - play.top - 24 }} />}
+            {play && <div ref={playBox} className="absolute rounded bg-amber-400/30" style={{ left: play.x - 13, top: play.top + 20, width: 26, height: play.bottom - play.top - 24 }} />}
             {cur && (
               <>
                 <div className="absolute w-0.5 bg-sky-500" style={{ left: cur.x - 1, top: cur.top + 24, height: cur.bottom - cur.top - 30 }} />
