@@ -72,6 +72,7 @@
    - Adjust tempo, metronome, a "drums + bass only" mode so the user comps along, and a mode that raises the tempo after every loop.
    - Create custom rhythms by clicking the grid and saving them.
 7. **Metronome** — a standalone practice metronome: tempo + tap tempo, any time signature, subdivisions, per-beat accents, speed trainer and muted bars. See Phase 9.
+8. **Sheet & tab editor** — write riffs, licks and solos as tab + staff, play them back with the fretboard following, label each note by its degree, and save / print / export (ASCII tab, MusicXML) / share by link. See Phase 10.
 
 ### 3.2. Curriculum
 Split into modules, each with several short lessons (10–15 minutes). Every lesson follows the same structure:
@@ -492,11 +493,116 @@ Goal: a metronome good enough to replace a phone app while practising — open i
 
 ✅ *Result: a standalone metronome in the Tools menu, usable on a phone, with tap tempo, any meter, subdivisions, accents and practice tools.*
 
+### Phase 10 — Sheet & tab editor (Tools menu) (planned 2026-10-21)
+
+Goal: write down your own riffs, licks, solos and arrangements as **tab + staff**, hear them back, and keep or share them. It closes the loop of the app: after learning a scale, a chord-tone idea or a lick in the Jam Room, the user can *notate* what they played and see *why* it works (each note labelled by its degree against the chord). Guitar-first, like the rest of the app; piano users get the staff view.
+
+Defaults chosen in this plan (to confirm with the user, see "Open decisions" below): one voice per staff, staff + tab shown together, the notation drawn by **VexFlow** (MIT) loaded only on this page, scores stored in the browser, no song transcriptions shipped with the app.
+
+**Screen** (new page `#/sheet`, *Tools* menu → *Sheet & tab*; vi: *Soạn sheet & tab (Tab editor)*):
+- **Library view** (`#/sheet`): the user's scores as cards (title, key, tempo, last edited) — New, Duplicate, Delete (with confirmation), Import. A few starter templates written for the app (empty 4/4 tab, 12-bar blues comping, a pentatonic lick sheet) — no copyrighted songs.
+- **Editor view** (`#/sheet/:id`):
+  - Top bar: title, tempo, time signature, key signature, tuning + capo, view switch *Staff + tab / Tab only / Staff only*.
+  - The score in the middle, wrapped into systems that fit the screen width; a blinking **cursor** (current bar, beat, string) and a selection range.
+  - A **duration palette** (whole → 16th, dot, triplet, rest, tie) and a **technique palette** (hammer-on, pull-off, slide, bend ½/full, vibrato, palm mute, dead note ×, let ring, natural harmonic).
+  - The virtual **fretboard** under the score (piano keyboard for piano users) — the main way to enter notes, and during playback it lights up the notes being played.
+  - Transport bar: Play / Stop, play from cursor, loop the selected bars, tempo % slider (50–150%, for slow practice), count-in, metronome on/off (shared `src/audio/click.ts`).
+- Phone: viewing, playback and tap-to-enter on the fretboard work at phone width; the palettes collapse into a bottom sheet. Heavy editing is designed for desktop first.
+
+**Data model** (`src/theory/score.ts`, pure, no React / Tone.js):
+```ts
+interface Score {
+  id: string; title: string; version: 1
+  tempo: number; timeSig: [number, number]; keySig: string   // e.g. 'G', 'Em'
+  tuning: string; capo: number                               // tuning id from TUNINGS
+  measures: Measure[]
+}
+interface Measure { events: ScoreEvent[]; chords?: { beat: number; symbol: string }[]; repeat?: 'start' | 'end'; endings?: number[] }
+interface ScoreEvent {
+  duration: 'w' | 'h' | 'q' | '8' | '16' | '32'; dots: 0 | 1 | 2; tuplet?: 3
+  rest?: boolean; tieToNext?: boolean
+  notes: { midi: number; string: number; tech?: Technique[] }[]   // several notes = a chord / double stop
+}
+```
+- Pitch is stored as **midi + string**; the fret is derived (`midi − open string − capo`). Changing the capo or transposing keeps the notes musically correct, and the tab follows.
+- Note spelling comes from the key signature (F major writes B♭, not A♯) — reuse `noteFromMidi` / tonal, as everywhere else in the app.
+- `chords` holds optional chord symbols above the staff (parsed with `parseProgression`).
+
+**Editing rules** (`src/theory/scoreEdit.ts`, pure functions returning a new `Score`, so undo / redo is just a history stack):
+- Insert / replace / delete an event at the cursor; add a note to the current event (build a chord); change duration, dots, tuplet, tie, techniques.
+- **Bar filling**: each bar must add up to the time signature. Entering past the end of a bar moves to the next bar; a note that does not fit is split and tied across the bar line; short bars are padded with rests when leaving them; a bar that is too full is flagged in red (never silently cut).
+- **String choice** when a pitch arrives without a string (piano, MIDI, mic, transpose): pick the playable position closest to the previous note's fret (`positionForMidi`), keeping within a 4–5 fret hand span when possible.
+- Transpose the selection or the whole score by semitones or to a new key; *octave up/down*; *move to another string* (same pitch, other position) with Alt+↑/↓.
+- Copy / paste / duplicate bars; insert / delete bars; repeat signs and 1st/2nd endings (playback follows them).
+- Undo / redo (Ctrl+Z / Ctrl+Shift+Z), up to 100 steps.
+
+**Ways to enter notes:**
+1. **Click the fretboard** (`<Fretboard onNoteClick>`): exact string + fret at the cursor with the current duration; Shift+click adds the note to the current event (chord).
+2. **Keyboard, Guitar Pro style**: ←/→ move between events, ↑/↓ between strings, digits type the fret (two digits within 0.5 s → fret 12), `+`/`−` change duration, `.` dot, `R` rest, `T` tie, `H`/`P`/`S`/`B` techniques, Delete removes, Space plays from the cursor.
+3. **Real instrument** (`useLiveNote` from `src/input/`): MIDI keyboard or mic — each stable note heard is entered at the cursor with the current duration ("step entry"; no real-time rhythm transcription).
+4. **Insert a chord shape**: pick a chord → its shape from `chordShapes` (`src/theory/guitarShapes.ts`) is entered as one event, and its symbol is written above the staff.
+5. **Paste ASCII tab** (the `e|--3--5--|` text found on forums): parsed into notes with a default duration per column; the user then fixes the rhythm. Best effort — unknown symbols are ignored with a warning.
+
+**Playback** (`src/audio/scorePlayer.ts`, following `src/audio/metronome.ts`):
+- `scoreToEvents(score)` (pure, tested) turns the score into timed `PlayEvent`s, unrolling repeats/endings, adding ties, applying tempo % and swing; bends/slides become short pitch glides where the voice allows, otherwise grace notes.
+- Claims the Transport through `transportOwner` (starting it stops the Jam Room / metronome / reflex drills and vice versa), UI updates through `setTimeout`, state through a `useSyncExternalStore` store (playing, current event, bar).
+- Cursor and fretboard follow the music; auto-scroll keeps the current system in view.
+- Voice follows the main instrument (guitar PluckSynth / piano samples).
+
+**Learning overlays** (what makes it more than a tab app):
+- **Degree labels**: under each note show its interval to the chord above it (1, ♭3, 5, ♭7…) or its scale degree in the key — the same label modes as the Explorer.
+- **Colour by function**: chord tones / scale tones / outside notes, using `markerColors`; helps check a solo against the changes.
+- **Scale check**: warn on notes outside the chosen scale (optional).
+- **Send to the Jam Room**: the score's chord symbols open `#/jam?p=...&key=...&tempo=...` to improvise over the same changes; and the other way, a *Notate* button in the Jam Room opens a new score with that progression already written as chord symbols over empty bars.
+
+**Saving, import & export** (`src/features/sheet/sheetStore.ts`):
+- Every score autosaves to `localStorage` (`mtl:sheets:index` + `mtl:sheets:<id>`), versioned (`version: 1`) with a migration hook. A warning when storage is nearly full.
+- Included in the existing progress **backup / restore** JSON (`ProgressBackup`).
+- **Export**: the app's own `.json`; **ASCII tab** (`.txt`, copy to clipboard); **MusicXML** (`.musicxml`, opens in MuseScore / Guitar Pro / Sibelius); **PDF / print** through a print stylesheet (score only, no UI).
+- **Import**: the app's `.json`, ASCII tab; MusicXML import (single part, single voice) as a later task.
+- **Share by link**: the score compressed (`CompressionStream('deflate')` → base64url) into `#/sheet/shared?d=...`; opening it shows a read-only copy with *Save to my library*. Nothing is uploaded anywhere.
+
+**Rendering** (`src/components/Score/`):
+- `ScoreView` draws a `Score` with VexFlow (`Stave` + `TabStave`, beams, ties, techniques, chord symbols), **lazy-loaded** with `import()` so other pages do not grow; the PWA caches it after the first visit.
+- Layout (how many bars per system) is a pure function in `src/theory/scoreLayout.ts`, tested, so VexFlow only draws.
+- Click / tap on the drawing maps back to (bar, event, string) to move the cursor.
+- If VexFlow ever gets in the way, the model and layout stay the same and only `ScoreView` changes.
+
+**Lessons** (small, at the end of the phase):
+- A read-only `<TabView src="..." />` MDX component to show short licks inside lessons (pentatonic licks in Module 5, chord-tone lines in Module 7), with a play button and *Open in editor*.
+- A short bilingual lesson "Writing your licks down" (how to read tab rhythm, the techniques symbols) embedding a small editor.
+
+**Architecture summary:**
+- `src/theory/score.ts`, `scoreEdit.ts`, `scoreLayout.ts`, `asciiTab.ts`, `musicXml.ts` — pure, fully tested.
+- `src/audio/scorePlayer.ts` — scheduler.
+- `src/components/Score/ScoreView.tsx` (VexFlow), `TabView.tsx` (read-only).
+- `src/features/sheet/` — `SheetLibrary.tsx`, `SheetEditor.tsx`, `sheetStore.ts`, palettes, keyboard handling.
+- Routes `sheet`, `sheet/:id`, `sheet/shared` in `src/App.tsx`; entry in `TOOLS` (`src/app/Layout.tsx`); `nav.sheet` and `sheet.*` strings in `src/i18n/messages.ts`.
+
+**Tasks:**
+- [ ] 10.1 Model: `score.ts` (types, fret ↔ midi with tuning + capo, spelling, durations in ticks) + `scoreEdit.ts` (insert / delete / chord / duration / bar filling with ties / string choice / transpose / copy-paste / repeats) + tests.
+- [ ] 10.2 Rendering: add VexFlow (lazy), `scoreLayout.ts` + tests, `ScoreView` for staff + tab, tab only, staff only; techniques and chord symbols; click → cursor mapping.
+- [ ] 10.3 Editor page: library + editor routes, cursor, palettes, fretboard entry, keyboard entry, chord-shape insert, undo/redo, autosave, phone layout.
+- [ ] 10.4 Playback: `scoreToEvents` + tests (repeats, ties, tuplets, tempo %), `scorePlayer.ts` with Transport ownership, cursor/fretboard follow, loop selection, count-in.
+- [ ] 10.5 Real-instrument step entry (MIDI / mic) with automatic string choice.
+- [ ] 10.6 Import / export: JSON, ASCII tab (both ways) + tests, MusicXML export + tests (validated against a sample file), print stylesheet, share link, backup integration.
+- [ ] 10.7 Learning overlays: degree labels, colour by function, scale check, Jam Room ↔ editor links.
+- [ ] 10.8 `<TabView>` in MDX, a few licks added to Modules 5 and 7, the short lesson; page tests (`SheetEditor.test.tsx`: create a score from the Tools menu, enter notes by fretboard and keyboard, undo, survives a reload, export ASCII tab) and bilingual UI strings.
+- [ ] Later: MusicXML import, a second voice (bass + melody), grand staff for piano (two hands), Guitar Pro file import.
+
+**Open decisions (to confirm with the user before starting):**
+1. Scope: *riff / lick / solo tab with staff* (this plan) — or a **chord sheet** (lyrics + chords above them, the "sheet hợp âm" used for singing) — or both? A chord-sheet mode is simple to add (text + chord symbols, transpose, print) and could be done first as a small step.
+2. Piano: staff only on a single treble staff in this phase, grand staff later — OK?
+3. VexFlow as a new dependency (MIT, loaded only on this page) instead of drawing the staff by hand — OK?
+4. Editing on phones: view + simple tap entry only, full editing on desktop — OK?
+
+✅ *Expected result: write a lick or solo as tab + staff, hear it back with the cursor and fretboard following, see each note's degree against the chord, and save, print, export or share it.*
+
 ## 10. Status (2026-10-21)
 
 All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
-Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21.
+Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21. Phase 10 (sheet & tab editor) is planned, waiting for the open decisions to be confirmed.
 
 Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key. The note reflex trainer lets users set how many frets their neck has (12–24, default 22 — e.g. 20 on a Taylor 214ce), with an advanced per-string override for necks whose strings have different fret counts; the upper zone runs from fret 12 to the last fret (at most 23, so zones stay unambiguous).
 
@@ -528,7 +634,7 @@ Ideas for later:
 ## 8. Open questions
 
 Things that can be decided along the way:
-1. Show staff notation (sheet music) for piano? If so, use **VexFlow** or **abcjs**.
+1. Show staff notation (sheet music) for piano? → Phase 10 proposes **VexFlow** (staff + tab); grand staff for piano comes later.
 2. Optimise the UI for phones from the start, or prioritise desktop (the virtual fretboard is wide)?
 3. Which Vietnamese songs to use as progression analysis examples in Module 4 and as examples for each comping rhythm?
 4. Build a similar comping track for piano (left-hand comping, arpeggio patterns, comping)?
@@ -537,4 +643,4 @@ Things that can be decided along the way:
 
 ## 9. Next step
 
-Start **Phase 0**: set up the project, `git init`, create the GitHub repo and configure GitHub Pages deployment.
+Confirm the open decisions of **Phase 10** (sheet & tab editor), then start with task 10.1 (the score model).
