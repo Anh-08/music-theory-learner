@@ -10,3 +10,13 @@
     transform: scaleX(0);
   }
 }
+
+/* Visual-only metronome: the card flashes on every beat and fades out. */
+@keyframes metronome-flash {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}

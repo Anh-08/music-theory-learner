@@ -18,6 +18,7 @@ Detailed plan: [PLAN.md](PLAN.md)
 - **Chord reflex**: chords keep appearing with the metronome, never repeating a fixed loop but always connecting smoothly (familiar loops, function-based generation, your own, or a "chaos" mode with any chord from any key); strum on the beat or play one rhythm pass per chord, preview the next chord, Easy / Medium / Hard levels.
 - **Note reflex**: see a note name, play it on the fretboard without counting frets. Targets are located by neck zone (frets 0–11 / 12–22) on a small neck, or by octave name (E2, E3) in advanced mode; one string, note + string, find every position, exact pitch, or inside a fret window; time limit or metronome; answer by clicking or on a real instrument (mic / MIDI); weak positions come back more often, with a blind-spot heat map and personal records after each session.
 - **Tools**: Key Explorer (circle of fifths, diatonic chords and their functions), chord identifier, real-instrument input (MIDI or mic).
+- **Metronome**: tap tempo, any time signature (odd meters with groupings, compound meters by dotted quarter or eighth), subdivisions and swing, per-beat accents, speed trainer, muted bars, session timer, visual-only mode.
 - **Daily review**: 7 decks of randomly generated questions on a spaced-repetition schedule.
 - Progress is stored in your browser and can be exported / imported as JSON. No accounts, no data sent anywhere.
 
@@ -46,7 +47,7 @@ npm run dev
 | `src/audio/` | Audio with Tone.js: note playback, the Jam backing track, comping rhythms, grooves |
 | `src/input/` | Real instruments: Web MIDI, pitch and onset detection through the mic |
 | `src/components/` | Fretboard, keyboard, rhythm grid, and the components used in lessons and exercises |
-| `src/features/` | Pages: curriculum, lessons, Explorer, Jam Room, guitar comping, keys, chord identifier, review, connect |
+| `src/features/` | Pages: curriculum, lessons, Explorer, Jam Room, guitar comping, keys, chord identifier, metronome, review, connect |
 | `src/lessons/` | MDX lessons: `<module>/<NN-slug>.mdx` (Vietnamese) and `.en.mdx` (English) |
 | `src/i18n/` | Interface strings in both languages |
 

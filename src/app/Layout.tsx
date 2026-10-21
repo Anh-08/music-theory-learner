@@ -23,6 +23,7 @@ const TOOLS: { to: string; label: MessageKey }[] = [
   { to: '/explorer', label: 'nav.explorer' },
   { to: '/keys', label: 'nav.keys' },
   { to: '/identify', label: 'nav.identify' },
+  { to: '/metronome', label: 'nav.metronome' },
   { to: '/connect', label: 'nav.connect' },
 ]
 

@@ -478,21 +478,25 @@ Goal: a metronome good enough to replace a phone app while practising — open i
 **Architecture:**
 - `src/features/metronome/metronomeModel.ts` — pure, fully tested logic: the click events of one bar (offset in beats, beat/subdivision index, level accent / normal / sub / silent) for a meter + grouping + subdivision + swing; the tempo of bar *n* in the speed trainer; whether bar *n* is muted in the gap trainer; tap tempo averaging; the tempo name for a BPM.
 - `src/audio/metronome.ts` — the scheduler, following `src/audio/noteReflex.ts`: claims the single Transport through `transportOwner` (starting the metronome stops a Jam / reflex drill and vice versa), `scheduleRepeat` once per bar placing that bar's events, UI updates through `setTimeout` (not `Draw`, which stops in hidden tabs), state exposed through a `useSyncExternalStore` store (running, current beat, bar, current tempo).
-- Clicks go through the shared `src/audio/click.ts` (done before this phase, see below); the page adds its own volume on top of the shared click volume.
+- Clicks go through the shared `src/audio/click.ts` (done before this phase, see below); the page only adds the subdivision volume.
 - `src/features/metronome/MetronomePage.tsx` + route `metronome` in `src/App.tsx` + entry in `TOOLS` (`src/app/Layout.tsx`) + `nav.metronome` and `metronome.*` strings in `src/i18n/messages.ts` (vi: *Máy đếm nhịp (Metronome)*).
 
 **Tasks:**
-- [ ] `metronomeModel.ts` + tests (meters, groupings, subdivisions, swing offsets, accents/silent beats, speed-trainer steps, gap bars, tap tempo).
-- [ ] `src/audio/metronome.ts` scheduler: start/stop, live tempo change, transport ownership, beat callback.
-- [ ] `#/metronome` page, basic screen: tempo controls, tap tempo, time signature, beat dots, start/stop, keyboard shortcuts, persisted settings, phone layout.
-- [ ] Advanced section: subdivision, per-beat accents, grouping, timbre/volume, visual-only mode, speed trainer, gap trainer, session timer, wake lock.
-- [ ] Page tests (`MetronomePage.test.tsx`: renders from the Tools menu, tap tempo sets the BPM, beat dots cycle accents, settings survive a reload) and the bilingual UI strings.
+- [x] `metronomeModel.ts` + tests (meters, groupings, subdivisions, swing offsets, accents/silent beats, speed-trainer steps, gap bars, tap tempo).
+- [x] `src/audio/metronome.ts` scheduler: start/stop, live tempo change, transport ownership, beat callback.
+- [x] `#/metronome` page, basic screen: tempo controls, tap tempo, time signature, beat dots, start/stop, keyboard shortcuts, persisted settings, phone layout.
+- [x] Advanced section: subdivision, per-beat accents, grouping, timbre/volume, visual-only mode, speed trainer, gap trainer, session timer, wake lock.
+- [x] Page tests (`MetronomePage.test.tsx`: renders from the Tools menu, tap tempo sets the BPM, beat dots cycle accents, settings survive a reload) and the bilingual UI strings.
 
-## 10. Status (2026-10-19)
+> Note: the `#/metronome` page (*Tools* menu). Logic in `src/features/metronome/metronomeModel.ts`, the scheduler in `src/audio/metronome.ts` (Transport `scheduleRepeat` once per pulse; the page's `plan(bar, elapsed)` is read at every bar start, so meter, accent, gap and trainer changes apply from the next bar; tempo changes from the controls apply at once). A pulse is one counted beat: 7/8 and "count by eighths" count eighths, 6/8 / 9/8 / 12/8 count dotted quarters by default. Accents have 4 levels (strong / medium / normal / silent); group starts default to medium. While the speed trainer is on, the main tempo controls are disabled and the trainer's start tempo is shown. Settings are stored in `mtl:metronome:settings`.
+
+✅ *Result: a standalone metronome in the Tools menu, usable on a phone, with tap tempo, any meter, subdivisions, accents and practice tools.*
+
+## 10. Status (2026-10-21)
 
 All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
-Phase 7 (chord reflex training) was finished on 2026-10-18 and Phase 8 (fretboard note reflex training) on 2026-10-19.
+Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21.
 
 Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key. The note reflex trainer lets users set how many frets their neck has (12–24, default 22 — e.g. 20 on a Taylor 214ce), with an advanced per-string override for necks whose strings have different fret counts; the upper zone runs from fret 12 to the last fret (at most 23, so zones stay unambiguous).
 

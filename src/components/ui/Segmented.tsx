@@ -15,7 +15,7 @@ export function Segmented<T extends string>({ label, value, options, onChange }:
   return (
     <div>
       <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">{label}</span>
-      <div role="radiogroup" aria-label={label} className="inline-flex rounded-lg bg-stone-200 p-0.5 dark:bg-stone-800">
+      <div role="radiogroup" aria-label={label} className="inline-flex flex-wrap rounded-lg bg-stone-200 p-0.5 dark:bg-stone-800">
         {options.map((o) => (
           <button
             key={o.value}
