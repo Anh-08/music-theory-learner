@@ -7,6 +7,7 @@ import { Fretboard } from '../../components/Fretboard/Fretboard'
 import { MiniFretboard } from '../../components/Fretboard/MiniFretboard'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
+import { ClickSettings } from '../../components/ui/ClickSettings'
 import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
 import { useLiveInput, useLiveNote } from '../../input/useLiveInput'
@@ -477,6 +478,7 @@ export function FretReflex(props: FretReflexProps) {
               <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">{t('jam.tempo', { bpm: settings.tempo })}</span>
               <input type="range" min={30} max={160} value={settings.tempo} onChange={(e) => update({ tempo: Number(e.target.value) })} aria-label={t('jam.tempoAria')} className="w-40 accent-rose-500" />
             </label>
+            <ClickSettings />
           </>
         )}
       </div>

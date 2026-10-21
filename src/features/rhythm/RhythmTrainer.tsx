@@ -19,6 +19,7 @@ import { usePersistentState } from '../../store/usePersistentState'
 import { chordShapes, intervalLabel, makeHighlights, parseProgression, type ChordShape, type ProgressionChord, type StringFret } from '../../theory'
 import { ChordDiagram } from '../../components/ChordDiagram/ChordDiagram'
 import { shapeCaption, shapeIntervalLabels } from '../../components/ChordDiagram/shapeLabels'
+import { ClickSettings } from '../../components/ui/ClickSettings'
 import { chordIndexAtBar, chordLabel } from '../jam/jamModel'
 import { nextCustomId, rhythmLabel, timeSignature, toRhythm, type CustomRhythm } from './customRhythms'
 
@@ -288,6 +289,7 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
           <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">{t('jam.tempo', { bpm: tempo })}</span>
           <input type="range" min={40} max={200} value={tempo} onChange={(e) => setTempo(Number(e.target.value))} aria-label={t('jam.tempoAria')} className="w-40 accent-rose-500" />
         </label>
+        <ClickSettings />
         <div role="group" aria-label={t('jam.tracks')} className="flex flex-wrap gap-1">
           {TRACKS.map((track) => (
             <button

@@ -1,6 +1,7 @@
 import type * as ToneNs from 'tone'
 import type { ProgressionChord } from '../theory'
 import type { Groove } from './grooves'
+import { getClick, type Click } from './click'
 import { getTone, getVoice, type InstrumentId } from './instruments'
 import { buildJamEvents, loopBeats, type JamEvent, type JamTrack } from './jamEvents'
 import type { Rhythm } from './rhythms'
@@ -29,13 +30,16 @@ interface Kit {
   snare: ToneNs.NoiseSynth
   hat: ToneNs.NoiseSynth
   bass: ToneNs.MonoSynth
-  click: ToneNs.Synth
+  click: Click
   chop: ToneNs.NoiseSynth
 }
 
 let kitPromise: Promise<Kit> | null = null
 
-function createKit(T: Tone): Kit {
+/** The click sits a little under the band (about −4 dB) so it does not cover the drums. */
+const JAM_CLICK_LEVEL = 0.63
+
+function createKit(T: Tone, click: Click): Kit {
   const kick = new T.MembraneSynth({ pitchDecay: 0.03, octaves: 6, envelope: { attack: 0.001, decay: 0.3, sustain: 0 } }).toDestination()
   kick.volume.value = -4
   const snareFilter = new T.Filter(1800, 'highpass').toDestination()
@@ -51,8 +55,6 @@ function createKit(T: Tone): Kit {
     envelope: { attack: 0.005, decay: 0.2, sustain: 0.7, release: 0.15 },
   }).toDestination()
   bass.volume.value = -9
-  const click = new T.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 } }).toDestination()
-  click.volume.value = -14
   // Muted "chop": a short, dull knock.
   const chopFilter = new T.Filter(1400, 'bandpass').toDestination()
   const chop = new T.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).connect(chopFilter)
@@ -87,7 +89,7 @@ function at(T: Tone, time: number, fn: () => void) {
 /** Plays the progression loop with drums, bass and chord comping. Calling again while playing restarts with the new settings. */
 export async function startJam(opts: JamOptions): Promise<void> {
   const T = await getTone()
-  kitPromise ??= Promise.resolve(createKit(T))
+  kitPromise ??= getClick().then((click) => createKit(T, click))
   const [kit, voice] = await Promise.all([kitPromise, getVoice(opts.instrument)])
 
   claimTransport(release)
@@ -123,7 +125,7 @@ export async function startJam(opts: JamOptions): Promise<void> {
           at(T, time, () => part === thisPart && jamStore.set({ step: ev.step }))
           break
         case 'click':
-          if (!mutes.click) kit.click.triggerAttackRelease(ev.accent ? 'C6' : 'G5', 0.03, time, ev.accent ? 1 : 0.6)
+          if (!mutes.click) kit.click.tick(time, ev.accent, JAM_CLICK_LEVEL)
           break
         case 'strum':
           if (hitListeners.size) hitListeners.forEach((l) => l(time + outputLatency))

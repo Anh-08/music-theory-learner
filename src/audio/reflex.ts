@@ -1,6 +1,7 @@
 import { useSyncExternalStore } from 'react'
 import type * as ToneNs from 'tone'
 import { guitarVoicing, type ChordShape, type ProgressionChord } from '../theory'
+import { getClick, type Click } from './click'
 import { getTone, getVoice } from './instruments'
 import { rhythmBarEvents } from './jamEvents'
 import type { Rhythm } from './rhythms'
@@ -67,15 +68,13 @@ export function useReflexState(): ReflexState {
 }
 
 interface Kit {
-  click: ToneNs.Synth
+  click: Click
   chop: ToneNs.NoiseSynth
 }
 
 let kit: Kit | null = null
 
-function createKit(T: Tone): Kit {
-  const click = new T.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 } }).toDestination()
-  click.volume.value = -10
+function createKit(T: Tone, click: Click): Kit {
   const chopFilter = new T.Filter(1400, 'bandpass').toDestination()
   const chop = new T.NoiseSynth({ noise: { type: 'pink' }, envelope: { attack: 0.001, decay: 0.05, sustain: 0 } }).connect(chopFilter)
   chop.volume.value = -4
@@ -99,7 +98,7 @@ function at(T: Tone, time: number, fn: () => void) {
 /** Starts the chord tape: one bar of count-in, then a metronome click every beat; chords change after their beat count. */
 export async function startReflex(opts: ReflexOptions): Promise<void> {
   const T = await getTone()
-  kit ??= createKit(T)
+  kit ??= createKit(T, await getClick())
   const voice = await getVoice('guitar')
   const k = kit
 
@@ -122,7 +121,7 @@ export async function startReflex(opts: ReflexOptions): Promise<void> {
   const id = transport.scheduleRepeat((time) => {
     if (repeatId !== id) return
     if (countLeft > 0) {
-      k.click.triggerAttackRelease(countLeft === opts.beatsPerBar ? 'C6' : 'G5', 0.03, time)
+      k.click.tick(time, countLeft === opts.beatsPerBar)
       const n = countLeft
       at(T, time, () => repeatId === id && reflexStore.set({ countIn: n }))
       countLeft--
@@ -142,7 +141,7 @@ export async function startReflex(opts: ReflexOptions): Promise<void> {
     }
     const slot = queue[0]
     const beat = beatInSlot
-    k.click.triggerAttackRelease(totalBeats % opts.beatsPerBar === 0 ? 'C6' : 'G5', 0.03, time, totalBeats % opts.beatsPerBar === 0 ? 1 : 0.6)
+    k.click.tick(time, totalBeats % opts.beatsPerBar === 0)
 
     const frets = slot.shape?.frets
     if (opts.rhythm) {

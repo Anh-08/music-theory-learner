@@ -9,6 +9,7 @@ import { usePlayer } from '../../audio/usePlayer'
 import { InstrumentView } from '../../components/lesson/InstrumentView'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
+import { ClickSettings } from '../../components/ui/ClickSettings'
 import type { Locale } from '../../i18n/locale'
 import type { MessageKey } from '../../i18n/messages'
 import { useT, type Translate } from '../../i18n/useT'
@@ -280,6 +281,7 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
               <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">Tempo: {tempo} bpm</span>
               <input type="range" min={40} max={200} value={tempo} onChange={(e) => setTempo(Number(e.target.value))} aria-label="Tempo" className="w-40 accent-rose-500" />
             </label>
+            <ClickSettings />
             <div role="group" aria-label={t('jam.tracks')} className="flex gap-1">
               {TRACKS.map((track) => (
                 <button

@@ -7,6 +7,7 @@ import { shapeIntervalLabels } from '../../components/ChordDiagram/shapeLabels'
 import { RhythmGrid } from '../../components/RhythmGrid/RhythmGrid'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
+import { ClickSettings } from '../../components/ui/ClickSettings'
 import { errorMessage } from '../../i18n/errors'
 import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
@@ -240,6 +241,7 @@ export function ChordReflex({ page = false, source, songKey, level, seed: initia
           <span className="mb-1 block text-xs font-medium text-stone-500 dark:text-stone-400">{t('jam.tempo', { bpm: settings.tempo })}</span>
           <input type="range" min={40} max={200} value={settings.tempo} onChange={(e) => update({ tempo: Number(e.target.value) })} aria-label={t('jam.tempoAria')} className="w-40 accent-rose-500" />
         </label>
+        <ClickSettings />
       </div>
 
       <details className="rounded-lg bg-stone-50 p-3 dark:bg-stone-800/50">

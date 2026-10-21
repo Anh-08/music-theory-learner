@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import type * as ToneNs from 'tone'
+import { getClick } from './click'
 import { getTone } from './instruments'
 import { claimTransport, ownsTransport, releaseTransport } from './transportOwner'
 
@@ -42,7 +42,6 @@ export function useNoteMetronome(): NoteMetronomeState {
   return useSyncExternalStore(noteMetronomeStore.subscribe, noteMetronomeStore.get)
 }
 
-let click: ToneNs.Synth | null = null
 let repeatId: number | null = null
 
 function release() {
@@ -53,11 +52,7 @@ function release() {
 
 export async function startNoteMetronome(opts: NoteMetronomeOptions): Promise<void> {
   const T = await getTone()
-  if (!click) {
-    click = new T.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 } }).toDestination()
-    click.volume.value = -10
-  }
-  const c = click
+  const c = await getClick()
   claimTransport(release)
   const transport = T.getTransport()
   transport.stop()
@@ -70,7 +65,7 @@ export async function startNoteMetronome(opts: NoteMetronomeOptions): Promise<vo
     if (repeatId !== id) return
     const b = beat++
     const accent = ((b % opts.beatsPerBar) + opts.beatsPerBar) % opts.beatsPerBar === 0
-    c.triggerAttackRelease(accent ? 'C6' : 'G5', 0.03, time, accent ? 1 : 0.6)
+    c.tick(time, accent)
     // A timer instead of Draw: Draw stops while the tab is hidden.
     setTimeout(
       () => {

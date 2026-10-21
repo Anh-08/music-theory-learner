@@ -442,6 +442,8 @@ Goal: see a note name and fret it immediately, without counting frets. Notes app
 
 ### Phase 9 — Metronome (Tools menu)
 
+Decided with the user (2026-10-20): it stays in the *Tools* menu; no embedded metronome in lessons.
+
 Goal: a metronome good enough to replace a phone app while practising — open it, set the tempo, play. Today a click only exists inside other features (the Jam Room's click track, the reflex drills); there is no way to just practise with a click.
 
 **Screen** (new page `#/metronome`, *Tools* menu → *Metronome*):
@@ -461,7 +463,7 @@ Goal: a metronome good enough to replace a phone app while practising — open i
 
 **Subdivision:** none, eighths, triplets, sixteenths, swung eighths (adjustable swing ratio); subdivision clicks are quieter than beats, with their own volume.
 
-**Sound:** 3 synthesized timbres (click, woodblock, beep — no samples, works offline), master volume. Optional **visual-only mode** (screen flash, no sound) for loud rooms or recording.
+**Sound:** the shared click timbres and volume from `src/audio/click.ts` (soft / wood block / sharp — synthesized, works offline). Optional **visual-only mode** (screen flash, no sound) for loud rooms or recording.
 
 **Practice tools:**
 - **Speed trainer**: start BPM → target BPM, +N BPM every M bars (or every M seconds); stops rising at the target. Shows the current step.
@@ -476,17 +478,15 @@ Goal: a metronome good enough to replace a phone app while practising — open i
 **Architecture:**
 - `src/features/metronome/metronomeModel.ts` — pure, fully tested logic: the click events of one bar (offset in beats, beat/subdivision index, level accent / normal / sub / silent) for a meter + grouping + subdivision + swing; the tempo of bar *n* in the speed trainer; whether bar *n* is muted in the gap trainer; tap tempo averaging; the tempo name for a BPM.
 - `src/audio/metronome.ts` — the scheduler, following `src/audio/noteReflex.ts`: claims the single Transport through `transportOwner` (starting the metronome stops a Jam / reflex drill and vice versa), `scheduleRepeat` once per bar placing that bar's events, UI updates through `setTimeout` (not `Draw`, which stops in hidden tabs), state exposed through a `useSyncExternalStore` store (running, current beat, bar, current tempo).
-- Shared click voices: `jam.ts`, `reflex.ts` and `noteReflex.ts` each build the same square-wave click; move it into one `createClick()` helper (e.g. `src/audio/click.ts`) used by all four, with the new timbres.
+- Clicks go through the shared `src/audio/click.ts` (done before this phase, see below); the page adds its own volume on top of the shared click volume.
 - `src/features/metronome/MetronomePage.tsx` + route `metronome` in `src/App.tsx` + entry in `TOOLS` (`src/app/Layout.tsx`) + `nav.metronome` and `metronome.*` strings in `src/i18n/messages.ts` (vi: *Máy đếm nhịp (Metronome)*).
 
 **Tasks:**
 - [ ] `metronomeModel.ts` + tests (meters, groupings, subdivisions, swing offsets, accents/silent beats, speed-trainer steps, gap bars, tap tempo).
-- [ ] `src/audio/click.ts` (shared click + 3 timbres) and switch the existing click users to it, without changing how they sound.
 - [ ] `src/audio/metronome.ts` scheduler: start/stop, live tempo change, transport ownership, beat callback.
 - [ ] `#/metronome` page, basic screen: tempo controls, tap tempo, time signature, beat dots, start/stop, keyboard shortcuts, persisted settings, phone layout.
 - [ ] Advanced section: subdivision, per-beat accents, grouping, timbre/volume, visual-only mode, speed trainer, gap trainer, session timer, wake lock.
 - [ ] Page tests (`MetronomePage.test.tsx`: renders from the Tools menu, tap tempo sets the BPM, beat dots cycle accents, settings survive a reload) and the bilingual UI strings.
-- [ ] Optional: an embeddable `<Metronome />` in lesson R1 "Beats and counting" (preset to that lesson's meter), and a "metronome" link from the Rhythm Trainer.
 
 ## 10. Status (2026-10-19)
 
@@ -495,6 +495,8 @@ All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the gui
 Phase 7 (chord reflex training) was finished on 2026-10-18 and Phase 8 (fretboard note reflex training) on 2026-10-19.
 
 Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key. The note reflex trainer lets users set how many frets their neck has (12–24, default 22 — e.g. 20 on a Taylor 214ce), with an advanced per-string override for necks whose strings have different fret counts; the upper zone runs from fret 12 to the last fret (at most 23, so zones stay unambiguous).
+
+Metronome sound (2026-10-20): every click (Jam Room, guitar comping, chord and note reflex) now goes through `src/audio/click.ts`. The old square wave at C6/G5 was harsh in headphones, so the default is a soft sine tick; a *Metronome sound* pop-over next to each tempo slider picks soft / wood block / sharp (the old sound) and the volume, remembered in `mtl:click` and applied live.
 
 Ideas for later:
 - Real guitar samples instead of PluckSynth (needs a sample source with a clear licence).
