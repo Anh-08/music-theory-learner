@@ -42,8 +42,8 @@ export function Layout() {
   }, [location.pathname])
 
   return (
-    <div className="min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100">
-      <header className="border-b border-stone-200 dark:border-stone-800">
+    <div className="min-h-screen bg-stone-50 text-stone-900 dark:bg-stone-950 dark:text-stone-100 print:!bg-white print:!text-black">
+      <header className="border-b border-stone-200 print:hidden dark:border-stone-800">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <NavLink to="/" className="text-lg font-bold tracking-tight">
             Music Theory Learner

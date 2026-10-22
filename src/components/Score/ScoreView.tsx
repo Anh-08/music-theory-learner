@@ -94,9 +94,9 @@ export function ScoreView({ score, view, cursor, selection, playing, labels, onP
       {failed && <p className="p-4 text-sm text-red-600 dark:text-red-400">{t('sheet.loadError')}</p>}
       {!vex && !failed && <p className="p-4 text-sm text-stone-500">{t('sheet.loading')}</p>}
       <div className="relative cursor-text" onClick={click} data-testid="score-canvas">
-        <div ref={canvas} className="text-stone-900 dark:[filter:invert(1)_hue-rotate(180deg)]" />
+        <div ref={canvas} className="text-stone-900 dark:[filter:invert(1)_hue-rotate(180deg)] print:![filter:none]" />
         {geo && (
-          <div className="pointer-events-none absolute inset-0">
+          <div className="pointer-events-none absolute inset-0 print:hidden">
             {overBars.map((m) => {
               const sys = geo.systems[m.system]
               return (

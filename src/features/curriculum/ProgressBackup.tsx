@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent } from 'react'
 import { useT } from '../../i18n/useT'
-import { emptyProgress, parseProgress } from '../../store/progress'
+import { emptyProgress, parseProgress, type Progress } from '../../store/progress'
+import { exportAllSheets, importSheets } from '../sheet/sheetStore'
 import { useProgress } from '../../store/progressContext'
 
 /** Export / import / clear progress (progress only lives in this browser). */
@@ -11,7 +12,7 @@ export function ProgressBackup() {
   const [message, setMessage] = useState<string | null>(null)
 
   const exportJson = () => {
-    const blob = new Blob([JSON.stringify(progress, null, 2)], { type: 'application/json' })
+    const blob = new Blob([JSON.stringify({ ...progress, sheets: exportAllSheets() }, null, 2)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -27,8 +28,11 @@ export function ProgressBackup() {
     const parsed = parseProgress(await file.text())
     if (!parsed) return setMessage(t('backup.invalid'))
     if (!window.confirm(t('backup.confirmReplace'))) return
-    replace(parsed)
-    setMessage(t('backup.imported', { n: parsed.completedLessons.length }))
+    // Scores written in the sheet editor travel in the same file but are stored separately.
+    const { sheets, ...rest } = parsed as Progress & { sheets?: unknown }
+    replace(rest)
+    const s = importSheets(sheets)
+    setMessage(s ? t('backup.importedSheets', { n: rest.completedLessons.length, s }) : t('backup.imported', { n: rest.completedLessons.length }))
   }
 
   const reset = () => {

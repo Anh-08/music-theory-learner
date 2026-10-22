@@ -1,8 +1,10 @@
-import { useState, useSyncExternalStore } from 'react'
+import { useRef, useState, useSyncExternalStore, type ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { Select } from '../../components/ui/Select'
 import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
+import { parseAsciiTab } from '../../theory/asciiTab'
+import { readScore } from '../../theory/scoreIO'
 import { btn, btnPrimary, card, keyName } from './ui'
 import { deleteSheet, loadSheet, newSheetId, saveSheet, sheetsSnapshot, subscribeSheets } from './sheetStore'
 import { TEMPLATE_IDS, buildTemplate, type TemplateId } from './templates'
@@ -25,6 +27,41 @@ export function SheetLibrary() {
     const s = loadSheet(id)
     if (!s) return
     saveSheet({ ...s, id: newSheetId(), title: t('sheet.copyOf', { title: s.title || t('sheet.untitled') }) })
+  }
+
+  const [message, setMessage] = useState<string | null>(null)
+  const [pasted, setPasted] = useState('')
+  const fileInput = useRef<HTMLInputElement>(null)
+
+  /** Opens an imported score (a .json from this app, or a text tab). Returns false if nothing could be read. */
+  const importText = (text: string, title: string): boolean => {
+    const id = newSheetId()
+    let json: unknown = null
+    try {
+      json = JSON.parse(text)
+    } catch {
+      json = null
+    }
+    const fromJson = json ? readScore({ ...(json as object), id }, id) : null
+    if (fromJson) {
+      saveSheet(fromJson)
+      navigate(`/sheet/${id}`)
+      return true
+    }
+    const tab = parseAsciiTab(text, id)
+    if (!tab) return false
+    saveSheet({ ...tab.score, title })
+    navigate(`/sheet/${id}`)
+    if (tab.skipped) window.alert(t('sheet.importSkipped', { n: tab.skipped }))
+    return true
+  }
+
+  const importFile = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    const name = file.name.replace(/\.[^.]+$/, '')
+    if (!importText(await file.text(), name)) setMessage(t('sheet.importBad'))
   }
 
   const remove = (id: string, title: string) => {
@@ -50,6 +87,33 @@ export function SheetLibrary() {
         <button type="button" className={btnPrimary} onClick={create}>
           {t('sheet.new')}
         </button>
+        <button type="button" className={btn} onClick={() => fileInput.current?.click()}>
+          {t('sheet.importFile')}
+        </button>
+        <input ref={fileInput} type="file" accept=".json,.txt,application/json,text/plain" className="hidden" onChange={importFile} aria-label={t('sheet.importFileAria')} />
+        {message && (
+          <p role="status" className="w-full text-sm text-red-600 dark:text-red-400">
+            {message}
+          </p>
+        )}
+        <details className="w-full">
+          <summary className="cursor-pointer text-sm font-medium">{t('sheet.pasteTab')}</summary>
+          <div className="mt-2 space-y-2">
+            <p className="text-sm text-stone-500">{t('sheet.pasteTabHint')}</p>
+            <textarea
+              value={pasted}
+              onChange={(e) => setPasted(e.target.value)}
+              rows={8}
+              spellCheck={false}
+              aria-label={t('sheet.pasteTab')}
+              placeholder={'e|-----------------|\nB|-----------------|\nG|---------2-------|\nD|-----2-------2---|\nA|-3---------------|\nE|-----------------|'}
+              className="w-full rounded-lg border border-stone-300 bg-white p-2 font-mono text-xs dark:border-stone-700 dark:bg-stone-950"
+            />
+            <button type="button" className={btn} disabled={!pasted.trim()} onClick={() => !importText(pasted, t('sheet.importedTitle')) && setMessage(t('sheet.importNoTab'))}>
+              {t('sheet.pasteTabButton')}
+            </button>
+          </div>
+        </details>
       </section>
 
       <section className="space-y-3">

@@ -14,6 +14,7 @@ import { fretOf, midiAt, scoreKey, scoreTuning, spellMidi, type Score } from '..
 import { getEvent, refsInRange } from '../../theory/scoreEdit'
 import type { ScoreViewMode } from '../../theory/scoreLayout'
 import { MetaBar, Toolbar } from './EditorPanels'
+import { ExportMenu } from './ExportMenu'
 import { PlaybackBar } from './PlaybackBar'
 import { editorReducer, initEditor, keyToAction, liveJoinsChord } from './editorState'
 import { lastSaveFailed, loadSheet, saveSheet, storageUsage, subscribeSheets } from './sheetStore'
@@ -132,22 +133,25 @@ function Editor({ initial }: { initial: Score }) {
 
   return (
     <div className="space-y-4 outline-none" ref={box} tabIndex={-1} onKeyDown={onKeyDown}>
-      <Link to="/sheet" className="text-sm text-stone-500 hover:text-rose-600">
-        {t('sheet.back')}
-      </Link>
+      <div className="flex items-center justify-between gap-3 print:hidden">
+        <Link to="/sheet" className="text-sm text-stone-500 hover:text-rose-600">
+          {t('sheet.back')}
+        </Link>
+        <ExportMenu score={score} />
+      </div>
 
       <MetaBar score={score} view={view} onView={setView} dispatch={dispatch} />
 
-      {saveFailed && <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">{t('sheet.saveFailed')}</p>}
-      {!saveFailed && usage > 0.8 && <p className="text-sm text-amber-700 dark:text-amber-400">{t('sheet.storageHigh', { pct: Math.round(usage * 100) })}</p>}
+      {saveFailed && <p className="rounded-lg print:hidden bg-red-50 p-3 text-sm text-red-700 dark:bg-red-950 dark:text-red-300">{t('sheet.saveFailed')}</p>}
+      {!saveFailed && usage > 0.8 && <p className="text-sm text-amber-700 print:hidden dark:text-amber-400">{t('sheet.storageHigh', { pct: Math.round(usage * 100) })}</p>}
 
-      <div className={`${card} z-10 space-y-3 !p-3 shadow-sm md:sticky md:top-0`}>
+      <div className={`${card} z-10 space-y-3 !p-3 shadow-sm print:hidden md:sticky md:top-0`}>
         <PlaybackBar playing={player.playing} countingIn={player.countIn} settings={playback} onSettings={setPlayback} onPlay={play} onStop={() => void stopScore()} />
         <hr className="border-stone-200 dark:border-stone-800" />
         <Toolbar state={state} dispatch={dispatch} chordMode={chordMode} onChordMode={setChordMode} />
       </div>
 
-      <section className={`${card} !p-2`} aria-label={t('sheet.scoreAria')}>
+      <section className={`${card} !p-2 print:border-0 print:!p-0`} aria-label={t('sheet.scoreAria')}>
         <ScoreView
           score={score}
           view={view}
@@ -161,7 +165,7 @@ function Editor({ initial }: { initial: Score }) {
         />
       </section>
 
-      <section className={`${card} space-y-2 !p-3`}>
+      <section className={`${card} space-y-2 !p-3 print:hidden`}>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <p className="text-sm text-stone-500">{instrument === 'piano' ? t('sheet.instrumentHintPiano') : t('sheet.instrumentHint')}</p>
           {live.status === 'on' ? (
@@ -199,7 +203,7 @@ function Editor({ initial }: { initial: Score }) {
         <p className="text-xs text-stone-500 sm:hidden">{t('sheet.phoneHint')}</p>
       </section>
 
-      <details className={`${card} !p-3 text-sm`}>
+      <details className={`${card} !p-3 text-sm print:hidden`}>
         <summary className="cursor-pointer font-medium">{t('sheet.shortcuts')}</summary>
         <ul className="mt-2 list-disc space-y-1 pl-5 text-stone-600 dark:text-stone-400">
           {(['play', 'move', 'string', 'fret', 'duration', 'tech', 'edit'] as const).map((k) => (

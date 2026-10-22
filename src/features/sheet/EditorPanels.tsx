@@ -59,7 +59,10 @@ export function MetaBar({ score, view, onView, dispatch }: { score: Score; view:
         aria-label={t('sheet.titlePlaceholder')}
         className="w-full rounded-lg border border-transparent bg-transparent px-1 text-2xl font-bold hover:border-stone-300 focus:border-stone-400 focus:outline-none dark:hover:border-stone-700"
       />
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <p className="hidden text-sm print:block">
+        {[TUNINGS.find((x) => x.id === score.tuning)?.name[locale], score.capo ? `Capo ${score.capo}` : '', score.timeSig.join('/'), `${score.tempo} BPM`].filter(Boolean).join(' · ')}
+      </p>
+      <div className="grid grid-cols-2 gap-3 print:hidden sm:grid-cols-3 lg:grid-cols-6">
         <label className="block">
           <span className={label}>{t('sheet.tempo')}</span>
           <input
