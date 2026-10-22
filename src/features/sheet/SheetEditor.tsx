@@ -11,14 +11,16 @@ import { usePersistentState } from '../../store/usePersistentState'
 import { displayNote } from '../../theory/notes'
 import { Note } from 'tonal'
 import { fretOf, midiAt, scoreKey, scoreTuning, spellMidi, type Score } from '../../theory/score'
+import { analyzeScore } from '../../theory/scoreAnalysis'
 import { getEvent, refsInRange } from '../../theory/scoreEdit'
 import type { ScoreViewMode } from '../../theory/scoreLayout'
+import { AnalysisBar } from './AnalysisBar'
 import { MetaBar, Toolbar } from './EditorPanels'
 import { ExportMenu } from './ExportMenu'
 import { PlaybackBar } from './PlaybackBar'
 import { editorReducer, initEditor, keyToAction, liveJoinsChord } from './editorState'
 import { lastSaveFailed, loadSheet, saveSheet, storageUsage, subscribeSheets } from './sheetStore'
-import { DEFAULT_PLAYBACK, card, type PlaybackSettings } from './ui'
+import { DEFAULT_ANALYSIS, DEFAULT_PLAYBACK, ROLE_CLASS, card, type AnalysisSettings, type PlaybackSettings } from './ui'
 
 /** `#/sheet/:id` — the editor for one saved score. */
 export function SheetEditor() {
@@ -55,6 +57,15 @@ function Editor({ initial }: { initial: Score }) {
   const shift = useRef(false)
   const player = useScorePlayer()
   const [playback, setPlayback] = usePersistentState<PlaybackSettings>('sheet:playback', DEFAULT_PLAYBACK)
+  const [analysis, setAnalysis] = usePersistentState<AnalysisSettings>('sheet:analysis', DEFAULT_ANALYSIS)
+  const info = useMemo(() => analyzeScore(score, analysis.mode, analysis.scale), [score, analysis.mode, analysis.scale])
+  const labels = useMemo(
+    () =>
+      analysis.mode === 'off' && !analysis.colors
+        ? undefined
+        : info.map((x) => ({ measure: x.ref.measure, event: x.ref.event, text: x.label || '●', className: analysis.colors ? ROLE_CLASS[x.role] : undefined })),
+    [info, analysis.mode, analysis.colors],
+  )
 
   const play = (fromCursor: boolean) => {
     const a = state.anchor
@@ -151,6 +162,10 @@ function Editor({ initial }: { initial: Score }) {
         <Toolbar state={state} dispatch={dispatch} chordMode={chordMode} onChordMode={setChordMode} />
       </div>
 
+      <section className={`${card} !p-3 print:hidden`} aria-label={t('sheet.analysis')}>
+        <AnalysisBar score={score} info={info} settings={analysis} onSettings={setAnalysis} />
+      </section>
+
       <section className={`${card} !p-2 print:border-0 print:!p-0`} aria-label={t('sheet.scoreAria')}>
         <ScoreView
           score={score}
@@ -158,6 +173,7 @@ function Editor({ initial }: { initial: Score }) {
           cursor={state.cursor}
           selection={selection}
           playing={player.playing ? player.current : null}
+          labels={labels}
           onPick={(hit, e) => {
             dispatch({ type: 'pick', hit, extend: e.shiftKey })
             box.current?.focus({ preventScroll: true })

@@ -1,5 +1,5 @@
 import { useEffect, useId, useMemo, useState } from 'react'
-import { Link } from 'react-router'
+import { Link, useNavigate } from 'react-router'
 import { GROOVES, groove as getGroove } from '../../audio/grooves'
 import { RHYTHMS } from '../../audio/rhythms'
 import { startJam, stopJam, updateJam } from '../../audio/jam'
@@ -18,6 +18,8 @@ import { CHROMAS, chroma, keyLabel, parseKey, relatedKeys, spellingsOf, type Key
 import { errorMessage } from '../../i18n/errors'
 import { analyze, chordIndexAtBar, chordLabel, jamHighlights, scaleLabel, transposeProgression, type Analysis } from './jamModel'
 import { JAM_PRESETS, type JamPreset } from './presets'
+import { scoreFromProgression } from '../../theory/scoreAnalysis'
+import { newSheetId, saveSheet } from '../sheet/sheetStore'
 
 export interface JamPlayerProps {
   progression: string
@@ -70,6 +72,7 @@ function tryAnalyze(text: string, keyChoice: string): { analysis: Analysis | nul
 }
 
 export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initialTempo, scale, scaleRoot, editable = false }: JamPlayerProps) {
+  const navigate = useNavigate()
   const id = useId()
   const { instrument } = useSettings()
   const { t, locale } = useT()
@@ -227,6 +230,20 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
             <Select label={t('jam.groove')} value={grooveId} onChange={chooseGroove} options={GROOVES.map((g) => ({ value: g.id, label: `${g.name} — ${t(`groove.${g.id}`)}` }))} />
             <Select label={t('jam.compStyle')} value={compId} onChange={chooseComp} options={compOptions} />
           </div>
+          {analysis && (
+            <button
+              type="button"
+              title={t('jam.notateHint')}
+              onClick={() => {
+                const sheetId = newSheetId()
+                saveSheet(scoreFromProgression(sheetId, analysis.chords, analysis.key, tempo, getGroove(grooveId).beatsPerBar, text.trim()))
+                navigate(`/sheet/${sheetId}`)
+              }}
+              className="text-sm text-rose-600 hover:underline"
+            >
+              {t('jam.notate')}
+            </button>
+          )}
         </div>
       )}
 
