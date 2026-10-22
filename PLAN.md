@@ -584,10 +584,10 @@ interface ScoreEvent {
 - [x] 10.2 Rendering: add VexFlow (lazy), `scoreLayout.ts` + tests, `ScoreView` for staff + tab, tab only, staff only; techniques and chord symbols; click → cursor mapping.
 - [x] 10.3 Editor page: library + editor routes, cursor, palettes, fretboard entry, keyboard entry, chord-shape insert, undo/redo, autosave, phone layout.
 - [x] 10.4 Playback: `scoreToEvents` + tests (repeats, ties, tuplets, tempo %), `scorePlayer.ts` with Transport ownership, cursor/fretboard follow, loop selection, count-in.
-- [ ] 10.5 Real-instrument step entry (MIDI / mic) with automatic string choice.
-- [ ] 10.6 Import / export: JSON, ASCII tab (both ways) + tests, MusicXML export + tests (validated against a sample file), print stylesheet, share link, backup integration.
-- [ ] 10.7 Learning overlays: degree labels, colour by function, scale check, Jam Room ↔ editor links.
-- [ ] 10.8 `<TabView>` in MDX, a few licks added to Modules 5 and 7, the short lesson; page tests (`SheetEditor.test.tsx`: create a score from the Tools menu, enter notes by fretboard and keyboard, undo, survives a reload, export ASCII tab) and bilingual UI strings.
+- [x] 10.5 Real-instrument step entry (MIDI / mic) with automatic string choice.
+- [x] 10.6 Import / export: JSON, ASCII tab (both ways) + tests, MusicXML export + tests (parsed back as well-formed XML with the expected elements), print stylesheet, share link, backup integration.
+- [x] 10.7 Learning overlays: degree labels, colour by function, scale check, Jam Room ↔ editor links.
+- [x] 10.8 `<TabView>` in MDX, a few licks added to Modules 5 and 7, the short lesson; page tests (`SheetEditor.test.tsx`: create a score from the Tools menu, enter notes by fretboard and keyboard, undo, survives a reload, export ASCII tab) and bilingual UI strings.
 - [ ] Later: MusicXML import, a second voice (bass + melody), grand staff for piano (two hands), Guitar Pro file import.
 
 > Note (10.1): time is counted in ticks (`TICKS_PER_QUARTER = 480`, so every value down to a 32nd triplet is a whole number). `src/theory/score.ts` holds the types, durations, fret ↔ pitch with tuning + capo, `chooseString` and key-aware spelling (`spellMidi`, which keeps the raised 6th/7th in minor keys). `src/theory/scoreEdit.ts` holds the editing operations and the undo history; neither is re-exported from `src/theory/index.ts` (import them directly). Inserting in the middle of a bar pushes the following events (the bar is then flagged `over`); only appending splits a note across the bar line.
@@ -596,7 +596,7 @@ interface ScoreEvent {
 
 > Note (10.4): `src/theory/scorePlayback.ts` unrolls repeats and endings (`playOrder`), merges ties, and turns techniques into what the plain voices can do: hammer-on / pull-off / slide targets are struck softer, bends become a short grace note followed by the bent pitch, palm mutes and dead notes are cut short, let-ring notes sustain to the bar end. Tempo counts dotted quarters in 6/8, 9/8 and 12/8, like the metronome page. `src/audio/scorePlayer.ts` places the events on the shared Transport (in seconds) through `transportOwner`; the editor's playback bar has play from start / from cursor (Space), loop (the selected bars, or the whole score), speed 50–150 %, a one-bar count-in and an optional metronome, remembered in `mtl:sheet:playback`. The played event is highlighted and kept in view, and the fretboard shows its notes. Not done: swing.
 
-> **Paused here (2026-10-21):** the user asked to stop after 10.4; tasks 10.5–10.8 are left for later.
+> Note (10.5–10.8, done 2026-10-22): notes played on a connected MIDI keyboard or picked up by the mic are entered at the cursor with an automatic string choice; MIDI keys pressed within 60 ms form a chord; nothing is entered while the score plays. `src/theory/asciiTab.ts` writes text tab (4 bars per line, techniques as `h p / \ b ~ x`, chord symbols and PM above) and reads it back best effort: every column becomes one event of a default duration and bars are refilled from the time signature. `src/theory/musicXml.ts` writes MusicXML 4.0 (single part, one voice, sounding pitches with an octave-down clef for guitar and bass, string/fret, ties, hammer-on / pull-off / slide / bend / harmonic, chord symbols, repeats and endings, staff tuning and capo). Share links carry the score deflated and base64url-encoded in `#/sheet/shared?d=…` (`src/features/sheet/share.ts`); the shared page is read-only with *Save to my library*. The progress backup file now includes the scores (`sheets`). Printing hides everything but the title line and the score. `src/theory/scoreAnalysis.ts` labels notes by interval to the chord in effect or by degree in the key, and classifies them as chord tone / scale tone / outside against the key's scale or a chosen scale on the tonic; the editor links its chord symbols to the Jam Room, and the Jam Room has *Notate as a score*. Lessons use `<TabView notes="[Am] 8 5:5h 5:7 …" labels="chord" />` with the short notation of `src/theory/lickText.ts`; examples were added to M5-1 and M7-1, plus the guitar-track lesson G9 "Reading and writing tab". Not done: MusicXML import, swing, real pitch bends. Tests mock `loadVex` globally (`src/test/setup.ts`) since jsdom cannot draw scores.
 
 **Decisions (confirmed by the user on 2026-10-21: all four defaults accepted — tab + staff for riffs/solos first, no chord-sheet mode for now; single treble staff for piano; VexFlow; phone = view + tap entry):**
 1. Scope: *riff / lick / solo tab with staff* (this plan) — or a **chord sheet** (lyrics + chords above them, the "sheet hợp âm" used for singing) — or both? A chord-sheet mode is simple to add (text + chord symbols, transpose, print) and could be done first as a small step.
@@ -608,9 +608,9 @@ interface ScoreEvent {
 
 ## 10. Status (2026-10-21)
 
-All 6 original phases are done: 50 bilingual lessons (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
+All 6 original phases are done: 51 bilingual lessons (50 then, plus G9 from Phase 10) (Modules 0–10 and the guitar track), Explorer, Key Explorer, chord identifier, Jam Room, comping practice page, spaced-repetition review, real-instrument input, PWA.
 
-Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21. Phase 10 (sheet & tab editor): tasks 10.1–10.4 done on 2026-10-21 (score model, VexFlow rendering, the `#/sheet` editor in the Tools menu, playback); 10.5–10.8 (MIDI / mic entry, import / export / share, learning overlays, lessons) are paused until the user asks.
+Phase 7 (chord reflex training) was finished on 2026-10-18, Phase 8 (fretboard note reflex training) on 2026-10-19 and Phase 9 (metronome) on 2026-10-21. Phase 10 (sheet & tab editor, `#/sheet` in the Tools menu) was finished on 2026-10-22: score model, VexFlow rendering, editor, playback, MIDI / mic entry, import / export / print / share links, learning overlays, Jam Room bridge and lessons.
 
 Added later: the **Chord shapes** page (`#/chords`, Tools menu) — an automatic shape finder (`src/theory/guitarShapes.ts`) for 31 chord types (adding m(maj7), 7♭5, 7♯5, 6/9, 9sus4, 7♭9, 7♯9, 11, m11, 13) at several positions, with fingering and barres; changing each chord's shape right on the Guitar comping page; lesson R7 "Chord shapes". In the Jam Room, changing the key transposes the typed progression, and presets follow the selected key. The note reflex trainer lets users set how many frets their neck has (12–24, default 22 — e.g. 20 on a Taylor 214ce), with an advanced per-string override for necks whose strings have different fret counts; the upper zone runs from fret 12 to the last fret (at most 23, so zones stay unambiguous).
 
@@ -618,7 +618,7 @@ Metronome sound (2026-10-20): every click (Jam Room, guitar comping, chord and n
 
 Ideas for later:
 - Real guitar samples instead of PluckSynth (needs a sample source with a clear licence).
-- Staff notation (VexFlow / abcjs) for piano learners.
+- A grand staff (two hands) for piano learners — VexFlow is in the app since Phase 10.
 - More analysis examples from Vietnamese songs (chord progressions only).
 - A similar comping track for piano (left hand, comping).
 - The `@tailwindcss/typography` dependency pulls in `postcss-selector-parser`, which has a moderate security advisory (build time only) — update when a fix is released.
@@ -651,4 +651,4 @@ Things that can be decided along the way:
 
 ## 9. Next step
 
-When the user asks, continue **Phase 10** with task 10.5 (real-instrument step entry).
+Phase 10 is done. Next ideas are listed under *Ideas for later* in section 10; the remaining Phase 10 extras are MusicXML import, a second voice, a grand staff for piano and Guitar Pro import.

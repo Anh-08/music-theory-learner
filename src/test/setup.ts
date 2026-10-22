@@ -23,3 +23,6 @@ vi.mock('../audio/jam', async () => {
     }),
   }
 })
+
+// jsdom cannot measure fonts or draw with canvas: scores stay in their "loading" state in tests.
+vi.mock('../components/Score/loadVex', () => ({ loadVex: () => new Promise(() => {}) }))

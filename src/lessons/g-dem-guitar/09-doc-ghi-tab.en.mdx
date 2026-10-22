@@ -1,0 +1,47 @@
+export const meta = {
+  title: 'Reading and writing tab',
+  description: 'Reading tab with rhythm, the technique symbols (hammer-on, pull-off, slide, bend…) and writing down your own licks.',
+  minutes: 15,
+}
+
+Learn a great line and don't write it down, and a few days later it is gone. **Tab** (tablature) is the notation guitarists know best: no reading notes on a staff, just **which string, which fret**.
+
+## How to read tab
+
+- **6 lines = 6 strings.** The **top line is string 1** (high E), the bottom line is string 6 — upside down compared with looking down at the neck, but the way a listener in front of you sees it.
+- **Numbers = frets.** `0` is the open string, `5` is the 5th fret.
+- **Read from left to right.** Numbers stacked in one column are played together (a chord or a double stop).
+
+Tab on the internet usually **has no rhythm**: you have to listen to the record to know which notes are long or short. Tab in this app comes with a standard staff above it — stems, flags and rests show the durations. In **Tab only** view, the stems and flags are drawn right under the numbers.
+
+<TabView notes="[Am] 8 2:5 2:8 1:5 2:8 2:5 3:7 q 3:5 | [Dm] q 3:7 8 3:5 4:7 h 5:5" songKey="Am" tempo={84} caption="A two-bar line: six eighth notes and a quarter, then a quarter, two eighths and a half note." />
+
+## Technique symbols
+
+| Symbol | Name | How to play it |
+|---|---|---|
+| `5h7` | Hammer-on | Pick fret 5, then **hammer** a finger onto fret 7 — no second pick |
+| `7p5` | Pull-off | Fretting 7, **pull** the finger off so fret 5 sounds — no second pick |
+| `5/7`, `7\5` | Slide | Pick, then **slide** the finger along the string to the new fret |
+| `7b9`, full | Whole-step bend | Push the string until the note rises **a whole step** (2 frets) |
+| `7b8`, ½ | Half-step bend | Push the string until the note rises **a half step** |
+| `~` | Vibrato | Shake the finger so the note sings |
+| `x` | Dead note | Touch the string lightly so it is muted and pick a percussive "tick" |
+| P.M. | Palm mute | Rest the edge of the picking hand on the strings by the bridge |
+| `<12>` | Natural harmonic | Touch the string right above fret 12, pick, then lift the finger |
+
+Hear each technique:
+
+<TabView notes="[Am] 8 3:5h 3:7 3:7p 3:5 4:7s 4:5 q 3:7b | h 3:5~ q 4:7 r" songKey="Am" tempo={76} view="tab" caption="Hammer-on, pull-off, slide, whole-step bend and vibrato — in Tab only view." />
+
+<TabView notes="[E5] 8 6:0m 6:0m 6:0m 6:0m 6:0x 6:0m 5:2+6:0 5:2+6:0" songKey="E" tempo={100} view="tab" caption="Palm mutes and a dead note: the familiar rock 'chug'." />
+
+<Quiz id="g-tab-q1" question="In tab, which string is the top line?" options={['String 1 (high E)', 'String 6 (low E)', 'String 3', 'It depends on the song']} answer={0} />
+
+<Quiz id="g-tab-q2" question="What does 7b9 mean?" options={['Fret 7, then push the string until it sounds like fret 9 (a whole step)', 'Pick fret 7, then pick fret 9', 'Slide from fret 7 up to fret 9', 'Fret 7 and 9 together']} answer={0} explain="b = bend; the number after b is the pitch to reach by pushing the string." />
+
+<Quiz id="g-tab-q3" question="How do hammer-ons and pull-offs differ from normal picking?" options={['The second note is not picked again', 'You must use a pick', 'They only work on open strings', 'They must be played very slowly']} answer={0} />
+
+<Callout type="practice" title="Write down your licks">
+Open **Tools → Sheet & tab editor**, create an empty score and write down a line you often play: click the virtual neck to enter notes, press H / P / S / B for techniques, then press Play to hear it back. Turn on **Labels under notes → Interval to the chord** to see what each note is against the chord — which notes lean on the chord and which pass through. Every tab example in the lessons also has an **Open in the editor** button so you can change it and try it out.
+</Callout>

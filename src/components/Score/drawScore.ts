@@ -243,12 +243,12 @@ function makeTabNote(V: Vex, score: Score, e: ScoreEvent, stems: boolean, errorC
     if (n.tech?.includes('bendFull')) tn.addModifier(new V.Bend([{ type: V.Bend.UP, text: 'full' }]), i)
     if (n.tech?.includes('vibrato')) tn.addModifier(new V.Vibrato(), i)
   })
-  const below = [
+  const marks = [
     notes.some((n) => n.tech?.includes('palmMute')) ? 'P.M.' : '',
     notes.some((n) => n.tech?.includes('letRing')) ? 'let ring' : '',
   ].filter(Boolean)
-  if (below.length) {
-    const a = new V.Annotation(below.join(' ')).setVerticalJustification(V.Annotation.VerticalJustify.BOTTOM)
+  if (marks.length) {
+    const a = new V.Annotation(marks.join(' ')).setVerticalJustification(V.Annotation.VerticalJustify.TOP)
     a.setFont('Arial', 10, 'normal', 'italic')
     tn.addModifier(a, 0)
   }

@@ -17,9 +17,11 @@ export interface ScorePlayerState {
   current: EventRef | null
   /** True during the count-in bar. */
   countIn: boolean
+  /** Who started playback (the editor, or one tab example in a lesson). */
+  owner: string | null
 }
 
-let state: ScorePlayerState = { playing: false, current: null, countIn: false }
+let state: ScorePlayerState = { playing: false, current: null, countIn: false, owner: null }
 const listeners = new Set<() => void>()
 
 export const scorePlayerStore = {
@@ -46,6 +48,8 @@ export interface ScorePlayOptions extends PlaybackOptions {
   countIn?: boolean
   /** Clicks on every beat while playing. */
   metronome?: boolean
+  /** Identifies the caller, so several players on one page know which one is playing. */
+  owner?: string
 }
 
 let session = 0
@@ -64,7 +68,7 @@ function release() {
   session++
   timers.forEach(clearTimeout)
   timers.clear()
-  scorePlayerStore.set({ playing: false, current: null, countIn: false })
+  scorePlayerStore.set({ playing: false, current: null, countIn: false, owner: null })
 }
 
 export async function playScore(score: Score, opts: ScorePlayOptions): Promise<void> {
@@ -107,7 +111,7 @@ export async function playScore(score: Score, opts: ScorePlayOptions): Promise<v
   } else {
     transport.schedule((time) => later(() => my === session && void stopScore(), (time - T.now()) * 1000 + 300), end)
   }
-  scorePlayerStore.set({ playing: true, current: null, countIn: !!opts.countIn })
+  scorePlayerStore.set({ playing: true, current: null, countIn: !!opts.countIn, owner: opts.owner ?? null })
   transport.start('+0.05')
 }
 

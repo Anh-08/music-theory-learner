@@ -126,4 +126,22 @@ describe('Sheet & tab editor', () => {
     fireEvent.click(screen.getByRole('button', { name: '+ Tạo bản mới' }))
     expect(screen.getByRole('link', { name: 'Kết nối đàn thật để nhập nốt bằng cách chơi →' })).toHaveAttribute('href', expect.stringMatching(/connect$/))
   })
+
+  it('enters notes by clicking the fretboard, Shift-click adding to the chord, with a capo', () => {
+    renderWithProviders(<AppRoutes />, { route: '/sheet' })
+    fireEvent.click(screen.getByRole('button', { name: '+ Tạo bản mới' }))
+    const id = listSheets()[0].id
+    fireEvent.click(screen.getByLabelText('Dây 5, phím 3: C'))
+    fireEvent.pointerDown(window, { shiftKey: true })
+    fireEvent.click(screen.getByLabelText('Dây 4, phím 2: E'))
+    fireEvent.pointerDown(window, { shiftKey: false })
+    fireEvent.change(screen.getByRole('combobox', { name: 'Capo' }), { target: { value: '2' } })
+    fireEvent.click(screen.getByLabelText('Dây 1, phím 1: F')) // below the capo: nothing sounds
+    fireEvent.click(screen.getByLabelText('Dây 1, phím 5: A'))
+    const s = loadSheet(id)!
+    const events = s.measures[0].events
+    expect(events).toHaveLength(2)
+    expect(events[0].notes.map((n) => n.midi).sort()).toEqual([48, 52])
+    expect(events[1].notes).toEqual([{ midi: 69, string: 1 }])
+  })
 })

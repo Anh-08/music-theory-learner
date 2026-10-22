@@ -666,6 +666,7 @@ export const vi = {
   'sheet.toJam': 'Ngẫu hứng trên vòng hợp âm này trong Jam Room →',
   'jam.notate': 'Ghi thành bản nhạc →',
   'jam.notateHint': 'Tạo một bản nhạc trống với vòng hợp âm này để ghi lại câu bạn vừa chơi.',
+  'tabView.open': 'Mở trong trình soạn →',
   'backup.importedSheets': 'Đã nhập: {n} bài đã học, {s} bản nhạc.',
 }
 
@@ -1338,6 +1339,7 @@ export const en: Record<MessageKey, string> = {
   'sheet.toJam': 'Improvise over these chords in the Jam Room →',
   'jam.notate': 'Notate as a score →',
   'jam.notateHint': 'Creates an empty score with these chords so you can write down what you played.',
+  'tabView.open': 'Open in the editor →',
   'backup.importedSheets': 'Imported: {n} lessons done, {s} scores.',
 }
 

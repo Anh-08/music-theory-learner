@@ -78,6 +78,7 @@ function Editor({ initial }: { initial: Score }) {
       loop: playback.loop,
       countIn: playback.countIn,
       metronome: playback.metronome,
+      owner: 'editor',
     })
   }
 

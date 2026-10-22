@@ -1,0 +1,47 @@
+export const meta = {
+  title: 'Đọc và ghi tab',
+  description: 'Đọc tab có nhịp, các ký hiệu kỹ thuật (hammer-on, pull-off, slide, bend…) và tự ghi lại lick của bạn.',
+  minutes: 15,
+}
+
+Học được một câu hay mà không ghi lại thì vài hôm sau sẽ quên. **Tab** (tablature) là cách ghi nhạc quen thuộc nhất với người chơi guitar: không cần đọc nốt trên khuông, chỉ cần biết **dây nào, phím nào**.
+
+## Tab đọc như thế nào
+
+- **6 dòng = 6 dây.** Dòng **trên cùng là dây 1** (Mi cao), dòng dưới cùng là dây 6 — ngược với khi bạn nhìn xuống cần đàn, nhưng giống khi nhìn từ phía người nghe.
+- **Con số = phím bấm.** `0` là dây buông, `5` là phím 5.
+- **Đọc từ trái sang phải.** Các số nằm thẳng một cột thì chơi cùng lúc (một hợp âm hoặc một double stop).
+
+Tab trên mạng thường **không ghi nhịp điệu**: bạn phải nghe bài gốc mới biết nốt nào dài, nốt nào ngắn. Tab trong ứng dụng này có kèm khuông nhạc (staff) ở trên — đuôi nốt, móc và dấu lặng cho biết trường độ. Ở chế độ **Chỉ tab**, đuôi và móc được vẽ ngay dưới các con số.
+
+<TabView notes="[Am] 8 2:5 2:8 1:5 2:8 2:5 3:7 q 3:5 | [Dm] q 3:7 8 3:5 4:7 h 5:5" songKey="Am" tempo={84} caption="Một câu 2 ô nhịp: sáu nốt móc đơn và một nốt đen, rồi nốt đen, hai móc đơn và một nốt trắng." />
+
+## Ký hiệu kỹ thuật
+
+| Ký hiệu | Tên | Cách chơi |
+|---|---|---|
+| `5h7` | Hammer-on | Gảy phím 5, rồi **gõ** ngón xuống phím 7 — không gảy lại |
+| `7p5` | Pull-off | Đang bấm phím 7, **giật** ngón ra để phím 5 vang — không gảy lại |
+| `5/7`, `7\5` | Slide (vuốt) | Gảy rồi **trượt** ngón dọc dây sang phím mới |
+| `7b9`, full | Bend 1 cung | Đẩy dây cho nốt cao lên **một cung** (bằng 2 phím) |
+| `7b8`, ½ | Bend nửa cung | Đẩy dây cho nốt cao lên **nửa cung** |
+| `~` | Vibrato | Rung ngón để nốt ngân "sống" hơn |
+| `x` | Nốt chặn tiếng (dead note) | Chạm nhẹ dây cho tắt tiếng, gảy ra tiếng "tắc" |
+| P.M. | Palm mute | Áp cạnh lòng bàn tay gảy lên dây sát ngựa đàn |
+| `<12>` | Harmonic tự nhiên | Chạm hờ ngay trên phím 12, gảy rồi nhấc ngón |
+
+Nghe từng kỹ thuật:
+
+<TabView notes="[Am] 8 3:5h 3:7 3:7p 3:5 4:7s 4:5 q 3:7b | h 3:5~ q 4:7 r" songKey="Am" tempo={76} view="tab" caption="Hammer-on, pull-off, slide, bend 1 cung và vibrato — ở chế độ Chỉ tab." />
+
+<TabView notes="[E5] 8 6:0m 6:0m 6:0m 6:0m 6:0x 6:0m 5:2+6:0 5:2+6:0" songKey="E" tempo={100} view="tab" caption="Palm mute và nốt chặn tiếng: tiếng 'chuck' quen thuộc của rock." />
+
+<Quiz id="g-tab-q1" question="Trong tab, dòng trên cùng là dây nào?" options={['Dây 1 (Mi cao)', 'Dây 6 (Mi trầm)', 'Dây 3', 'Tùy bài']} answer={0} />
+
+<Quiz id="g-tab-q2" question="Ký hiệu 7b9 nghĩa là gì?" options={['Bấm phím 7 rồi đẩy dây cho cao lên bằng phím 9 (một cung)', 'Gảy phím 7 rồi gảy phím 9', 'Vuốt từ phím 7 lên phím 9', 'Bấm phím 7 và 9 cùng lúc']} answer={0} explain="b = bend; số sau b là cao độ cần đạt khi đẩy dây." />
+
+<Quiz id="g-tab-q3" question="Hammer-on và pull-off khác cách gảy thường ở điểm nào?" options={['Nốt thứ hai không gảy lại', 'Phải dùng pick', 'Chỉ chơi trên dây buông', 'Phải chơi rất chậm']} answer={0} />
+
+<Callout type="practice" title="Ghi lại lick của bạn">
+Mở **Công cụ → Soạn sheet & tab**, tạo một bản trống và ghi lại một câu bạn hay chơi: bấm lên cần đàn ảo để nhập nốt, gõ H / P / S / B để thêm kỹ thuật, rồi bấm Phát để nghe lại. Bật **Nhãn dưới nốt → Quãng so với hợp âm** để xem từng nốt là quãng mấy của hợp âm — nốt nào "bám" hợp âm, nốt nào đi qua. Mỗi ví dụ tab trong bài học cũng có nút **Mở trong trình soạn** để bạn sửa và chơi thử.
+</Callout>
