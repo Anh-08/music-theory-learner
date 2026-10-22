@@ -623,6 +623,10 @@ export const vi = {
   'sheet.countIn': 'Đếm vào 1 ô',
   'sheet.metronome': 'Metronome',
   'sheet.sc.play': 'Space phát / dừng từ con trỏ',
+  'sheet.liveMidi': 'Nhập nốt từ đàn MIDI',
+  'sheet.liveMic': 'Nhập nốt qua micro',
+  'sheet.liveHint': 'Mỗi nốt bạn chơi được chèn tại con trỏ với trường độ đang chọn; ứng dụng tự chọn dây gần tay nhất. Với MIDI, bấm nhiều phím cùng lúc để nhập hợp âm. Không nhập khi đang phát nhạc.',
+  'sheet.liveConnect': 'Kết nối đàn thật để nhập nốt bằng cách chơi →',
 }
 
 export type MessageKey = keyof typeof vi
@@ -1251,6 +1255,10 @@ export const en: Record<MessageKey, string> = {
   'sheet.countIn': 'One-bar count-in',
   'sheet.metronome': 'Metronome',
   'sheet.sc.play': 'Space plays / stops from the cursor',
+  'sheet.liveMidi': 'Enter notes from the MIDI keyboard',
+  'sheet.liveMic': 'Enter notes through the mic',
+  'sheet.liveHint': 'Each note you play is inserted at the cursor with the selected duration; the app picks the string nearest your hand. On MIDI, press several keys together to enter a chord. Nothing is entered while the score plays.',
+  'sheet.liveConnect': 'Connect a real instrument to enter notes by playing →',
 }
 
 export const MESSAGES = { vi, en }

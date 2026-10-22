@@ -438,3 +438,14 @@ export function keyToAction(e: KeyInput, now: number): EditorAction | null {
   }
   return null
 }
+
+/** Keys pressed this close together on a MIDI keyboard are entered as one chord. */
+export const CHORD_WINDOW_MS = 60
+
+/**
+ * Whether a note played on a real instrument joins the previous one as a chord: always in "add to chord" mode,
+ * and on MIDI when it follows the previous key within `CHORD_WINDOW_MS` (the mic hears one note at a time).
+ */
+export function liveJoinsChord(source: 'midi' | 'mic' | 'none', msSinceLast: number, chordMode: boolean): boolean {
+  return chordMode || (source === 'midi' && msSinceLast < CHORD_WINDOW_MS)
+}

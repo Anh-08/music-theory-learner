@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { measureCapacity, measureTicks, newScore, type Score } from '../../theory/score'
-import { editorReducer, initEditor, keyToAction, type EditorAction, type EditorState } from './editorState'
+import { editorReducer, initEditor, keyToAction, liveJoinsChord, type EditorAction, type EditorState } from './editorState'
 
 const run = (s: EditorState, ...actions: EditorAction[]) => actions.reduce(editorReducer, s)
 const sc = (s: EditorState): Score => s.history.present
@@ -146,5 +146,14 @@ describe('keyboard shortcuts', () => {
     expect(keyToAction({ key: '+' }, 0)).toEqual({ type: 'longer' })
     expect(keyToAction({ key: 'q' }, 0)).toBeNull()
     expect(keyToAction({ key: 'a', ctrlKey: true }, 0)).toBeNull()
+  })
+})
+
+describe('real-instrument entry', () => {
+  it('groups MIDI keys pressed together into a chord', () => {
+    expect(liveJoinsChord('midi', 20, false)).toBe(true)
+    expect(liveJoinsChord('midi', 300, false)).toBe(false)
+    expect(liveJoinsChord('mic', 20, false)).toBe(false)
+    expect(liveJoinsChord('mic', 900, true)).toBe(true)
   })
 })

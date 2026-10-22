@@ -1,7 +1,8 @@
-import { fireEvent, screen, within } from '@testing-library/react'
+import { act, fireEvent, screen, within } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppRoutes } from '../../App'
 import { playScore } from '../../audio/scorePlayer'
+import { handleMidiMessage, liveStore } from '../../input/liveInput'
 import { renderWithProviders } from '../../test/renderWithProviders'
 import { listSheets, loadSheet } from './sheetStore'
 
@@ -22,6 +23,7 @@ describe('Sheet & tab editor', () => {
   beforeEach(() => {
     localStorage.clear()
     vi.mocked(playScore).mockClear()
+    act(() => liveStore.set({ source: 'none', status: 'idle', held: [] }))
   })
 
   it('opens from the Tools menu and creates a score from a template', () => {
@@ -94,5 +96,34 @@ describe('Sheet & tab editor', () => {
     expect(screen.getByRole('button', { name: '▶ Phát từ đầu' })).toBeInTheDocument()
     fireEvent.keyDown(editor(), { key: ' ' })
     expect(playScore).toHaveBeenLastCalledWith(expect.anything(), expect.objectContaining({ from: { measure: 0, event: 0, string: 3 } }))
+  })
+
+  it('enters notes played on a MIDI keyboard, keys pressed together as a chord', () => {
+    act(() => liveStore.set({ source: 'midi', status: 'on', devices: ['Piano'] }))
+    renderWithProviders(<AppRoutes />, { route: '/sheet' })
+    fireEvent.click(screen.getByRole('button', { name: '+ Tạo bản mới' }))
+    const id = listSheets()[0].id
+    expect(screen.getByRole('checkbox', { name: 'Nhập nốt từ đàn MIDI' })).toBeChecked()
+    const now = vi.spyOn(performance, 'now')
+    now.mockReturnValue(1000)
+    act(() => handleMidiMessage([0x90, 57, 90]))
+    now.mockReturnValue(2000)
+    act(() => handleMidiMessage([0x90, 60, 90]))
+    now.mockReturnValue(2020)
+    act(() => handleMidiMessage([0x90, 64, 90]))
+    now.mockRestore()
+    const events = loadSheet(id)!.measures[0].events
+    expect(events[0].notes.map((n) => n.midi)).toEqual([57])
+    expect(events).toHaveLength(2)
+    expect(new Set(events[1].notes.map((n) => n.midi))).toEqual(new Set([60, 64]))
+    fireEvent.click(screen.getByRole('checkbox', { name: 'Nhập nốt từ đàn MIDI' }))
+    act(() => handleMidiMessage([0x90, 67, 90]))
+    expect(loadSheet(id)!.measures[0].events).toHaveLength(2)
+  })
+
+  it('links to the connect page when no instrument is connected', () => {
+    renderWithProviders(<AppRoutes />, { route: '/sheet' })
+    fireEvent.click(screen.getByRole('button', { name: '+ Tạo bản mới' }))
+    expect(screen.getByRole('link', { name: 'Kết nối đàn thật để nhập nốt bằng cách chơi →' })).toHaveAttribute('href', expect.stringMatching(/connect$/))
   })
 })

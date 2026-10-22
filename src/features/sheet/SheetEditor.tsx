@@ -5,6 +5,7 @@ import { Fretboard } from '../../components/Fretboard/Fretboard'
 import { Piano } from '../../components/Piano/Piano'
 import { ScoreView } from '../../components/Score/ScoreView'
 import { useT } from '../../i18n/useT'
+import { useLiveInput, useLiveNote } from '../../input/useLiveInput'
 import { useSettings } from '../../store/settingsContext'
 import { usePersistentState } from '../../store/usePersistentState'
 import { displayNote } from '../../theory/notes'
@@ -14,7 +15,7 @@ import { getEvent, refsInRange } from '../../theory/scoreEdit'
 import type { ScoreViewMode } from '../../theory/scoreLayout'
 import { MetaBar, Toolbar } from './EditorPanels'
 import { PlaybackBar } from './PlaybackBar'
-import { editorReducer, initEditor, keyToAction } from './editorState'
+import { editorReducer, initEditor, keyToAction, liveJoinsChord } from './editorState'
 import { lastSaveFailed, loadSheet, saveSheet, storageUsage, subscribeSheets } from './sheetStore'
 import { DEFAULT_PLAYBACK, card, type PlaybackSettings } from './ui'
 
@@ -67,6 +68,21 @@ function Editor({ initial }: { initial: Score }) {
       metronome: playback.metronome,
     })
   }
+
+  // Notes played on a connected MIDI keyboard or picked up by the mic are entered at the cursor
+  // (not while the score plays, so the mic does not hear the speakers).
+  const live = useLiveInput()
+  const [liveEntry, setLiveEntry] = usePersistentState('sheet:liveEntry', true)
+  const lastLive = useRef(0)
+  useLiveNote(
+    (m) => {
+      const now = performance.now()
+      const chord = liveJoinsChord(live.source, now - lastLive.current, chordMode)
+      lastLive.current = now
+      dispatch({ type: 'insertMidi', midi: m, chord })
+    },
+    live.status === 'on' && liveEntry && !player.playing,
+  )
 
   // Leaving the editor stops the music.
   useEffect(() => () => void (scorePlayerStore.get().playing && stopScore()), [])
@@ -146,7 +162,19 @@ function Editor({ initial }: { initial: Score }) {
       </section>
 
       <section className={`${card} space-y-2 !p-3`}>
-        <p className="text-sm text-stone-500">{instrument === 'piano' ? t('sheet.instrumentHintPiano') : t('sheet.instrumentHint')}</p>
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="text-sm text-stone-500">{instrument === 'piano' ? t('sheet.instrumentHintPiano') : t('sheet.instrumentHint')}</p>
+          {live.status === 'on' ? (
+            <label className="flex items-center gap-1.5 text-sm" title={t('sheet.liveHint')}>
+              <input type="checkbox" checked={liveEntry} onChange={(e) => setLiveEntry(e.target.checked)} />
+              {t(live.source === 'midi' ? 'sheet.liveMidi' : 'sheet.liveMic')}
+            </label>
+          ) : (
+            <Link to="/connect" className="text-sm text-rose-600 hover:underline">
+              {t('sheet.liveConnect')}
+            </Link>
+          )}
+        </div>
         <div className="overflow-x-auto">
           {instrument === 'piano' ? (
             <Piano startMidi={40} endMidi={84} highlights={new Map()} activeMidis={new Set(shown?.notes.map((n) => n.midi))} onKeyClick={(m) => dispatch({ type: 'insertMidi', midi: m, chord: addToChord() })} />
