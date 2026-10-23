@@ -161,6 +161,7 @@ export const vi = {
   'jam.legendScale': 'nốt khác trong scale',
   'jam.legendRelative': '· nhãn là quãng tính từ {chord}',
   'jam.openInRoom': 'Mở trong Jam Room để sửa tiến trình →',
+  'jam.practiseComping': '🎸 Tập đệm guitar với vòng này →',
   'jam.customScale': 'Scale gợi ý cho bài này.',
 
   'groove.pop': 'Nhịp 4/4 đều, phổ biến nhất.',
@@ -834,6 +835,7 @@ export const en: Record<MessageKey, string> = {
   'jam.legendScale': 'other scale notes',
   'jam.legendRelative': '· labels are intervals from {chord}',
   'jam.openInRoom': 'Open in the Jam Room to edit the progression →',
+  'jam.practiseComping': '🎸 Practise comping this loop on guitar →',
   'jam.customScale': 'Suggested scale for this lesson.',
 
   'groove.pop': 'Steady 4/4, the most common feel.',

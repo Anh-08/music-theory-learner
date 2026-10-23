@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
+import { GROOVES, groove } from '../../audio/grooves'
+import { RHYTHMS } from '../../audio/rhythms'
 import { parseProgression } from '../../theory'
-import { analyze, chordIndexAtBar, chordLabel, jamHighlights, transposeProgression, usesRomanNumerals } from './jamModel'
+import { GROOVE_RHYTHM, analyze, chordIndexAtBar, compingLink, chordLabel, jamHighlights, transposeProgression, usesRomanNumerals } from './jamModel'
 
 describe('jamModel', () => {
   it('recognises Roman numerals', () => {
@@ -45,5 +47,18 @@ describe('jamModel', () => {
     expect(transposeProgression('Am G F G', { tonic: 'A', mode: 'minor' }, { tonic: 'D#', mode: 'minor' })).toBe('D#m C# B C#')
     expect(transposeProgression('C G Am F', C, { tonic: 'A', mode: 'minor' })).toBe('C G Am F')
     expect(transposeProgression('I V vi IV', C, { tonic: 'E', mode: 'major' })).toBe('I V vi IV')
+  })
+
+  it('comping link: resolved chords, a rhythm that fits the groove, the same tempo', () => {
+    const params = (href: string) => Object.fromEntries(new URLSearchParams(href.split('?')[1]))
+    const { chords } = analyze('ii V I*2', 'Bb')
+    expect(params(compingLink(chords, groove('pop'), 'default', 96))).toEqual({ r: 'ballad', p: 'Cm F Bb*2', tempo: '96' })
+    expect(params(compingLink(chords, groove('pop'), 'travis', 96)).r).toBe('travis')
+    // A comping style with another beat count is ignored, as in the Jam playback.
+    expect(params(compingLink(chords, groove('waltz'), 'travis', 120)).r).toBe('valse')
+    for (const g of GROOVES) {
+      const r = RHYTHMS.find((x) => x.id === GROOVE_RHYTHM[g.id])
+      expect(r?.beatsPerBar, g.id).toBe(g.beatsPerBar)
+    }
   })
 })

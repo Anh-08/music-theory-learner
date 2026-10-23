@@ -58,4 +58,13 @@ describe('JamPlayer', () => {
     expect(screen.getByLabelText('Giọng')).toHaveValue('Cm')
     expect(screen.getByLabelText('Tiến trình hợp âm')).toHaveValue('Cm Bb Ab Bb')
   })
+
+  it('links to the Guitar comping page with the current loop', () => {
+    renderWithProviders(<JamPlayer editable progression="I V vi IV" songKey="G" groove="ballad" />)
+    const link = screen.getByRole('link', { name: /Tập đệm guitar với vòng này/ })
+    const params = new URLSearchParams(link.getAttribute('href')!.split('?')[1])
+    expect(params.get('p')).toBe('G D Em C')
+    expect(params.get('r')).toBe('ballad')
+    expect(params.get('tempo')).toBe('72')
+  })
 })

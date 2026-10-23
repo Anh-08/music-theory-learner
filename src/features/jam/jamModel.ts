@@ -1,3 +1,5 @@
+import type { Groove } from '../../audio/grooves'
+import { RHYTHMS } from '../../audio/rhythms'
 import type { Locale } from '../../i18n/locale'
 import { Interval, Note } from 'tonal'
 import {
@@ -73,6 +75,29 @@ export function transposeProgression(text: string, from: KeyRef, to: KeyRef): st
       return transposeNote(norm(root), interval) + suffix + (bass ? `/${transposeNote(norm(bass), interval)}` : '') + times
     })
     .join('')
+}
+
+/** Guitar rhythm that fits each Jam groove, for practising the same loop on the Guitar comping page. */
+export const GROOVE_RHYTHM: Record<Groove['id'], string> = {
+  pop: 'ballad',
+  ballad: 'ballad',
+  rock: 'rock',
+  blues: 'shuffle',
+  bossa: 'bossa-pick',
+  slowrock: 'slowrock',
+  slowrock68: 'slowrock68',
+  waltz: 'valse',
+}
+
+/**
+ * Link to the Guitar comping page with the same loop: the chords as resolved in the current key (Roman numerals become
+ * chord symbols, "C*2" keeps its length), the comping style picked in the Jam (or the groove's usual rhythm) and the tempo.
+ */
+export function compingLink(chords: ProgressionChord[], groove: Groove, compId: string, tempo: number): string {
+  // Same rule as the Jam playback: a comping style only applies when its beat count matches the groove.
+  const rhythm = RHYTHMS.find((r) => r.id === compId && r.beatsPerBar === groove.beatsPerBar)?.id ?? GROOVE_RHYTHM[groove.id]
+  const p = chords.map((c) => c.symbol + (c.bars > 1 ? `*${c.bars}` : '')).join(' ')
+  return `/rhythm?${new URLSearchParams({ r: rhythm, p, tempo: String(tempo) })}`
 }
 
 export function chordLabel(c: ProgressionChord): string {

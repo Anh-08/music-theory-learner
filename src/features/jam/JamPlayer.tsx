@@ -16,7 +16,7 @@ import { useT, type Translate } from '../../i18n/useT'
 import { useSettings } from '../../store/settingsContext'
 import { CHROMAS, chroma, keyLabel, parseKey, relatedKeys, spellingsOf, type KeyRef, type ScaleSuggestion } from '../../theory'
 import { errorMessage } from '../../i18n/errors'
-import { analyze, chordIndexAtBar, chordLabel, jamHighlights, scaleLabel, transposeProgression, type Analysis } from './jamModel'
+import { analyze, chordIndexAtBar, chordLabel, compingLink, jamHighlights, scaleLabel, transposeProgression, type Analysis } from './jamModel'
 import { JAM_PRESETS, type JamPreset } from './presets'
 import { scoreFromProgression } from '../../theory/scoreAnalysis'
 import { newSheetId, saveSheet } from '../sheet/sheetStore'
@@ -312,6 +312,13 @@ export function JamPlayer({ progression, songKey, groove = 'pop', tempo: initial
                 </button>
               ))}
             </div>
+            <Link
+              to={compingLink(chords, getGroove(grooveId), compId, tempo)}
+              onClick={() => playing && void stopJam(id)}
+              className="rounded-lg border border-rose-300 px-3 py-1.5 text-sm text-rose-700 hover:bg-rose-50 dark:border-rose-800 dark:text-rose-300 dark:hover:bg-rose-950/50"
+            >
+              {t('jam.practiseComping')}
+            </Link>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end">

@@ -11,7 +11,7 @@ export function RhythmPage() {
         <h1 className="text-3xl font-bold tracking-tight">{t('rhythm.title')}</h1>
         <p className="mt-2 text-stone-600 dark:text-stone-400">{t('rhythm.intro')}</p>
       </header>
-      <RhythmTrainer key={params.toString()} editable rhythm={params.get('r') ?? 'ballad'} progression={params.get('p') ?? 'C Am F G'} />
+      <RhythmTrainer key={params.toString()} editable rhythm={params.get('r') ?? 'ballad'} progression={params.get('p') ?? 'C Am F G'} tempo={Number(params.get('tempo')) || undefined} />
     </div>
   )
 }
