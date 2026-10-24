@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { nudgeClickVolume } from '../../audio/click'
 import { setMetronomeTempo, startMetronome, stopMetronome, useMetronome, type BarPlan } from '../../audio/metronome'
-import { ClickSettings } from '../../components/ui/ClickSettings'
+import { ClickSettings, ClickVolume } from '../../components/ui/ClickSettings'
 import { Segmented } from '../../components/ui/Segmented'
 import { Select } from '../../components/ui/Select'
 import type { MessageKey } from '../../i18n/messages'
@@ -202,6 +203,8 @@ export function MetronomePage() {
         e.preventDefault()
         a.nudge((e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 5 : 1))
       } else if ((e.key === 't' || e.key === 'T') && !a.trainerOn) a.tap()
+      else if (e.key === '-' || e.key === '_') nudgeClickVolume(-0.1)
+      else if (e.key === '+' || e.key === '=') nudgeClickVolume(0.1)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -295,6 +298,9 @@ export function MetronomePage() {
               </button>
             ))}
             <NumberField label={t('metronome.tempoInput')} value={settings.tempo} min={MIN_BPM} max={MAX_BPM} onChange={setTempo} disabled={trainerOn} />
+          </div>
+          <div className="mx-auto w-full max-w-xs pt-1 text-left">
+            <ClickVolume />
           </div>
           {trainerOn && <p className="text-xs text-stone-500 dark:text-stone-400">{t('metronome.trainerHint')}</p>}
         </div>

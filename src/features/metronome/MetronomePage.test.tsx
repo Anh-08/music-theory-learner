@@ -1,6 +1,7 @@
 import { act, fireEvent, screen } from '@testing-library/react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { AppRoutes } from '../../App'
+import { DEFAULT_CLICK, setClickSettings } from '../../audio/click'
 import { metronomeStore, setMetronomeTempo, startMetronome, stopMetronome, type MetronomeOptions } from '../../audio/metronome'
 import { renderWithProviders } from '../../test/renderWithProviders'
 import { MetronomePage } from './MetronomePage'
@@ -25,6 +26,7 @@ const dots = () => screen.getAllByRole('button', { name: /^Phách \d+:/ })
 describe('Metronome page', () => {
   beforeEach(() => {
     localStorage.clear()
+    act(() => setClickSettings(DEFAULT_CLICK))
     run.opts = null
     vi.mocked(startMetronome).mockClear()
     vi.mocked(setMetronomeTempo).mockClear()
@@ -98,6 +100,10 @@ describe('Metronome page', () => {
     expect(bigTempo()).toBe('94')
     fireEvent.keyDown(document.body, { key: ' ' })
     expect(stopMetronome).toHaveBeenCalled()
+    fireEvent.keyDown(document.body, { key: '+' })
+    fireEvent.keyDown(document.body, { key: '+' })
+    fireEvent.keyDown(document.body, { key: '-' })
+    expect(screen.getAllByText('Âm lượng metronome: 110%')).toHaveLength(2)
   })
 
   it('speed trainer, muted bars and visual-only mode shape the bar plan', async () => {

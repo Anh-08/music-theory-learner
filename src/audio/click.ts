@@ -12,12 +12,14 @@ export type ClickSound = 'soft' | 'wood' | 'sharp'
 
 export interface ClickSettings {
   sound: ClickSound
-  /** 0–1 (0 = silent). */
+  /** 0–`MAX_CLICK_VOLUME` (0 = silent, 1 = normal, above 1 = boosted). */
   volume: number
 }
 
 export const CLICK_SOUNDS: ClickSound[] = ['soft', 'wood', 'sharp']
-export const DEFAULT_CLICK: ClickSettings = { sound: 'soft', volume: 0.7 }
+/** Up to +6 dB of boost: a sine tick is easy to lose under a guitar, especially through laptop speakers. */
+export const MAX_CLICK_VOLUME = 2
+export const DEFAULT_CLICK: ClickSettings = { sound: 'soft', volume: 1 }
 
 const KEY = 'mtl:click'
 
@@ -27,14 +29,14 @@ export function parseClickSettings(raw: string | null): ClickSettings {
     const v = raw === null ? {} : (JSON.parse(raw) as Partial<ClickSettings>)
     return {
       sound: CLICK_SOUNDS.includes(v.sound as ClickSound) ? (v.sound as ClickSound) : DEFAULT_CLICK.sound,
-      volume: typeof v.volume === 'number' && v.volume >= 0 && v.volume <= 1 ? v.volume : DEFAULT_CLICK.volume,
+      volume: typeof v.volume === 'number' && v.volume >= 0 && v.volume <= MAX_CLICK_VOLUME ? v.volume : DEFAULT_CLICK.volume,
     }
   } catch {
     return DEFAULT_CLICK
   }
 }
 
-/** Gain in dB for a 0–1 volume slider (linear amplitude, so the slider feels even). */
+/** Gain in dB for the volume slider (linear amplitude, so the slider feels even; 2 = +6 dB). */
 export function volumeToDb(volume: number): number {
   return volume <= 0 ? -Infinity : 20 * Math.log10(volume)
 }
@@ -64,6 +66,7 @@ export function useClickSettings(): ClickSettings {
 
 export function setClickSettings(patch: Partial<ClickSettings>): void {
   settings = { ...settings, ...patch }
+  settings.volume = Math.min(MAX_CLICK_VOLUME, Math.max(0, Math.round(settings.volume * 100) / 100))
   try {
     localStorage.setItem(KEY, JSON.stringify(settings))
   } catch {
@@ -84,24 +87,27 @@ interface ClickVoice {
 type Tone = typeof ToneNs
 
 function createVoices(T: Tone): Record<ClickSound, ClickVoice> {
+  // Boosted clicks (and clicks on top of a full band) could push the output past full scale and crackle; the limiter
+  // keeps peaks just under it.
+  const out = new T.Limiter(-1).toDestination()
   return {
     // Pure sine, short decay: no harmonics at all — the gentlest in headphones.
     soft: {
-      synth: new T.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.002, decay: 0.05, sustain: 0, release: 0.02 } }).toDestination(),
+      synth: new T.Synth({ oscillator: { type: 'sine' }, envelope: { attack: 0.002, decay: 0.05, sustain: 0, release: 0.02 } }).connect(out),
       notes: ['A5', 'E5'],
-      baseDb: -6,
+      baseDb: -3,
     },
     // A falling-pitch sine "tok", like a wood block.
     wood: {
-      synth: new T.MembraneSynth({ pitchDecay: 0.012, octaves: 1.5, envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.01 } }).toDestination(),
+      synth: new T.MembraneSynth({ pitchDecay: 0.012, octaves: 1.5, envelope: { attack: 0.001, decay: 0.06, sustain: 0, release: 0.01 } }).connect(out),
       notes: ['C5', 'G4'],
-      baseDb: -4,
+      baseDb: -1,
     },
     // The original square-wave beep, for those who want a click that cuts through a loud mix.
     sharp: {
-      synth: new T.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 } }).toDestination(),
+      synth: new T.Synth({ oscillator: { type: 'square' }, envelope: { attack: 0.001, decay: 0.03, sustain: 0, release: 0.01 } }).connect(out),
       notes: ['C6', 'G5'],
-      baseDb: -12,
+      baseDb: -9,
     },
   }
 }
@@ -134,10 +140,28 @@ export async function getClick(): Promise<Click> {
   }
 }
 
-/** Plays one accented click so the user hears a settings change. Skipped until audio has been used once. */
+let lastPreview = 0
+
+/**
+ * Plays one accented click so the user hears a settings change. Skipped until audio has been used once, and while
+ * the Transport is playing (the change is already audible, and an extra note between scheduled clicks would go back
+ * in time on these monophonic synths).
+ */
 export async function previewClick(): Promise<void> {
   if (!isToneLoaded()) return
   const T = await getTone()
+  if (T.getTransport().state === 'started') return
   const c = await getClick()
-  c.tick(T.now() + 0.02, true)
+  lastPreview = Math.max(T.now() + 0.02, lastPreview + 0.06)
+  try {
+    c.tick(lastPreview, true)
+  } catch {
+    // Right after stopping, a click scheduled slightly ahead can still be pending; skipping one preview is fine.
+  }
+}
+
+/** Changes the volume by `delta` and plays a click (reads the store, so quick repeated presses all count). */
+export function nudgeClickVolume(delta: number): void {
+  setClickSettings({ volume: settings.volume + delta })
+  void previewClick()
 }
