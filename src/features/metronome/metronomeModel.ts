@@ -12,14 +12,22 @@ export type Grouping7 = '2+2+3' | '3+2+2' | '2+3+2'
 export const METERS: Meter[] = ['2/4', '3/4', '4/4', '5/4', '6/8', '7/8', '9/8', '12/8', 'custom']
 export const GROUPINGS_7: Grouping7[] = ['2+2+3', '3+2+2', '2+3+2']
 export const BEAT_LEVELS: BeatLevel[] = ['strong', 'medium', 'normal', 'silent']
+/** Lower numbers of a custom time signature: the note value one beat dot stands for (2 = half note, 8 = eighth…). */
+export const CUSTOM_UNITS = [1, 2, 4, 8, 16, 32] as const
+export type CustomUnit = (typeof CUSTOM_UNITS)[number]
+export const MAX_CUSTOM_BEATS = 32
 export const MIN_BPM = 30
 export const MAX_BPM = 300
 
 export interface MetronomeSettings {
   tempo: number
   meter: Meter
-  /** Beats per bar for the custom meter (1–16 quarter notes). */
+  /** Upper number of the custom time signature: beats per bar (1–32). */
   customBeats: number
+  /** Lower number of the custom time signature: which note is one beat (the BPM counts it). */
+  customUnit: CustomUnit
+  /** Optional grouping of the custom meter, e.g. "3+3+2"; empty or invalid = the default. */
+  customGrouping: string
   /** 6/8, 9/8, 12/8: count the dotted quarter (felt beat) or every eighth. */
   compoundUnit: 'dotted' | 'eighth'
   grouping7: Grouping7
@@ -60,6 +68,8 @@ export const DEFAULT_METRONOME: MetronomeSettings = {
   tempo: 90,
   meter: '4/4',
   customBeats: 4,
+  customUnit: 4,
+  customGrouping: '',
   compoundUnit: 'dotted',
   grouping7: '2+2+3',
   accents: null,
@@ -81,7 +91,9 @@ export function normalizeSettings(raw: Partial<MetronomeSettings> | null | undef
     ...s,
     tempo: clampBpm(Number(s.tempo) || DEFAULT_METRONOME.tempo),
     meter: METERS.includes(s.meter) ? s.meter : DEFAULT_METRONOME.meter,
-    customBeats: Math.min(16, Math.max(1, Math.round(Number(s.customBeats) || 4))),
+    customBeats: Math.min(MAX_CUSTOM_BEATS, Math.max(1, Math.round(Number(s.customBeats) || 4))),
+    customUnit: CUSTOM_UNITS.includes(s.customUnit) ? s.customUnit : 4,
+    customGrouping: typeof s.customGrouping === 'string' ? s.customGrouping.slice(0, 64) : '',
     compoundUnit: s.compoundUnit === 'eighth' ? 'eighth' : 'dotted',
     grouping7: GROUPINGS_7.includes(s.grouping7) ? s.grouping7 : DEFAULT_METRONOME.grouping7,
     subdivision: allowedSubdivisions('quarter').includes(s.subdivision) ? s.subdivision : 'none',
@@ -105,10 +117,26 @@ export interface MeterLayout {
   groups: number[]
 }
 
-export function meterLayout(s: Pick<MetronomeSettings, 'meter' | 'customBeats' | 'compoundUnit' | 'grouping7'>): MeterLayout {
+/** Parses a grouping like "3+2+2" that must add up to `beats`; null when empty or wrong. */
+export function parseGrouping(text: string, beats: number): number[] | null {
+  const parts = text.split('+').map((x) => x.trim())
+  if (!text.trim() || parts.some((x) => !/^\d+$/.test(x))) return null
+  const groups = parts.map(Number)
+  return groups.every((g) => g > 0) && groups.reduce((a, b) => a + b, 0) === beats ? groups : null
+}
+
+/** Custom meters with an eighth (or shorter) beat and a multiple of 3 beats are compound: groups of 3 (9/16 = 3+3+3). */
+export function defaultCustomGroups(beats: number, unit: CustomUnit): number[] {
+  return unit >= 8 && beats > 3 && beats % 3 === 0 ? Array<number>(beats / 3).fill(3) : [beats]
+}
+
+export function meterLayout(s: Pick<MetronomeSettings, 'meter' | 'customBeats' | 'customUnit' | 'customGrouping' | 'compoundUnit' | 'grouping7'>): MeterLayout {
   switch (s.meter) {
-    case 'custom':
-      return { pulses: s.customBeats, kind: 'quarter', groups: [s.customBeats] }
+    case 'custom': {
+      // Every beat dot is one lower-number note; the pulse can be split like a quarter note (in 2, 3, 4 or swung).
+      const groups = parseGrouping(s.customGrouping, s.customBeats) ?? defaultCustomGroups(s.customBeats, s.customUnit)
+      return { pulses: s.customBeats, kind: 'quarter', groups }
+    }
     case '7/8': {
       const groups = s.grouping7.split('+').map(Number)
       return { pulses: 7, kind: 'eighth', groups }

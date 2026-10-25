@@ -8,9 +8,11 @@ import type { MessageKey } from '../../i18n/messages'
 import { useT } from '../../i18n/useT'
 import { usePersistentState } from '../../store/usePersistentState'
 import {
+  CUSTOM_UNITS,
   DEFAULT_METRONOME,
   GROUPINGS_7,
   MAX_BPM,
+  MAX_CUSTOM_BEATS,
   METERS,
   MIN_BPM,
   addTap,
@@ -22,11 +24,14 @@ import {
   meterLayout,
   nextLevel,
   normalizeSettings,
+  parseGrouping,
   tapTempo,
   tempoName,
   trainerTempo,
   type BeatLevel,
+  type CustomUnit,
   type MetronomeSettings,
+  type Subdivision,
 } from './metronomeModel'
 
 const card = 'space-y-4 rounded-xl border border-stone-200 bg-white p-5 dark:border-stone-800 dark:bg-stone-900'
@@ -79,6 +84,42 @@ function NumberField({ label, value, min, max, onChange, disabled }: { label: st
         onKeyDown={(e) => e.key === 'Enter' && commit()}
         className="w-24 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm disabled:opacity-40 dark:border-stone-700 dark:bg-stone-900"
       />
+    </label>
+  )
+}
+
+/** Subdivision names: note values for a quarter-note beat, "split in N" when the beat is another note (3/2, 7/8…). */
+function subLabel(sub: Subdivision, generic: boolean): MessageKey {
+  if (generic && sub !== 'none' && sub !== 'swing') return `metronome.split.${sub}` as MessageKey
+  return `metronome.sub.${sub}` as MessageKey
+}
+
+/** Text box for a grouping like "3+2+2"; commits on blur / Enter and says when the numbers do not add up. */
+function GroupingField({ beats, value, onChange }: { beats: number; value: string; onChange: (v: string) => void }) {
+  const { t } = useT()
+  const [draft, setDraft] = useState(value)
+  const [shown, setShown] = useState(value)
+  if (shown !== value) {
+    setShown(value)
+    setDraft(value)
+  }
+  const invalid = value.trim() !== '' && parseGrouping(value, beats) === null
+  const example = beats > 3 ? `${Array<number>(Math.floor(beats / 2) - 1).fill(2).join('+')}+${beats - 2 * (Math.floor(beats / 2) - 1)}` : String(beats)
+  return (
+    <label className="block text-sm">
+      <span className={fieldLabel}>{t('metronome.customGrouping')}</span>
+      <input
+        type="text"
+        inputMode="text"
+        value={draft}
+        placeholder={t('metronome.groupingPlaceholder', { example })}
+        onChange={(e) => setDraft(e.target.value)}
+        onBlur={() => onChange(draft.replace(/\s/g, ''))}
+        onKeyDown={(e) => e.key === 'Enter' && onChange(draft.replace(/\s/g, ''))}
+        aria-invalid={invalid}
+        className="w-44 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm dark:border-stone-700 dark:bg-stone-900"
+      />
+      {invalid && <span className="mt-1 block text-xs text-amber-700 dark:text-amber-400">{t('metronome.groupingInvalid', { n: beats, example })}</span>}
     </label>
   )
 }
@@ -312,10 +353,27 @@ export function MetronomePage() {
             label={t('metronome.meter')}
             value={settings.meter}
             onChange={(v) => update({ meter: v as MetronomeSettings['meter'], accents: null })}
-            options={METERS.map((x) => ({ value: x, label: x === 'custom' ? t('metronome.custom') : x }))}
+            options={METERS.map((x) => ({ value: x, label: x === 'custom' ? t('metronome.customNamed', { sig: `${settings.customBeats}/${settings.customUnit}` }) : x }))}
           />
           {settings.meter === 'custom' && (
-            <NumberField label={t('metronome.customBeats')} value={settings.customBeats} min={1} max={16} onChange={(n) => update({ customBeats: n, accents: null })} />
+            <div className="space-y-2">
+              <div className="flex items-end gap-2">
+                <NumberField label={t('metronome.customBeats')} value={settings.customBeats} min={1} max={MAX_CUSTOM_BEATS} onChange={(n) => update({ customBeats: n, accents: null })} />
+                <span className="pb-1.5 text-2xl leading-none text-stone-400" aria-hidden>
+                  /
+                </span>
+                <div className="w-44">
+                  <Select
+                    label={t('metronome.customUnit')}
+                    value={String(settings.customUnit)}
+                    onChange={(v) => update({ customUnit: Number(v) as CustomUnit, accents: null })}
+                    options={CUSTOM_UNITS.map((u) => ({ value: String(u), label: `${u} · ${t(`metronome.note.${u}` as MessageKey)}` }))}
+                  />
+                </div>
+              </div>
+              <p className="text-xs text-stone-500 dark:text-stone-400">{t('metronome.customHint', { note: t(`metronome.note.${settings.customUnit}` as MessageKey) })}</p>
+              <GroupingField beats={settings.customBeats} value={settings.customGrouping} onChange={(g) => update({ customGrouping: g, accents: null })} />
+            </div>
           )}
           {compound && (
             <Segmented
@@ -342,7 +400,7 @@ export function MetronomePage() {
             label={t('metronome.subdivision')}
             value={subdivision}
             onChange={(v) => update({ subdivision: v })}
-            options={subs.map((x) => ({ value: x, label: t(`metronome.sub.${x}` as MessageKey) }))}
+            options={subs.map((x) => ({ value: x, label: t(subLabel(x, settings.meter === 'custom' && settings.customUnit !== 4)) }))}
           />
           {subdivision === 'swing' && (
             <label className="block text-sm">

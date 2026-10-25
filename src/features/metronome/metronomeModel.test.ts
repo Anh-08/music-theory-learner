@@ -8,6 +8,7 @@ import {
   meterLayout,
   nextLevel,
   normalizeSettings,
+  parseGrouping,
   pulseOffsets,
   tapTempo,
   tempoName,
@@ -21,6 +22,25 @@ describe('meters', () => {
   it('simple meters count quarter notes', () => {
     expect(meterLayout(s({ meter: '3/4' }))).toEqual({ pulses: 3, kind: 'quarter', groups: [3] })
     expect(meterLayout(s({ meter: 'custom', customBeats: 11 }))).toEqual({ pulses: 11, kind: 'quarter', groups: [11] })
+  })
+
+  it('custom meters take any top and bottom number; one dot = one bottom-number note', () => {
+    expect(meterLayout(s({ meter: 'custom', customBeats: 3, customUnit: 2 }))).toEqual({ pulses: 3, kind: 'quarter', groups: [3] })
+    // A multiple of 3 eighths / sixteenths is compound by default…
+    expect(meterLayout(s({ meter: 'custom', customBeats: 9, customUnit: 16 })).groups).toEqual([3, 3, 3])
+    expect(meterLayout(s({ meter: 'custom', customBeats: 6, customUnit: 4 })).groups).toEqual([6])
+    // …and any additive grouping can be typed.
+    expect(meterLayout(s({ meter: 'custom', customBeats: 11, customUnit: 8, customGrouping: '3+3+3+2' })).groups).toEqual([3, 3, 3, 2])
+    expect(meterLayout(s({ meter: 'custom', customBeats: 11, customUnit: 8, customGrouping: '3+3' })).groups).toEqual([11])
+  })
+
+  it('parses groupings that add up to the beat count', () => {
+    expect(parseGrouping('2+2+3', 7)).toEqual([2, 2, 3])
+    expect(parseGrouping(' 3 + 2 ', 5)).toEqual([3, 2])
+    expect(parseGrouping('3+3', 7)).toBeNull()
+    expect(parseGrouping('3+0+4', 7)).toBeNull()
+    expect(parseGrouping('3+x', 7)).toBeNull()
+    expect(parseGrouping('', 7)).toBeNull()
   })
 
   it('compound meters count dotted quarters by default, or every eighth in groups of 3', () => {
@@ -130,6 +150,8 @@ describe('settings', () => {
     expect(n.meter).toBe('4/4')
     expect(n.subdivision).toBe('none')
     expect(n.trainer).toEqual({ ...DEFAULT_METRONOME.trainer, on: true })
+    expect(normalizeSettings({ customBeats: 99, customUnit: 3 as never }).customBeats).toBe(32)
+    expect(normalizeSettings({ customUnit: 3 as never }).customUnit).toBe(4)
   })
 
   it('names the tempo', () => {

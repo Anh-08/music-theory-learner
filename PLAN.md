@@ -458,7 +458,7 @@ Goal: a metronome good enough to replace a phone app while practising — open i
 - Changing the tempo while running takes effect **without restarting** (set `Transport.bpm`, the bar position is kept).
 
 **Time signature & beats:**
-- Presets 2/4, 3/4, 4/4, 5/4, 6/8, 7/8, 9/8, 12/8, plus a custom beat count (1–16).
+- Presets 2/4, 3/4, 4/4, 5/4, 6/8, 7/8, 9/8, 12/8, plus a **custom time signature** (2026-10-24): any top number 1–32 over 1, 2, 4, 8, 16 or 32 (3/2, 5/8, 9/16, 11/8…). One beat dot = one bottom-number note and the BPM counts it; an optional typed grouping ("3+3+3+2") sets the medium accents, and multiples of 3 eighths/sixteenths default to groups of 3. Subdivisions are named "split in 2/3/4" when the beat is not a quarter note.
 - Compound meters (6/8, 9/8, 12/8): the BPM counts the **dotted quarter** by default (6/8 at 60 = 2 felt beats per second), with an option to count eighths. Odd meters get a grouping (7/8 = 2+2+3, 3+2+2, 2+3+2), whose group starts are accented.
 - **Per-beat accent**: clicking a beat dot cycles *accent → normal → silent*, e.g. accent only beats 2 and 4 (backbeat practice) or leave beat 1 silent.
 
