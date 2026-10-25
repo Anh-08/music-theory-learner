@@ -1,7 +1,8 @@
+import { useEffect, useRef, type PointerEvent } from 'react'
 import type { Step } from '../../audio/rhythms'
 import { useT } from '../../i18n/useT'
 import type { MessageKey } from '../../i18n/messages'
-import { countLabels, toggleCell, visibleRows, type GridRow } from './gridModel'
+import { countLabels, paintCells, toggleCell, visibleRows, type GridCell, type GridRow } from './gridModel'
 
 interface RhythmGridProps {
   steps: Step[]
@@ -9,7 +10,7 @@ interface RhythmGridProps {
   stepsPerBeat: number
   /** Step currently sounding (playhead), -1 when not playing. */
   current?: number
-  /** If given, clicking a cell edits the rhythm. */
+  /** If given, clicking a cell edits the rhythm; dragging across cells paints them all the same way. */
   onChange?: (steps: Step[]) => void
 }
 
@@ -26,6 +27,34 @@ export function RhythmGrid({ steps, beatsPerBar, stepsPerBeat, current = -1, onC
   const editing = Boolean(onChange)
   const rows = visibleRows(steps, editing)
   const counts = countLabels(beatsPerBar, stepsPerBeat)
+
+  // Drag-to-paint: always applied to the steps as they were when the drag began, so dragging back restores cells.
+  const drag = useRef<{ start: GridCell; end: GridCell; before: Step[] } | null>(null)
+  useEffect(() => {
+    const stop = () => (drag.current = null)
+    window.addEventListener('pointerup', stop)
+    window.addEventListener('pointercancel', stop)
+    return () => {
+      window.removeEventListener('pointerup', stop)
+      window.removeEventListener('pointercancel', stop)
+    }
+  }, [])
+
+  const beginDrag = (e: PointerEvent<HTMLButtonElement>, cell: GridCell) => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    // Touch input captures the pointer to the first cell; release it so the cells it moves over get pointerenter.
+    if (e.currentTarget.hasPointerCapture?.(e.pointerId)) e.currentTarget.releasePointerCapture(e.pointerId)
+    drag.current = { start: cell, end: cell, before: steps }
+    onChange!(paintCells(steps, cell, cell, rows))
+  }
+
+  const extendDrag = (cell: GridCell) => {
+    const d = drag.current
+    if (!d || (d.end.row === cell.row && d.end.step === cell.step)) return
+    d.end = cell
+    onChange!(paintCells(d.before, d.start, cell, rows))
+  }
 
   const rowLabel = (row: GridRow) => (row === 'strum' ? t('grid.strum') : row === 'bass' ? t('grid.bass') : t('grid.string', { n: row }))
 
@@ -74,7 +103,15 @@ export function RhythmGrid({ steps, beatsPerBar, stepsPerBeat, current = -1, onC
                 return (
                   <td key={i}>
                     {editing ? (
-                      <button type="button" aria-label={label} className={`${cls} hover:border-violet-400`} onClick={() => onChange!(steps.map((s, j) => (j === i ? toggleCell(s, row) : s)))}>
+                      <button
+                        type="button"
+                        aria-label={label}
+                        className={`${cls} touch-none hover:border-violet-400`}
+                        onPointerDown={(e) => beginDrag(e, { row, step: i })}
+                        onPointerEnter={() => extendDrag({ row, step: i })}
+                        // Pointer presses are handled on pointerdown; this is the keyboard (Enter / Space) path.
+                        onClick={(e) => e.detail === 0 && onChange!(steps.map((s, j) => (j === i ? toggleCell(s, row) : s)))}
+                      >
                         {c.text}
                       </button>
                     ) : (

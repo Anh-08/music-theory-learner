@@ -39,6 +39,27 @@ describe('RhythmTrainer', () => {
     expect(JSON.parse(localStorage.getItem('mtl:rhythms.custom')!)).toEqual([])
   })
 
+  it('drags across cells to switch several on, and drags back to undo', () => {
+    renderWithProviders(<RhythmTrainer editable rhythm="ballad-pick" progression="C G" />)
+    fireEvent.click(screen.getByRole('button', { name: 'Tự tạo điệu từ điệu này' }))
+    const cell = (row: string, n: number) => screen.getByRole('button', { name: new RegExp(`^${row}, bước ${n}:`) })
+    // Step 2 of "B 3 2 3 1 3 2 3" only picks string 3: drag down from string 1 to string 3.
+    fireEvent.pointerDown(cell('Dây 1', 2), { button: 0, pointerId: 1 })
+    fireEvent.pointerEnter(cell('Dây 2', 2), { pointerId: 1 })
+    fireEvent.pointerEnter(cell('Dây 3', 2), { pointerId: 1 })
+    expect(cell('Dây 1', 2)).toHaveAccessibleName('Dây 1, bước 2: có')
+    expect(cell('Dây 2', 2)).toHaveAccessibleName('Dây 2, bước 2: có')
+    expect(cell('Dây 3', 2)).toHaveAccessibleName('Dây 3, bước 2: có')
+    // Dragging back up shrinks the block: string 2 goes back to off (string 3 was already on before the drag).
+    fireEvent.pointerEnter(cell('Dây 1', 2), { pointerId: 1 })
+    expect(cell('Dây 2', 2)).toHaveAccessibleName('Dây 2, bước 2: không')
+    fireEvent.pointerUp(window, { pointerId: 1 })
+    // After the drag ends, moving over cells changes nothing.
+    fireEvent.pointerEnter(cell('Dây 1', 3), { pointerId: 1 })
+    expect(cell('Dây 1', 3)).toHaveAccessibleName('Dây 1, bước 3: không')
+    expect(cell('Dây 1', 2)).toHaveAccessibleName('Dây 1, bước 2: có')
+  })
+
   it('shows an error on a bad progression', () => {
     renderWithProviders(<RhythmTrainer editable progression="C G" />)
     fireEvent.change(screen.getByLabelText('Tiến trình'), { target: { value: 'C Qm' } })

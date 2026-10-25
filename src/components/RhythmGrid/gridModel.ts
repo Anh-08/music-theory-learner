@@ -63,3 +63,60 @@ export function countLabels(beatsPerBar: number, stepsPerBeat: number): string[]
   const sub = stepsPerBeat === 2 ? ['&'] : stepsPerBeat === 4 ? ['e', '&', 'a'] : ['·', '·']
   return Array.from({ length: beatsPerBar }, (_, b) => [String(b + 1), ...sub]).flat()
 }
+
+export interface GridCell {
+  row: GridRow
+  step: number
+}
+
+function bassOf(step: Step): 'B' | "B'" | null {
+  const notes = picks(step)
+  return notes.includes('B') ? 'B' : notes.includes("B'") ? "B'" : null
+}
+
+function withBass(step: Step, bass: 'B' | "B'" | null): Step {
+  const others = picks(step).filter((n) => n !== 'B' && n !== "B'")
+  return fromPicks(bass ? [bass, ...others] : others)
+}
+
+function withString(step: Step, string: 1 | 2 | 3 | 4, on: boolean): Step {
+  const notes = picks(step).filter((n) => n !== string)
+  return fromPicks(on ? [...notes, string] : notes)
+}
+
+/**
+ * Drag-to-paint, like selecting photos by dragging on a phone: the first cell is toggled as by a click,
+ * and every cell in the rectangle from `start` to `end` takes the same state. Dragging back shrinks the
+ * rectangle and restores the cells it leaves, since it is always applied to the steps as they were when
+ * the drag began.
+ * - Starting on the Strum row paints that strum (↓, ↑, ✕…) along the row.
+ * - Starting on the Bass row or a string row paints across those rows: if the first cell was switched on,
+ *   every cell is switched on (bass cells take the first cell's B / B′, or B); if it was switched off,
+ *   every cell is cleared.
+ */
+export function paintCells(steps: Step[], start: GridCell, end: GridCell, rows: GridRow[]): Step[] {
+  const first = toggleCell(steps[start.step], start.row)
+  const lo = Math.min(start.step, end.step)
+  const hi = Math.max(start.step, end.step)
+  const inCols = (i: number) => i >= lo && i <= hi
+
+  if (start.row === 'strum') return steps.map((s, i) => (inCols(i) ? first : s))
+
+  const pickRows = rows.filter((r) => r !== 'strum')
+  const a = pickRows.indexOf(start.row)
+  // Dragging onto the Strum row stops at the first pick row.
+  const b = end.row === 'strum' ? 0 : pickRows.indexOf(end.row)
+  const covered = pickRows.slice(Math.min(a, b), Math.max(a, b) + 1)
+  const bass = start.row === 'bass' ? bassOf(first) : null
+  const on = start.row === 'bass' ? bass !== null : picks(first).includes(start.row)
+
+  return steps.map((s, i) => {
+    if (!inCols(i)) return s
+    let next = s
+    for (const row of covered) {
+      if (row === 'bass') next = withBass(next, start.row === 'bass' ? bass : on ? (bassOf(next) ?? 'B') : null)
+      else next = withString(next, row, on)
+    }
+    return next
+  })
+}

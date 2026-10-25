@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { formatStep, parsePattern, parseStep } from '../../audio/rhythms'
-import { countLabels, toggleCell, visibleRows } from './gridModel'
+import { countLabels, paintCells, toggleCell, visibleRows, type GridRow } from './gridModel'
 
 
 describe('gridModel', () => {
@@ -42,5 +42,52 @@ describe('gridModel', () => {
     expect(countLabels(3, 2)).toEqual(['1', '&', '2', '&', '3', '&'])
     expect(countLabels(1, 4)).toEqual(['1', 'e', '&', 'a'])
     expect(countLabels(2, 3)).toEqual(['1', '·', '·', '2', '·', '·'])
+  })
+})
+
+describe('paintCells (drag to paint)', () => {
+  const ROWS: GridRow[] = ['strum', 'bass', 1, 2, 3, 4]
+  const paint = (pattern: string, start: [GridRow, number], end: [GridRow, number]) =>
+    paintCells(parsePattern(pattern), { row: start[0], step: start[1] }, { row: end[0], step: end[1] }, ROWS).map(formatStep).join(' ')
+
+  it('a drag that stays on one cell is the same as a click', () => {
+    for (const row of ROWS) {
+      const steps = parsePattern("B+1 D - 2")
+      for (let i = 0; i < steps.length; i++) {
+        expect(paintCells(steps, { row, step: i }, { row, step: i }, ROWS), `${row} ${i}`).toEqual(steps.map((s, j) => (j === i ? toggleCell(s, row) : s)))
+      }
+    }
+  })
+
+  it('dragging down one step switches on strings 1, 2 and 3 together', () => {
+    expect(paint('B - - -', [1, 1], [3, 1])).toBe('B 123 - -')
+    // Dragging up works the same way.
+    expect(paint('B - - -', [3, 2], [1, 2])).toBe('B - 123 -')
+  })
+
+  it('dragging across a row paints every step; a block covers rows and steps', () => {
+    expect(paint('- - - -', [2, 0], [2, 3])).toBe('2 2 2 2')
+    expect(paint('- - - -', ['bass', 0], [2, 1])).toBe('B+12 B+12 - -')
+  })
+
+  it('starting on a cell that is on switches every covered cell off', () => {
+    expect(paint('123 123 B+3 -', [1, 0], [2, 3])).toBe('3 3 B+3 -')
+    // On the Bass row, "on" means the next click would clear it (B′ → none).
+    expect(paint("B'+3 B+2 B -", ['bass', 0], [3, 2])).toBe('- - - -')
+  })
+
+  it('the Bass row paints the first cell\'s B / B′ and leaves strings alone', () => {
+    expect(paint('B 3 2 1', ['bass', 0], ['bass', 3])).toBe("B' B'+3 B'+2 B'+1")
+    // From a string row, covered bass cells keep B′ when switching on.
+    expect(paint("- B' - -", [1, 0], ['bass', 1])).toBe("B+1 B'+1 - -")
+  })
+
+  it('the Strum row paints the first cell\'s new strum and never touches pick rows', () => {
+    expect(paint('- - - -', ['strum', 0], [3, 3])).toBe('D D D D')
+    expect(paint('X B+1 - U', ['strum', 0], ['strum', 2])).toBe('- - - U')
+  })
+
+  it('dragging onto the Strum row from a pick row stops at the Bass row', () => {
+    expect(paint('- - - -', [2, 0], ['strum', 0])).toBe('B+12 - - -')
   })
 })
