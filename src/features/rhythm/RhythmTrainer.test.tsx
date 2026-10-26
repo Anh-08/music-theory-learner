@@ -39,6 +39,19 @@ describe('RhythmTrainer', () => {
     expect(JSON.parse(localStorage.getItem('mtl:rhythms.custom')!)).toEqual([])
   })
 
+  it('a custom rhythm can switch to sixteenths', () => {
+    renderWithProviders(<RhythmTrainer editable rhythm="ballad" progression="C G" />)
+    fireEvent.click(screen.getByRole('button', { name: 'Tự tạo điệu từ điệu này' }))
+    expect(screen.queryByRole('button', { name: /^Quạt, bước 16:/ })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('radio', { name: 'Móc kép (1 e & a)' }))
+    expect(screen.getByRole('button', { name: 'Quạt, bước 5: xuống' })).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: /^Quạt, bước 2:/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Lưu điệu' }))
+    const [saved] = JSON.parse(localStorage.getItem('mtl:rhythms.custom')!)
+    expect(saved).toMatchObject({ stepsPerBeat: 4, beatsPerBar: 4, pattern: 'D D - - D - U - - - U - D - U -' })
+    expect(screen.getByLabelText(/^Quạt, bước 16:/)).toBeInTheDocument()
+  })
+
   it('drags across cells to switch several on, and drags back to undo', () => {
     renderWithProviders(<RhythmTrainer editable rhythm="ballad-pick" progression="C G" />)
     fireEvent.click(screen.getByRole('button', { name: 'Tự tạo điệu từ điệu này' }))

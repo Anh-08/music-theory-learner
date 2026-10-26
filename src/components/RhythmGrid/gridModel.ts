@@ -120,3 +120,17 @@ export function paintCells(steps: Step[], start: GridCell, end: GridCell, rows: 
     return next
   })
 }
+
+/**
+ * Re-divides a bar to `to` steps per beat (e.g. eighths 2 → sixteenths 4): finer steps keep every hit in place with rests
+ * in between; coarser steps keep only the hits that still fall on a step (the in-between sixteenths are dropped).
+ */
+export function resubdivide(steps: Step[], from: number, to: number): Step[] {
+  if (from === to) return steps
+  if (to > from) {
+    const k = to / from
+    return steps.flatMap((s) => [s, ...Array.from({ length: k - 1 }, (): Step => ({ kind: 'rest' }))])
+  }
+  const k = from / to
+  return steps.filter((_, i) => i % k === 0)
+}

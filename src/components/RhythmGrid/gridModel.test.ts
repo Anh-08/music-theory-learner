@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { formatStep, parsePattern, parseStep } from '../../audio/rhythms'
-import { countLabels, paintCells, toggleCell, visibleRows, type GridRow } from './gridModel'
+import { countLabels, paintCells, resubdivide, toggleCell, visibleRows, type GridRow } from './gridModel'
 
 
 describe('gridModel', () => {
@@ -89,5 +89,15 @@ describe('paintCells (drag to paint)', () => {
 
   it('dragging onto the Strum row from a pick row stops at the Bass row', () => {
     expect(paint('- - - -', [2, 0], ['strum', 0])).toBe('B+12 - - -')
+  })
+
+  it('re-divides a bar between eighths and sixteenths', () => {
+    const eighths = parsePattern('D - D U - U D U')
+    const sixteenths = resubdivide(eighths, 2, 4)
+    expect(sixteenths.map(formatStep).join(' ')).toBe('D - - - D - U - - - U - D - U -')
+    expect(resubdivide(sixteenths, 4, 2)).toEqual(eighths)
+    // Hits on the in-between sixteenths are dropped when going back to eighths.
+    expect(resubdivide(parsePattern('D U D U'), 4, 2).map(formatStep)).toEqual(['D', 'D'])
+    expect(resubdivide(eighths, 2, 2)).toBe(eighths)
   })
 })
