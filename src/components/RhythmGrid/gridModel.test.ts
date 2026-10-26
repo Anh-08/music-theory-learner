@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { formatStep, parsePattern, parseStep } from '../../audio/rhythms'
-import { countLabels, paintCells, resubdivide, toggleCell, visibleRows, type GridRow } from './gridModel'
+import { countLabels, paintCells, resubdivide, splitOf, toggleCell, toggleSplit, visibleRows, visibleSteps, type GridRow } from './gridModel'
 
 
 describe('gridModel', () => {
@@ -99,5 +99,30 @@ describe('paintCells (drag to paint)', () => {
     // Hits on the in-between sixteenths are dropped when going back to eighths.
     expect(resubdivide(parsePattern('D U D U'), 4, 2).map(formatStep)).toEqual(['D', 'D'])
     expect(resubdivide(eighths, 2, 2)).toBe(eighths)
+  })
+
+  it('splits single beats into sixteenths and back', () => {
+    const ballad = parsePattern('D - D U - U D U')
+    // Splitting beat 2 of an eighth bar: a sixteenth bar where only beat 2 shows e / a.
+    const one = toggleSplit({ steps: ballad, stepsPerBeat: 2 }, 4, 1)
+    expect(one.stepsPerBeat).toBe(4)
+    expect(one.split).toEqual([false, true, false, false])
+    expect(one.steps.map(formatStep).join(' ')).toBe('D - - - D - U - - - U - D - U -')
+    expect(visibleSteps(4, 4, one.split)).toEqual([0, 2, 4, 5, 6, 7, 8, 10, 12, 14])
+    // Unsplitting clears that beat's e / a; with no split beat left the bar goes back to eighths.
+    const filled = { ...one, steps: one.steps.map((s, i) => (i === 5 ? parsePattern('U')[0] : s)) }
+    const back = toggleSplit(filled, 4, 1)
+    expect(back).toEqual({ steps: ballad, stepsPerBeat: 2 })
+    // Older sixteenth rhythms without `splitBeats` show every beat split.
+    expect(splitOf({ beatsPerBar: 4, stepsPerBeat: 4 })).toEqual([true, true, true, true])
+    expect(splitOf({ beatsPerBar: 4, stepsPerBeat: 4, splitBeats: [3] })).toEqual([false, false, false, true])
+    expect(splitOf({ beatsPerBar: 4, stepsPerBeat: 2 })).toBeUndefined()
+  })
+
+  it('painting skips the hidden sixteenths of beats kept in eighths', () => {
+    const bar = toggleSplit({ steps: parsePattern('- - - - - - - -'), stepsPerBeat: 2 }, 4, 1)
+    const shown = visibleSteps(4, 4, bar.split)
+    const painted = paintCells(bar.steps, { row: 'strum', step: 0 }, { row: 'strum', step: 7 }, ['strum'], shown)
+    expect(painted.map(formatStep).join(' ')).toBe('D - D - D D D D - - - - - - - -')
   })
 })

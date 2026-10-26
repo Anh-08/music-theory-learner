@@ -39,17 +39,21 @@ describe('RhythmTrainer', () => {
     expect(JSON.parse(localStorage.getItem('mtl:rhythms.custom')!)).toEqual([])
   })
 
-  it('a custom rhythm can switch to sixteenths', () => {
+  it('a custom rhythm can split single beats into sixteenths', () => {
     renderWithProviders(<RhythmTrainer editable rhythm="ballad" progression="C G" />)
+    expect(screen.queryByRole('button', { name: /Phách 2: móc kép/ })).not.toBeInTheDocument()
     fireEvent.click(screen.getByRole('button', { name: 'Tự tạo điệu từ điệu này' }))
-    expect(screen.queryByRole('button', { name: /^Quạt, bước 16:/ })).not.toBeInTheDocument()
-    fireEvent.click(screen.getByRole('radio', { name: 'Móc kép (1 e & a)' }))
-    expect(screen.getByRole('button', { name: 'Quạt, bước 5: xuống' })).toBeInTheDocument()
-    fireEvent.click(screen.getByRole('button', { name: /^Quạt, bước 2:/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Phách 2: móc kép/ }))
+    expect(screen.getByRole('button', { name: /Phách 2: móc kép/ })).toHaveAttribute('aria-pressed', 'true')
+    // Beat 2 shows 1 e & a (steps 5–8); beat 1 still shows only 1 and & (steps 1 and 3).
+    expect(screen.getByRole('button', { name: 'Quạt, bước 6: nghỉ' })).toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /^Quạt, bước 2:/ })).not.toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Quạt, bước 6: nghỉ' }))
     fireEvent.click(screen.getByRole('button', { name: 'Lưu điệu' }))
     const [saved] = JSON.parse(localStorage.getItem('mtl:rhythms.custom')!)
-    expect(saved).toMatchObject({ stepsPerBeat: 4, beatsPerBar: 4, pattern: 'D D - - D - U - - - U - D - U -' })
-    expect(screen.getByLabelText(/^Quạt, bước 16:/)).toBeInTheDocument()
+    expect(saved).toMatchObject({ stepsPerBeat: 4, splitBeats: [1], pattern: 'D - - - D D U - - - U - D - U -' })
+    expect(screen.getByLabelText('Quạt, bước 6: xuống')).toBeInTheDocument()
+    expect(screen.queryByLabelText(/^Quạt, bước 2:/)).not.toBeInTheDocument()
   })
 
   it('drags across cells to switch several on, and drags back to undo', () => {

@@ -9,6 +9,8 @@ export interface CustomRhythm {
   beatsPerBar: 2 | 3 | 4
   stepsPerBeat: 2 | 3 | 4
   pattern: string
+  /** Beats shown in sixteenths (see `Rhythm.splitBeats`). */
+  splitBeats?: number[]
   groove: Groove['id']
   defaultTempo: number
 }
@@ -23,6 +25,7 @@ export function toRhythm(c: CustomRhythm): Rhythm {
     beatsPerBar: c.beatsPerBar,
     stepsPerBeat: c.stepsPerBeat,
     pattern: c.pattern,
+    ...(c.splitBeats ? { splitBeats: c.splitBeats } : {}),
     defaultTempo: c.defaultTempo,
     groove: c.groove,
     description: { vi: '', en: '' },

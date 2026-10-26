@@ -23,6 +23,8 @@ export interface Rhythm {
    * B / B' = bass / alternate bass, number = string to pick, join simultaneous notes with "+" (B+1, 123 = strings 1, 2, 3).
    */
   pattern: string
+  /** Sixteenth rhythms (4 steps per beat): beats shown in sixteenths in the grid; the others only use 1 and &. Undefined = all. */
+  splitBeats?: number[]
   defaultTempo: number
   /** Drum + bass groove that goes with it. */
   groove: Groove['id']

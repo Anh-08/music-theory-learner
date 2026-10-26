@@ -9,8 +9,7 @@ import type { JamTrack } from '../../audio/jamEvents'
 import { useJamState } from '../../audio/jamStore'
 import { RHYTHMS, formatStep, parsePattern, type Rhythm, type Step } from '../../audio/rhythms'
 import { RhythmGrid } from '../../components/RhythmGrid/RhythmGrid'
-import { resubdivide } from '../../components/RhythmGrid/gridModel'
-import { Segmented } from '../../components/ui/Segmented'
+import { splitOf, toggleSplit } from '../../components/RhythmGrid/gridModel'
 import { InstrumentView } from '../../components/lesson/InstrumentView'
 import { Select } from '../../components/ui/Select'
 import { errorMessage } from '../../i18n/errors'
@@ -59,9 +58,10 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
   const all = useMemo(() => [...RHYTHMS, ...custom.map(toRhythm)], [custom])
   const [rhythmId, setRhythmId] = useState(initialRhythm)
   const selected = all.find((r) => r.id === rhythmId) ?? RHYTHMS[0]
-  // The rhythm being edited; `stepsPerBeat` can switch between eighths (2) and sixteenths (4).
-  const [draft, setDraft] = useState<{ steps: Step[]; name: string; stepsPerBeat: Rhythm['stepsPerBeat'] } | null>(null)
+  // The rhythm being edited; single beats can be split into sixteenths (`split`, with 4 steps per beat).
+  const [draft, setDraft] = useState<{ steps: Step[]; name: string; stepsPerBeat: Rhythm['stepsPerBeat']; split?: boolean[] } | null>(null)
   const current: Rhythm = draft ? { ...selected, id: 'draft', stepsPerBeat: draft.stepsPerBeat, pattern: draft.steps.map(formatStep).join(' ') } : selected
+  const split = draft ? draft.split : splitOf(selected)
   const steps = useMemo(() => parsePattern(current.pattern), [current.pattern])
 
   const [text, setText] = useState(progression)
@@ -149,13 +149,15 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
     if (playing) play({ ...current, pattern: next.map(formatStep).join(' ') }, chords)
   }
 
-  const startEditing = () => setDraft({ steps, name: t('rhythm.customDefault', { n: custom.length + 1 }), stepsPerBeat: selected.stepsPerBeat })
+  const startEditing = () => setDraft({ steps, name: t('rhythm.customDefault', { n: custom.length + 1 }), stepsPerBeat: selected.stepsPerBeat, split: splitOf(selected) })
 
-  const changeSubdivision = (to: 2 | 4) => {
+  /** Splits one beat into sixteenths (or back into eighths). */
+  const toggleBeat = (beat: number) => {
     if (!draft) return
-    const next = { ...draft, steps: resubdivide(draft.steps, draft.stepsPerBeat, to), stepsPerBeat: to }
-    setDraft(next)
-    if (playing) play({ ...current, stepsPerBeat: to, pattern: next.steps.map(formatStep).join(' ') }, chords)
+    const bar = toggleSplit(draft, selected.beatsPerBar, beat)
+    const stepsPerBeat = bar.stepsPerBeat as Rhythm['stepsPerBeat']
+    setDraft({ ...draft, steps: bar.steps, stepsPerBeat, split: bar.split })
+    if (playing) play({ ...current, stepsPerBeat, pattern: bar.steps.map(formatStep).join(' ') }, chords)
   }
 
   const save = () => {
@@ -167,6 +169,7 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
       beatsPerBar: selected.beatsPerBar,
       stepsPerBeat: draft.stepsPerBeat,
       pattern: draft.steps.map(formatStep).join(' '),
+      ...(draft.split ? { splitBeats: draft.split.flatMap((on, b) => (on ? [b] : [])) } : {}),
       groove: selected.groove,
       defaultTempo: tempo,
     }
@@ -238,7 +241,15 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
         </p>
       )}
 
-      <RhythmGrid steps={steps} beatsPerBar={current.beatsPerBar} stepsPerBeat={current.stepsPerBeat} current={playing ? jam.step : -1} onChange={draft ? editSteps : undefined} />
+      <RhythmGrid
+        steps={steps}
+        beatsPerBar={current.beatsPerBar}
+        stepsPerBeat={current.stepsPerBeat}
+        current={playing ? jam.step : -1}
+        onChange={draft ? editSteps : undefined}
+        split={split}
+        onToggleBeat={draft && draft.stepsPerBeat !== 3 ? toggleBeat : undefined}
+      />
       <p className="text-xs text-stone-500">{draft ? t('rhythm.editHint') : t('rhythm.legend')}</p>
 
       {editable && (
@@ -253,17 +264,6 @@ export function RhythmTrainer({ rhythm: initialRhythm = 'ballad', progression = 
                   className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm dark:border-stone-700 dark:bg-stone-950"
                 />
               </label>
-              {draft.stepsPerBeat !== 3 && (
-                <Segmented
-                  label={t('rhythm.subdivision')}
-                  value={String(draft.stepsPerBeat) as '2' | '4'}
-                  onChange={(v) => changeSubdivision(Number(v) as 2 | 4)}
-                  options={[
-                    { value: '2', label: t('rhythm.eighths') },
-                    { value: '4', label: t('rhythm.sixteenths') },
-                  ]}
-                />
-              )}
               <button type="button" onClick={save} className="rounded-lg bg-violet-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-violet-700">
                 {t('rhythm.save')}
               </button>

@@ -94,11 +94,12 @@ function withString(step: Step, string: 1 | 2 | 3 | 4, on: boolean): Step {
  *   every cell is switched on (bass cells take the first cell's B / B′, or B); if it was switched off,
  *   every cell is cleared.
  */
-export function paintCells(steps: Step[], start: GridCell, end: GridCell, rows: GridRow[]): Step[] {
+export function paintCells(steps: Step[], start: GridCell, end: GridCell, rows: GridRow[], visible?: ReadonlyArray<number>): Step[] {
   const first = toggleCell(steps[start.step], start.row)
   const lo = Math.min(start.step, end.step)
   const hi = Math.max(start.step, end.step)
-  const inCols = (i: number) => i >= lo && i <= hi
+  // Hidden steps (the e / a of a beat shown in eighths) are never painted.
+  const inCols = (i: number) => i >= lo && i <= hi && (!visible || visible.includes(i))
 
   if (start.row === 'strum') return steps.map((s, i) => (inCols(i) ? first : s))
 
@@ -133,4 +134,41 @@ export function resubdivide(steps: Step[], from: number, to: number): Step[] {
   }
   const k = from / to
   return steps.filter((_, i) => i % k === 0)
+}
+
+/**
+ * Which beats are split into sixteenths. A bar with sixteenth steps (4 per beat) can show some beats in eighths only:
+ * `splitBeats` lists the beats shown in sixteenths (undefined = all of them). Other step sizes have no split beats.
+ */
+export function splitOf(r: { beatsPerBar: number; stepsPerBeat: number; splitBeats?: number[] }): boolean[] | undefined {
+  if (r.stepsPerBeat !== 4) return undefined
+  return Array.from({ length: r.beatsPerBar }, (_, b) => !r.splitBeats || r.splitBeats.includes(b))
+}
+
+/** Steps shown in the grid: everything, except the e / a of beats kept in eighths. */
+export function visibleSteps(beatsPerBar: number, stepsPerBeat: number, split?: boolean[]): number[] {
+  const all = Array.from({ length: beatsPerBar * stepsPerBeat }, (_, i) => i)
+  if (stepsPerBeat !== 4 || !split) return all
+  return all.filter((i) => split[Math.floor(i / 4)] || i % 2 === 0)
+}
+
+export interface Subdivided {
+  steps: Step[]
+  stepsPerBeat: number
+  split?: boolean[]
+}
+
+/**
+ * Splits beat `beat` into sixteenths, or back into eighths. An eighth-note bar becomes a sixteenth bar with only that
+ * beat split; unsplitting a beat clears its e / a; when no beat is split any more the bar goes back to eighths.
+ */
+export function toggleSplit(bar: Subdivided, beatsPerBar: number, beat: number): Subdivided {
+  if (bar.stepsPerBeat === 2) {
+    return { steps: resubdivide(bar.steps, 2, 4), stepsPerBeat: 4, split: Array.from({ length: beatsPerBar }, (_, b) => b === beat) }
+  }
+  if (bar.stepsPerBeat !== 4) return bar
+  const split = (bar.split ?? Array.from({ length: beatsPerBar }, () => true)).map((on, b) => (b === beat ? !on : on))
+  const steps = split[beat] ? bar.steps : bar.steps.map((s, i): Step => (Math.floor(i / 4) === beat && i % 2 === 1 ? { kind: 'rest' } : s))
+  if (split.some(Boolean)) return { steps, stepsPerBeat: 4, split }
+  return { steps: resubdivide(steps, 4, 2), stepsPerBeat: 2 }
 }
